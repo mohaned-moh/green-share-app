@@ -1,0 +1,950 @@
+﻿
+
+
+
+
+
+University of Petra
+
+Faculty of Information Technology
+
+Project Title:
+Green Share 
+
+By
+Names   IDs
+Laith Alawneh    202120280
+Anas ALzoubi   202120600
+Marya Belal       202210958
+Mohanad Al Arefi  202120762
+                                              Supervised By:
+
+                                              Dr. Nuha Al-Khalili
+
+
+First semester/ 2025
+
+
+ABSTRACT
+This project addresses the critical environmental and social challenge of resource wastage and the increasing volume of usable goods ending up in landfills, which causes significant ecological and economic damage. There is an urgent need for a fast, intelligent, and trustworthy mechanism to facilitate the redistribution of these items within the community. This inspired the development of GreenShare, a dedicated mobile application designed to establish a seamless, circular economy platform.
+The GreenShare mobile system operates by allowing donors to upload items, which are then immediately processed by an Artificial Intelligence (AI) model trained to recognize and categorize the goods. When an item is successfully categorized and listed, the application provides real-time, location-based access to recipients. The system is further secured by a robust rating and history log to ensure accountability and build community trust.
+The project will be developed using Agile/Scrum  management framework to accommodate changes in the requirements and stakeholder’s feedback. . The  proposed system is expected to  significantly protect the environment by promoting reuse, save natural resources, and provide local communities with a reliable, transparent tool for rapid, ethical resource sharing via their smartphones.
+
+
+TABLE OF CONTENTS
+ABSTRACT	
+LIST OF TABLES	
+Table 1 :compare between existing system & proposed system
+Table 2: stakeholders list
+Table 3: WBS for the project
+Table 4:Human resource
+Table 5:cost estimation and budget 
+Table 6:view item location om map use case 
+Table 7:search and filter items use case 
+Table 8:direct messaging use case 
+Table 9:edit profile informatin use case
+Table 10:select preferred language use case 
+Table 11:register user use case 
+Table 12:post listing use case 
+Table 13 : auto classifying item category use case
+Table 14:rate users and leave reviews use case 
+Table 15:maintain item history log use case
+ LIST OF FIGURES	
+Figure 1 : freecycle logo
+
+Figure 2 : freecycle main page
+
+Figure 3 : fineswap main page	
+
+Figure 4 : fineswap logo
+
+Figure 5 : Trash Nothing logo.
+
+Figure 6 : Trash Nothing working plan  
+
+Figure 7 : Geev logo
+
+Figure 8 : Geev HomePage. 
+
+Figure 9 : Gant chart
+
+Figure 10 : Gant chart
+
+Figure 11 : Questionnaire result  
+
+
+CHAPTER I: PROJECT INITIATION 	
+1.1-	Introduction :	
+1.2-	Problem Definition:	
+1.3-	Current System:	
+1.4-	Existing System:	
+1.5-	Literature Review:	
+1.6-	Project Objectives:	
+1.7-	Stakeholders list:	
+1.8-	Proposed Scope:	
+1.9-	Scope excluded and project constraints:	
+1.10-	Effects of the Project:	
+CHAPTER II: PROJECT PLANNING	
+2.1-	Process model:	
+2.2-	Scope Initiations (WBS):	
+2.3-	Gantt Chart:	
+2.4-	Resource Sheet:	
+2.5-	Cost Estimation and Budgeting:	
+2.6-	Risk List:	
+CHAPTER III: : PROJECT REQUIREMENTS	
+3.1-	Requirements Gathering Techniques:	
+3.2-	Functional Requirements:	
+3.3-	Non-Functional Requirements:	
+3.4-             Use Cases Templates:	
+
+CHAPTER IIII: : BUSINESS MODEL CANVAS	
+REFERENCES	
+
+
+CHAPTER I :Project Initiation
+1.1 Introduction :
+Think of sustainability as being a good neighbor to the Earth and to each other. It means we use what we need today without taking away what our children will need tomorrow. For a long time, we have simply thrown things away when we were done with them. This linear approach has proven to be a waste. The circular economy presents a superior paradigm. It is a simple promise: we will stop making trash. Instead, we will prioritize the repair, reuse, and remanufacturing of goods, ensuring everything we use has a long, useful life. This shift is essential for maintaining a clean and healthy planet, representing the most valuable legacy we can secure for future generations.
+
+1.2Problem Definition:
+Jordan suffers from problems of excessive waste and weak reusability of usable items. Some people in Jordan throw away clothes, books, furniture, and other household items, even though they are still in good condition. At the same time, other individuals, families, and charities are in need of these goods. Although donation programs exist in Jordan, they are scattered, mostly manual, and lack wide reach. Currently, there is no simple online platform in Jordan that allows people who want to donate usable items to easily connect with those who need them. There is also no system that helps categorize items, match donors and recipients based on location, or organize pickup processes.
+1. Wastage of reusable resources that could benefit others
+2. Growing pressure on landfills and waste management systems(such as :Amman Municipality)
+3. Missed opportunities to strengthen social solidarity and community support
+4. Poor visibility of donation needs and opportunities across regions
+5. Lack of data and measurable indicators for reuse and sustainable consumption
+According to the Jordan Ministry of Environment’s Waste Sector Green Growth Plan (2020–2030), the recycling rate of municipal solid waste in Jordan remains low, at approximately 7%. In addition, Jordanians generate an average of 0.81 kg of municipal waste per capita per day, resulting in more than 2 million tons of municipal solid waste annually (Jordan Ministry of Environment, 2020). These figures highlight an urgent need to shift from waste disposal practices toward reuse and recycling, thereby promoting environmental responsibility and improving resource efficiency
+The lack of a modern, userFriendly digital system limits the ability of individuals to donate easily and of organizations to manage, track, and analyze donations effectively. This digital gap is particularly significant in a time when mobile applications dominate daily life and technology can play a major role in enabling sustainability.
+
+1.3 Current System :
+Right now, Jordan has a few charity and recycling projects going on:
+ 1. Charity Clothes Bank (Jordan Hashemite Charity Organization) This is one of
+ the biggest donation programs in the country. Since it started, it has helped over
+ 1.15 million families and given away more than 5.6 million pieces of clothing.
+ People donate usable items through drop-off bins, at shopping centers, and during
+ special events. Then, the charity sorts everything and gives it out. (The Jordan Times,2021)( JHCO, 2025)
+ 2. Mosques: A lot of charities take donations through mosques.
+ 3. Sakeena: This Jordanian non-profit organization takes clothes, furniture, and
+ households. They arrange for pickups or drop-offs. They sort the donations and
+ give them straight to families and orphans, making sure everything is useful. You
+ can contact them using phone number,email. (Sakeena, 2023)
+ 4. Words of mouth: This is how most people do it. They just give usable items to family,friends, and people who live nearby.
+
+
+1.4 Existing System :
+1.4.1Freecycle Network: (P2P) gifting When you sign up, you join one or more local Town groups and/or invite some local friends to form a Friends Circle. You make posts about things you want to gift or receive. Other members reply and then you arrange a pickup time and location(freecycle,2025(
+Advantages  free of charge, and all the money obstacles are eliminated. Being a non-profit, its sole purpose is to minimize landfill waste, which creates a sense of trust and a sense of community(freecycle,,2025)
+Disadvantages Web-based technology is old-fashioned. Unreliability has been the greatest user complaint, and no-shows have been a waste of time for givers. The local volunteer moderators are also important in the user experience, and they are inconsistent. Lastly, users are required to make pickups themselves, which is also a legitimate privacy and safety (freecycle,,2025)
+
+
+
+Figure1 : freecycle logo
+
+
+Figure2: freecycle main page 
+
+
+
+
+
+
+
+
+
+
+1.4.2 Fineswap: is a free mobile application that allows users to exchange goods, skills, or services instead of buying or selling them for money, promoting sustainability and reducing waste, Each user's profile displays the number of exchanges they have completed, and there is a dedicated page for each user containing details such as their "rating" and "last seen" status. The user-friendly interface and simple login process make the exchange process smooth and straightforward(fineswap,2025)
+Advantages Supports environmental sustainability through reuse and exchange and Helps users save money and access needed items easily and Encourages community interaction and responsible consumption. (fineswap,2025)
+Disadvantages Depends on active local users to function effectively and Requires coordination and trust between users and Its not available on all platforms(fineswap,2025)
+
+
+                                                              Figure 3 : fineswap main page 
+
+
+                                                                Figure 4 : fineswap logo 
+
+1.4.3 Trash Nothing : A freecycling platform focused on giving away and requesting reusable items for free to reduce waste and build community, Items are shown in a list/feed view, and filtered by the user's local group, Keyword-based search within local groups. Users can set Search Alerts for desired items, Posting Offers/Requests, private messaging for pickup arrangements, and managing local group subscriptions.( Trash Nothing,2025)
+Advantages Promotes recycling and environmental sustainability.100% free  no buying or selling, Very easy to use, It builds community connections by sharing also The platform offers significant technical improvements such as search alerts, making it easier for users to find the items they need without the need for continuous browsing. ( Trash Nothing,2025)
+Disadvantages (Reliance on Private Messaging):Relying on private messaging to coordinate pickups can lead to delays in responses and difficulty managing multiple requests from the donor, especially if the donor is receiving many messages. ( Trash Nothing,2025)
+
+
+Figure 5:  Trash Nothing logo 
+
+Figure6: Trash Nothing working plan  
+
+
+1.4.4 Geev : donating both items and food, where users post free ads with photos and descriptions, leveraging geolocation to connect with nearby recipients. The platform is unique feature is the "Bananas" token system, where a user must spend one "Banana" (a single-use credit) to unlock the in-app chat and contact a giver about a donation(Geev,2025)
+Advantages Promotes reuse and waste reduction, supporting a circular economy , Free and easy to use for giving and receiving items , Encourages local community interaction,The "Banana" system solves the problem of no-shows that other platforms suffer from. Spending a "banana" to open a conversation makes the user more serious and committed to receiving the item, it works on all platforms(Geev,2025)
+Disadvantages Relies on active users in the area to be effective , Some premium features require a subscription , Users must manage pickup logistics themselves,Users who do not donate do not earn "bananas," and therefore may find it difficult to request items after consuming their initial balance. This may limit access for people who need items but do not have anything to donate. (Geev,2025)
+
+
+Figure 7: Geev logo 
+
+
+
+
+Figure 8: Geev HomePage 
+1.5 Existing System Comparison:
+To position GreenShare within the landscape of existing sharing and donation platforms, a concise comparative analysis was conducted. This analysis examines selected platforms Freecycle Network, Fineswap, Trash Nothing, and Geev based on key criteria including geographical coverage, core features, platform type, and the use of Artificial Intelligence. The comparison highlights current limitations in existing systems and clarifies how GreenShare differentiates itself by addressing these gaps through a more secure, intelligent, and user-focused approac
+                                      Table 1:compare between existing system & proposed sysetm
+System Name
+Coverage / Region
+Key Features
+Platform
+Using AI?
+Freecycle Network
+Global (Town Groups)
+• Town-based groups
+
+• Volunteer moderation
+
+• Basic forum-style posting
+Web-based (Old)
+No
+Fineswap
+International
+• Exchange of goods & skills
+
+• Rating system & "Last Seen" status
+
+• Swap history
+Mobile App
+No
+Trash Nothing
+Global (Location-based)
+• Search Alerts for specific items
+
+• Feed/List view
+
+• Local group subscriptions
+Mobile App / Web
+No
+Geev
+International
+• Donation of items & food
+
+• "Bananas" token system (Gamification)
+
+• Geolocation map
+Mobile App
+No
+Green Share (Proposed)
+Global (Initial Launch: Jordan)
+• Student Verification (Secure Community)
+
+• Smart Recommendations
+
+• Chat & Easy Image Upload
+
+
+Mobile App 
+Yes
+
+1.6 Literature Review:
+
+1.6.1 Introduction:
+Platforms for sustainable resource-sharing and circular economy refer to the use of digital technologies to facilitate the sharing and reuse of resources such as electronic devices and furniture among individuals, which strengthens the circular economy and reduces waste. This concept emerged as a response to environmental and social challenges caused by overconsumption and inadequate waste-management systems.
+While developed countries have successfully implemented these platforms, developing countries and the Middle East face significant barriers, including limited infrastructure, insufficient digital literacy, security concerns, lack of trust mechanisms, and the absence of integrated solutions that address both technical and social dimensions. Many existing platforms also focus solely on perceived acceptance without measuring actual behavioral change or sustained user engagement.
+
+This literature review examines recent research on digital platforms for sustainable resource-sharing, with a focus on mobile applications for device donation, sustainable education, and community furniture-sharing platforms. The review identifies research gaps and shows how innovative technological solutions such as AI-based quality verification, authentication systems, and direct communication mechanisms can address these gaps and enable more effective and sustainable resource-sharing systems.
+
+1.6.2 Digital Platforms and Technological Integration
+Research into digital platforms for the circular economy often focuses on the technical architecture and the integration of advanced technologies to enhance efficiency and transparency. For instance, the "Recycle Chain" project demonstrated the feasibility of using Blockchain, Image Processing (CNN, YOLO), and IoT to create a transparent and rewarding recycling system, although it highlighted the need for costly hardware for high-accuracy AI (Borandag, 2023). Similarly, the development of deep-learning frameworks has proven highly effective in enhancing the classification of waste products, with models like ResNet50V2 achieving high accuracy (Al-Saqqar et al., 2023).
+From a system architecture perspective, the concept of a cloud-based Product-Service System (PSS) platform has been proposed to manage household solid waste, aiming to solve the "three-highs" problem (cost, risk, threshold) of smart equipment and enhance stakeholder enthusiasm (Wan et al., 2020). This PSS model, which focuses on providing a service facilitated by a product, is analogous to GreenShare's approach of providing a sharing/donation service via a mobile application. Furthermore, the efficiency of advanced digital platforms in social service administration, such as those benchmarked in European contexts, provides evidence that high automation (80-95%) and usage rates (85-95%) are achievable, correlating positively with sustainability indices (Sarojin et al., 2025).
+In terms of platform functionality, the development of mobile applications to digitize the donation process, such as "DonoSync," has been shown to enhance data accuracy and improve donor/organization trust by providing end-to-end tracking (Sani & Rejab, 2024). However, the development of critical features like map interfaces and real-time notification functions can be technically challenging, as noted in the development of the "RescuePlate" application for food donation (Jacildo & Soberano, 2024).
+
+1.6.3 User Acceptance and Behavioral Focus
+User acceptance and behavioral intention are critical factors for the success of sharing economy platforms. Studies have consistently shown that user participation dilemmas, particularly those related to trust, social presence, and lax platform governance, inhibit engagement in peer-to-peer (P2P) product sharing (He et al., 2021). The challenge of building trust is further emphasized in the context of sharing furniture and home decoration products, where doubts about item condition and image quality are critical barriers (Sarunporn & Jitiporn, 2020).
+The Extended Unified Theory of Acceptance and Use of Technology (UTAUT2) model has been widely used to analyze user behavior in this domain. Research on food waste reduction platforms confirmed the relevance of UTAUT2 factors but identified two new, context-specific factors: trust and gratefulness (Moltene & Orsato, 2021). Effort expectancy was also found to be a key factor for use behavior. Furthermore, a study on digital technology adoption for agricultural waste revealed that while standard motivators had no significant impact, older users were driven by trust and social influence, while younger users were motivated by data privacy (Pienwisetkaew et al., 2023).
+Finally, the mobile application approach for donation has been validated by case studies, such as one focusing on electronic device donation, which achieved an 80% donation rate in an experimental group (Zhang & Sahagun, 2023). Additionally, the use of gamification in mobile applications has been shown to be an effective tool for promoting the Circular Economy and achieving moderate-to-high acceptance rates among users (José Antonio et al., 2025).
+
+
+
+
+1.6.4 Research Gaps and GreenShare's Contribution
+
+The synthesis of the literature reveals a significant research gap that the "GreenShare" project is uniquely positioned to address: the lack of an integrated, community-focused platform that simultaneously addresses the technological requirements of item classification and the behavioral requirements of user trust and participation in the sharing of reusable goods.
+Firstly, a fragmentation of digital solutions exists, where platforms focus narrowly on specific areas like recycling (Borandag, 2023; Al-Saqqar et al., 2023), food waste (Moltene & Orsato, 2021), or general donation (Sani & Rejab, 2024). Our project "GreenShare"unifies the process of sharing and donation of diverse reusable goods within a single, integrated platform, promoting a broader circular economy model (Wan et al., 2020).
+Secondly, there is a lack of integrated trust mechanisms in many technological solutions, despite behavioral studies emphasizing that trust and social presence are critical for P2P sharing adoption (He et al., 2021). GreenShare directly mitigates this by integrating a comprehensive Rating System and Direct Messaging to foster social presence and build community trust (Moltene & Orsato, 2021; Pienwisetkaew et al., 2023; Sarunporn & Jitiporn, 2020).
+Finally, while AI is proven for waste classification (Al-Saqqar et al., 2023), there is a clear gap in applying high-accuracy AI for the classification and condition verification of reusable items for sharing/donation. GreenShare utilizes AI Image Recognition to automatically classify items and verify item condition, reducing the effort expectancy for donors and improving the search/filter efficiency for recipients (Borandag, 2023; Sarunporn & Jitiporn, 2020). Furthermore, GreenShare prioritizes the robust implementation of Location-Based Services and System Notification Generation, learning from the technical difficulties faced by similar projects (Jacildo & Soberano, 2024).
+1.6.5 Conclusion
+Based on the comprehensive review of recent literature, digital technologies such as mobile applications, AI, IoT, and Blockchain have proven essential in advancing the Circular Economy and transforming public service delivery, yet significant barriers remain. While individual studies demonstrated success in specific sectors—such as classifying waste with 98.95% accuracy using ResNet50V2 , increasing device donation rates to 80% via mobile apps , or managing food rescue operations —they consistently encountered critical user-centric and technical challenges, including a lack of trust in data privacy, the high cost of hardware for AI processing, and demographic disparities where "one-size-fits-all" solutions failed to engage both older and younger generations effectively. Furthermore, a major research gap persists in the fragmentation of these systems; governmental social services, non-profit donation platforms, and municipal environmental management systems currently operate in isolation, missing the opportunity for a unified exchange mechanism. Consequently, this project proposes an integral, unified framework that bridges these disjointed sectors by incorporating multi-layered authentication and AI-based verification to address the identified trust deficits and technical limitations, thereby ensuring a more efficient, transparent, and sustainable ecosystem for all stakeholders.
+ 1.7 Project Objectives :
+• Objective 1: reducing the need for new purchases and minimising waste
+• Objective 2: educate users on the environmental benefits of the sharing
+economy.
+• Objective 3:build trust and accountability among users.
+• Objective 4: decrease the volume of usable goods sent to landfills by providing a
+direct and convenient alternative to disposal.
+1.8 Stakeholder List :
+ For successful project development, it is imperative to clearly define each and every stakeholder involved in the project and their interests. The successful implementation of this particular initiative requires that each stakeholder plays a unique role in this process. Table 1 provides an extensive list of key stakeholders for this project and outlines their primary interests and level of significance in ensuring that this project receives a successful outcome.
+
+Table 2: stakeholders list
+Stakeholders
+Interest
+Importance
+Donor 
+Uses the App to post the item's photo, and uses Chat for coordination.
+High
+Recipient
+Uses the App to search for items, and uses Chat for coordination
+High
+Charities
+Use the App to search for donations (as a regular user).
+Medium
+Developers
+Work on the Code, Database, and AI Model
+High
+Project Manager
+Uses the Admin Dashboard to monitor progress
+High
+Government Bodies
+Facilitates partnerships to support donations and reuse
+Low 
+
+1.9 Proposed Scope:
+This section outlines what the project is and activities to be conducted to achieve the goal of the project in general. The project will deliver a  mobile application for free donations and reuse of items in Jordan. The scope covers requirements gathering, design, implementation and testing required to develop the core functionalities: user registration, posting donation ads, browsing listings, and private in-app messaging for pickup coordination. Crucially, the project will integrate Artificial Intelligence (AI) and Image Recognition technology to automatically classify donated items upon photo upload, enhancing user experience and data quality. The project will be implemented using an Agile methodology, and it shall undergo comprehensive functional testing. 
+1.10 Scope Excluded and Project Constraints:
+This section explains the constraints that will be surrounding the project and the features that will not be covered in the current phase. The application will not include any token-based systems for user commitment (like the "Bananas" model) nor will it provide third-party logistics services for item pickup. Time constraints dictate that the project must be completed within academic semester, which may limit the depth of the AI/Image Recognition model training and require the team to focus on a basic classification set. Financial constraints may limit the ability to acquire premium cloud services for hosting the AI model, potentially affecting its speed and scalability under heavy load. Technical constraints mean that while AI is included, the initial model will be limited to broad category classification (e.g., "Furniture," "Clothing") and will not perform fine-grained analysis (e.g., "Brand," "Condition"). Additionally, resource constraints related to team experience may necessitate a longer development cycle for the AI integration, potentially delaying the final deployment 
+1.11 Effects of the project: 
+ A)   Economic effect 
+Positive: The application reduces expenditure for low-income families on essential goods and supports the circular economy by extending product lifecycles
+B)   Environmental effect 
+Positive: It directly contributes to reducing the volume of solid waste sent to landfills, easing the pressure on Jordan's waste management systems.
+C)   Social effect 
+Positive: It enhances social solidarity and community ties by facilitating direct communication between donors, those in need, and charities.
+D)   Ethical effect 
+ Positive/Neutral: It raises awareness of the ethical responsibility towards sustainable consumption and reuse instead of wastefulness
+E)   Equality effect 
+Negative: The exclusive reliance on a mobile application excludes less privileged groups who do not own smartphones or have stable internet access, thereby creating a digital divide that limits their ability to benefit from the donations
+F)   Diversity & Inclusion effect 
+Positive: It makes it easier for individuals from all cultural and social backgrounds to participate in and benefit from the donation process, fostering community inclusion.
+G)   Commercial effect 
+Negative/Neutral: It may slightly impact the sales of second-hand goods in traditional commercial markets, but it opens future commercial opportunities in the logistics sector.
+CHAPTER II: Project PLANNING
+2.1  Process model:
+       The Agile (Scrum) process model has been selected for the development of the 'Green Share' application. This model allows for iterative development, enabling the team to develop, test, and refine features according to stakeholders' feedback. Given the time constraints of the academic semester, Agile provides the flexibility to adjust requirements based on supervisor feedback and testing results without exposing the entire project timeline. Also, because the project Requirements are not all clear and complete yet, this model allows to change requirements easily. 
+2.2 Scope Initiations (WBS):
+The project scope is decomposed into the following sprints (each sprint is 3 weeks long)  and tasks. Table 3shows the work breakdown structure of the project. We have shown the tasks of graduation project 1 in the WBS as well. 
+
+
+
+
+
+
+Table 3: WBS for the project 
+
+
+Task Name
+Duration
+Start
+Finish
+Predecessors
+Resource Names
+
+1
+project initiation and planning 
+76 days
+Thu 16/10/25
+Wed 07/01/26
+
+Anas, Laith, Marya, Mohanad
+1.1
+Proposal
+6 days
+Thu 16/10/25
+Wed 22/10/25
+
+Anas, Laith,Marya, Mohanad
+1.2
+Existing Systems & Current System & Problem Defenition
+10 days
+Thu 23/10/25
+Mon 03/11/25
+1.1
+Anas,Laith,Marya,Mohanad
+1.3
+Objectives, proposed scope,Scope excluded and projectconstraints, Stakeholder list
+6 days
+Tue 04/11/25
+Mon 10/11/25
+1.2
+Anas,Laith,Marya,Mohanad
+1.4
+Select & upload the references Progress report (1)
+6 days
+Tue 11/11/25
+Mon 17/11/25
+1.3
+Anas, Laith,Marya, Mohanad
+1.5
+Literature Review
+7  days
+Mon 17/11/25
+Mon 24/11/25
+1.4
+Anas, Laith, Marya, Mohanad
+1.6
+functional requirement, gathering technique
+12 days
+Tue 25/11/25
+Mon 08/12/25
+1.5
+Anas, Laith, Marya, Mohanad
+1.7
+Use Case Specifications
+12 days
+Mon 08/12/25
+Sun 21/12/25
+1.6
+Anas, Laith, Marya, Mohanad
+1.8
+Planning Section
+6 days
+Tue 23/12/25
+Mon 29/12/25
+1.7
+Anas, Laith, Marya, Mohanad
+1.9
+Final Submission
+9  days
+Mon 29/12/25
+Wed 07/01/26
+1.8
+Anas, Laith, Marya, Mohanad
+2
+Requirement revision 
+13 days
+Sun 01/03/26
+Sat 14/03/26
+1.9
+Anas, Laith, Marya, Mohanad
+3
+Sprint 1
+20 days
+Sat 14/03/26
+Sat 04/04/26
+2
+Anas, Laith, Marya, Mohanad
+4
+Sprint 2
+20 days
+Sat 04/04/26
+Sun 26/04/26
+3
+Anas, Laith, Marya, Mohanad
+5
+Sprint 3
+20 days
+Sat 26/04/26
+Sun 17/05/26
+4
+Anas, Laith, Marya, Mohanad
+6
+Sprint 4(full documentation and integration )
+20 days
+Sat 17/05/26
+Sun 07/06/26
+5
+Anas, Laith, Marya, Mohanad
+
+2.3 Gantt Chart:
+
+
+Figure 9:Gant chart 
+
+    
+                                                       Figure 10:Gant chart 
+
+2.4 Resource Sheet:
+2.4.1 Human Resources : 
+Table 4:Human resource
+Role
+Name
+Project Manager (PM) & System Analyst
+Mohaned Mohammed (MM)
+Frontend Developer (UI/UX & Integration)
+Marya Belal (MB)
+Quality Assurance (QA) & Technical Writer
+Anas Al- Zou’bi (AZ)
+Lead Developer (Backend & Database)
+Laith Alawneh (LA)
+
+
+2.4.2 Hardware Resources :
+Hardware: Laptops (Windows/macOS) for development , Android/IOS smartphones for real device testing.
+Software Framework: Flutter SDK (for cross-platform development).
+Database: Google Firebase (Firestore for NoSQL database, Firebase Auth for users, Firebase Storage for images).
+IDE: Visual Studio Code or Android Studio.
+Version Control: GitHub.
+
+2.5 Cost Estimation and Budgeting:
+Table 5:cost estimation and budget
+Item
+Description
+Estimated Cost (JOD)
+Notes
+Total Labour Cost (Wages)**
+4 students (250 for each student per month  *3 months)
+3,000.0
+Represents the *true value* of the team's effort.
+Hardware (Laptops)
+Estimated market value of 4 development laptops (e.g., 4 * 500 JOD)
+2,000.00
+Cost of essential hardware required for the project.
+Development Tools
+Flutter SDK, VS Code, GitHub (Estimated Commercial Value)
+500.00
+Estimated commercial value of software, even if free/open-source.
+Backend Services
+Firebase Spark Plan (Estimated Commercial Value)
+100.00
+Estimated commercial value of services, even if using the free tier.
+Internet/Data
+Connection for research & meetings
+20.00
+Estimated data usage over the project period.
+Documentation
+Printing & Binding Final Reports
+15.00
+Cost for physical submission.
+Domain & Hosting
+Domain name registration (1 year) and minimal cloud hosting for pilot
+30.00
+For a professional, publicly accessible pilot.
+Subtotal
+Sum of all costs
+5,665
+-
+
+2.6 Risk List:
+• Risk: Team members may face a learning curve with Flutter development
+• Risk: Loss of source code or documentation due to hardware failure (laptop crash) or accidental deletion.
+• Risk: Continuously adding new features (like payment gateways) that were not in the original plan, causing delays in delivering core functions. (Scope creep)
+• Risk: lack of communication leading to conflicts between team members.
+• Risk: Delays in finalizing the UI Design could impact the start of the coding phase.
+• Risk: Local charities or NGOs may refuse to collaborate or delay in responding to feedback requests.
+• Risk: The project scope includes AI features , but the team lacks prior experience in Machine Learning, which may lead to implementation delays or inaccurate results.
+• Risk: Since this is the team's first experience applying the Agile (Scrum) methodology, there is a risk of mismanaging sprints or failing to adhere to regular stand-up meetings, leading to disorganized progress.
+ 
+CHAPTER III: PROJECT REQUIREMENTS:
+3.1 Requirement Gathering :
+In this project, we used two requirements elicitation techniques: brainstorming and questionnaires. 
+Questionnaire 
+A questionnaire was electronically distributed using Google forms to gather the needed requirements of the system, it targets all the people, the questions are mainly about sustainability, the habits of reusing old items, and the user's acceptance of AI features. The questionnaire has [317] responses; according to the questionnaire the following statistics were given:
+• [31.9%] of the respondents are between the ages of 18-22, while [30.7%] are between the ages of 22-30, and [22.7%]  are between the ages of 30-45, and [14.7%]  are above 45 ,indicating a diverse target audience.
+• [53%] of the respondents expressed that they are "Interested" in environmental issues, and [38.8%] are "Slightly interested.", [8.6%] are "Not interested."
+•  [23%] reported donating or reusing old items regularly, while [66.8%] do so sometimes, whereas [10.2%] stated they have never done so.
+• [11.2%] of the respondents currently dispose of usable items by throwing them away, whereas [52.7%] donate them to charity and [27.8%] give them to friends/family, and [6.7%] sell them online and [1.6%] choose other.
+• Regarding the essential features, [40.5%] selected "Direct Messaging" as a priority, [37.3%] selected "Search and Filter," and [38.9%] the need for "Ratings and Reviews." The highest priorities were [61.4%] for "Detailed item descriptions" and[57.6%] for "Upload photos of items."[24.8%] for "Notifications" and [19.3%] for "History list
+• [19.3%] considered it "Very Important" to know the journey of the item after donation (tracking), while [27.3%] were not interested, The remaining votes are neutral.
+• Regarding the preferred authentication method, [54.2%] of the respondents chose "Phone number" as their primary method, indicating a strong preference for a simple and secure verification process. This was followed by [18.6%] who preferred "Face ID" ,[15.1%] who chose "Social media" login, and [12.2%] who preferred "Email" authentication.
+• [65.8%] of the respondents preferred "Phone Number" as their sign-up method, while [28.4%] preferred "Email.", [5.4%] preferred "Facebook , wahts app ."
+• Regarding the importance of linking the platform with charities, [48.2%] of the respondents rated Very Important ,and [8.7%] rated not important, The remaining votes are neutral.
+• [65%] of the respondents identified "Environmental Impact" as the most important factor for using the app, while [34.7%] chose "Saving Money" and [25.4%] chose "Free Items.", [32.8%] chose "Social connection ",[31.5%] chose "safety", and other chosees
+• [76.6%] of the respondents agreed (“Yes”) that they want  a donor rating system ,while [23.4%]  voted (“No”)
+• Among the respondents ,[57.6%] want contact info in profile information , [43.1%] chose they need donation count , [50.8%] chose rating ,and [32.5%] chose request history
+• Among the respondents, [72%] selected item photo as required information when posting an item, while [63.7%] considered description essential. Additionally, [48.6%] emphasized the importance of condition, [44.1%] highlighted location, and [43.7%] selected category, whereas [39.5%] indicated delivery time.
+• [80.2%] of the respondents agreed ("Yes") that they want an AI auto-classification system for the items to make posting easier, while [19.8%] voted (No)
+• Among the respondents, [53.4%] preferred using both methods for communication between the donor and the recipient, while [34.1%] preferred in-app chat, and [12.5%] favored showing the phone number.
+• [62.5%] of the respondents prefer Both languages, whereas [32.7%] prefer Arabic and [4.8%] prefer English.
+
+In conclusion, the most important thing most people need is a secure and organized platform to facilitate the exchange of goods, with clear features for communication, donor verification, and ease of posting items using modern tools like AI. The community is willing to support sustainability if the mechanism is convenient and safe. The full results of the questionnaire are shown in Appendix A of this document.
+Brainstorming  
+For the Green Share project, we approached requirements gathering as a process of discovery rather than just documentation. Since our goal is to shift community behavior towards sustainability, we needed to generate ideas that would genuinely motivate people to change their habits. We started by identifying the core problem: the gap between people who have unwanted usable items and the people in need who could benefit from them. We focused on two main objectives: first, how to educate users about the environmental value of second-hand goods, and second, how to drastically simplify the donation process so it becomes effortless for the donor. This brainstorming clarified our targeted requirements. 
+ 
+3.2 Functional Requirement:
+FR1 The system shall allow users to register using Phone Number, Email.
+FR2 The system shall allow users to upload images and descriptions of items. 
+FR3 The system shall use AI to automatically classify the item category from the image.
+FR4 The system shall allow users to search and filter items by category and location. 
+FR5 The system shall allow direct messaging (chat) between the donor and the recipient.
+FR6 The system shall allow users to rate donors and leave reviews. 
+FR7 The system shall maintain a history log of all donated and received items. 
+FR8 The system shall allow users to view the location of items on a map. 
+FR9 The system shall allow users to edit their profile information.   
+FR10 The system shall allow the user to choose their preferred language (Arabic/English).
+3.3 Non-Functional Requirement:
+NFR1 The system shall provide a user-friendly interface suitable for all age groups.
+NFR2 The system shall be easy to learn for first-time users without a tutorial. 
+NFR3 The system shall handle invalid inputs without crashing.
+NFR4 The system shall support both Arabic and English layouts correctly
+3.4 Scenarios & Use Cases:
+ This section shows the scenarios followed by their use cases for every functional requirement in the system. 
+
+3.4.1 Use Case Name: View Item Location on Map
+Scenario:User logs in and browses the list of available items.He selects the item, and the system displays the item details screen. User then taps the “View Location” button. The system displays a map centered on the item’s general location . User is now able to view the approximate location of the item.
+Table 6:view item location om map use case 
+Component
+Description
+Pre condition:
+
+1. The user is logged into the mobile application.
+2. The Donor has provided location data
+Actors:
+User (Donor/ Recipient/ Charities)
+Flow of events :
+1. User Browses the list of available items.
+2. User Selects a specific item.
+3. System Displays the item details screen
+4. User Taps the “View Location” button 
+(E1)
+5. System Displays a map centered on the item’s location
+Post conditions
+The User has successfully viewed the item’s approximate location on the map.
+
+Exception
+E1: Location Data Unavailable: If the Donor has not provided location data, the system disables the “View Location” button and displays a message stating that the location is unavailable.
+
+
+3.4.2 Use Case Name: Search and Filter Items
+Scenario:The User (Recipient) initiates the process by logging into the application. The User then navigates to the search interface. The User selects the desired filter criteria, specifying a Category (e.g., Furniture), a Location (e.g., West Amman), and a Condition (e.g., Excellent). The User then executes the search function. The System processes the request by querying the item database using the specified parameters. Upon successful retrieval, the System displays the resultant filtered list of items to the User, fulfilling the requirement for targeted item discovery.
+Table 7:search and filter items use case 
+Component
+Description
+Preconditions
+User is logged in. Available items exist in the system database
+Actors
+User (Donor/Recipient)
+Flow of Events
+1. User navigates to the search screen
+2. User selects filter criteria (Category, Location, Condition
+3. User initiates the search
+4. System queries the database using the specified criteria(E1)
+5. System displays the filtered list of items to the User.
+Post Conditions
+System displays a list of items matching the search and filter criteria.
+
+Exceptions
+E1: No Matching Items: System displays a message: "No items found matching your criteria."
+
+3.4.3 Use Case Name: Direct Messaging (Chat)
+Scenario:Following the initiation of an item request, the User (Donor or Recipient) accesses the dedicated chat interface for the transaction. The User composes a message and activates the "Send" function. The System performs a validation check on the message content. Upon successful validation, the System stores the message data in the transaction log and simultaneously transmits a real-time notification to the counterparty (the Recipient or Donor). The System then updates the chat history display, confirming the successful transmission of the message to the User.
+Table 8:direct messaging use case 
+Component
+Description
+Preconditions
+Both users are logged in. A transaction (item request) has been initiated between the two users
+Actors
+User (Donor/Recipient)
+Flow of Events
+1. User navigates to the chat screen 
+2. User types a message and presses "Send."
+3. System validates the message content.E1
+4. System stores the message and sends a real-time notification to the recipient.E2
+5. System displays the sent message in the chat history.
+Post Conditions
+The message is successfully sent, stored in the database, and displayed to the recipient 
+Exceptions
+E1: invalid message content. (The system displays an error message “invalid message “ )
+E2: Enabling notification  (The system displays an error message “Enabling notification”)
+
+3.4.4 Use Case Name: Edit Profile Information
+Scenario:User navigates to the “Settings” menu and selects “Edit Profile”. The system displays his current profile details. User enters his updated profile information. he then taps the “Save” button. The system updates the database, and displays the message: “Profile updated successfully.”
+Table 9:edit profile informatin use case
+                                   Component
+Description
+Pre condition: 
+
+1. The User is logged into the mobile application.
+
+Actors: 
+User (Donor/ Recipient/ Charities)
+Flow of events : 
+1.User Navigates to the profile or settings section 
+2.User Selects the Edit Profile option
+3.System Displays the current profile information in editable fields
+4. User Modifies one or more fields
+5. UserTaps the save button
+6. System Validates the entered data E1
+7.  System Updates the User’s profile in the database.
+8. System Displays a confirmation message (Profile updated successfully)
+Post conditions 
+The User’s profile information has been updated in the system.
+Exception 
+E1: Invalid Input: If the data validation fails the system displays an error message next to the invalid field and does not save the changes.
+
+3.4.5 Use Case Name: Select Preferred Language
+Scenario: user navigates to the “Settings” menu and selects the “Language” option. The system displays “English” and “Arabic” options. user selects “Arabic”. The system displays a confirmation prompt, reloads the application interface in Arabic, and saves “Arabic” as the preferred language
+Table 10:select preferred language use case 
+Component
+Description
+Pre condition: 
+
+1. User is logged into the mobile application.
+ 2. The application must support at least two languages (Arabic and English).
+Actors: 
+User (Donor/ Recipient/ Charities)
+Flow of events : 
+1.User Navigates to the “Settings” or “Language” section.
+2.System Displays the available language options (Arabic, English).
+3.User Selects their preferred language
+4.System Displays a confirmation message
+5.System Changes the entire user interface language to the selected language
+6.System Saves the language preference in the database.
+Post conditions 
+The user interface language has been changed to the User’s preferred language
+Exception 
+E1: Cancel Change: If the User decides not to change the language and leaves the settings screen, the current language remains unchanged.
+3.4.6 Use Case Name: Register User
+Scenario:When a new user launches the app and taps "Sign Up," the system asks them to identify their role to ensure the correct profile is created.
+For Charities: If the user represents an organization, they select the "Charity" option. The registration form specifically asks for the Company Name, Location, Company Email, and Company Phone Number. This helps the system verify the organization.
+For Individuals: If the user is a regular donor or recipient, they select "Individual." The form simplifies to ask only for personal contact details like a name and mobile number
+Table 11:register user use case 
+Component
+Description
+Preconditions
+User has not registered before.
+Actors
+User (Donor/charity/ Recipient)
+Flow of Events
+1.User chooses registration method (Phone Number or Email) and selects their role (Donor/Recipient/Charity).
+2.Display form according to the role
+3.User enters required details (Phone Number/Email, Password, Name).(E1)
+4.System validates the format of the email/phone.
+5.System checks if the user already exists in the database.(E2)
+6.System creates a new account and logs the user in.
+Post Conditions
+A new user account is created in the database
+User is logged into the system.
+ 
+Exceptions
+E1: Invalid Email/Phone format: System displays an error message asking for correct format.
+E2: User already exists: System displays a message that the account already exists and suggests logging in. 
+ 
+
+3.4.7 Use Case Name: Post Listing
+Scenario:The donor selects "Donate Item" to give something away. They upload a photo, and on The Charity, side selects "Request Item" to ask for specific supplies. They enter the item name (Winter Jackets) and the quantity needed. The system marks this post as a "Request", so the community knows it is a specific need.
+Table 12:post listing use case 
+Preconditions
+User logged into the application.
+Actors
+User (Donor/charity)
+Flow of Events
+1. User selects the option to "Create Post".
+2. System identifies the User Role.
+3. If Actor is Charity: User selects the post type: "Donate Item" OR "Request Item".(E1)
+4. System displays the appropriate form based on selection.
+5. User enters item details (Name, image Description).
+6. System validates that all mandatory fields are filled.(E2)
+System saves the item data and publishes it.
+Post Conditions
+A new listing is created in the database. The listing is tagged appropriately as either "Available" (Donation) or "Wanted" (Request).
+ 
+Exceptions
+E1: Unverified Charity: If a Charity account is not yet verified by Admin, System restricts them from posting "Requests" to prevent fraud.
+E2: Invalid info: System displays Error for data didn’t fill
+
+3.4.8 Use Case Name: Auto-Classifying Item Category
+Scenario:User wants to donate . User uploads a photo of it in the "Donate Item" form. The system's AI instantly analyzes the image and automatically selects "Furniture" as the category. User saves time by not having to search through lists , simply verifies the category is correct and hits "Publish".
+Table 13 : auto classifying item category use case
+Preconditions
+User has successfully uploaded an image of the item.
+Actors
+User (Donor/Recipient)
+Flow of Events
+1. System analyzes image visual features using AI algorithms .(E1)
+2. System matches the image features to the database of known categories.
+3. System automatically selects/fills the "Category" field.
+User reviews the category and confirms or edits it if necessary.
+Post Conditions
+The category field is automatically filled with the correct item type. 
+ 
+Exceptions
+E1: AI fails to recognize the object: System displays "Unknown Category" and prompts the user to select manually.
+ 
+
+3.4.9 Use Case Name: Rate Users and Leave Reviews
+Scenario:Upon the System marking a transaction as "Completed," the User (Donor or Recipient) is presented with a prompt to evaluate the completed exchange. The User selects a numerical rating (e.g., 5 stars) and may optionally input a textual review. The User then submits the rating. The System validates that the input adheres to the defined rating constraints (e.g., 1-5 scale). Following validation, the System stores the rating and review data and proceeds to recalculate and update the average rating displayed on the counterparty's profile, thereby ensuring the transparency and integrity of the user reputation system
+Table 14:rate users and leave reviews use case 
+                                   Component
+Description
+Pre condition: 
+
+A transaction between the two users has been marked as "Completed."
+
+Actors: 
+User (Donor/Recipient)
+Flow of events : 
+1.System display prompt to rate the completed transaction 
+2.User selects a star rating (1-5) and optionally enters a text review
+3.User submits the rating. 
+4.System validates the input (ensures a star rating is selected).
+5.System stores the rating/review and updates the recipient's profile rating.(E1)
+Post conditions 
+The rating and review are stored in the database. The recipient's average rating is updated.
+Exception 
+E1: Invalid Rating: System don't allow zero stars rating
+
+3.4.10 Use Case Name: Maintain Item History Log 
+Scenario:User  (Recipient) checks his history log after receiving a donated book. User  confirms the item transaction is complete for the book he received from donor . The system detects the transaction completion event and retrieves all transaction data. The system creates a new history log entry and stores it permanently on User  profile
+Table 15:maintain item history log use case
+                                   Component
+Description
+Pre condition: 
+
+User is logged in. An item’s lifecycle has completed (e.g., confirmed as donated/received).
+Actors: 
+User (Donor/Recipient/ Charity)
+
+Flow of events : 
+6. System Detects the transaction completion event E1
+7. System Retrieves all relevant transaction data (Item Name, Date, Other Party, Status)
+8. system Creates a new history log entry
+9. System Stores the history log entry permanently, linked to both the Donor’s and Recipient’s profiles
+10. User Navigates to the “History” section
+11. System Displays the complete, chronological list of donated and received items
+Post conditions 
+donation/receipt transaction is stored in the User’s history log. 
+Exception 
+E1: Transaction Not Confirmed: If the transaction is not confirmed by both parties, the item remains in an “Pending” state and no history log entry is created. 
+
+
+
+
+
+
+CHAPTER IIII:  BUSINESS MODEL CANVAS
+Key Partnerships
+• Charities & NGOs (e.g., JHCO)
+•Municipalities (Ministry of Social Development, GAM)
+•Tech Providers (Cloud, Maps)
+Key Activities
+•Platform Development and maintenance
+•AI Model Training
+•Community Management
+Value Propositions
+• For Donors: Easy waste disposal. Self-satisfaction of community service 
+•ForRecipients: Free essentials
+•AI Integration: Auto-categorization
+Customer Relationships
+•Trust & Safety (Rating system)
+•In-app Support
+•Automated Notifications
+Customer Segments
+•Individual Donors
+•Recipients (Families, Students)
+•Local Charities
+
+Key Resources
+•AI Algorithms
+• Mobile App Platform
+• User Database
+ Human resources
+
+Channels
+• Mobile App (iOS/Android)
+• Social Media
+•Location Services
+
+Cost Structure
+• Development Costs (AI & App, salaries
+• Server & Hosting Fees
+• Marketing & Awareness Campaigns
+Revenue Streams
+• Freemium Model (Premium listings)
+And advertisement
+• Partnership Fees (Charity Dashboard)
+• Sustainability Grants
+
+
+
+REFERENCES:
+1. Abu Zaid, S. (2021) ‘Charity Clothes Bank continues to serve underprivileged families amid pandemic’, The Jordan Times, 1 February. Available at: https://jordantimes.com/news/local/charity-clothes-bank-continues-serve-underprivileged-families-amid-pandemic (Accessed: October 2025).
+2. Al-Saqqar, F., Al-Rikabi, S. and Ibrahim, R. (2023) Deep Learning Approach to Recyclable Products Classification: Towards Sustainable Waste Management. Available at: https://www.mdpi.com/2071-1050/15/14/11138  (Accessed: 17 November 2025).
+3. Borandag, E. (2023) A Blockchain-Based Recycling Platform Using Image Processing, QR Codes, and IoT System. Sustainability. Available at: https://www.mdpi.com/2071-1050/15/7/6116 (Accessed: 14 November 2025).
+4. Fineswap (2025) Fineswap. Available at: https://fineswap.com/ (Accessed: October 2025).
+5. Freecycle Network (2025) The Freecycle Network. Available at: https://www.freecycle.org/home/dashboard (Accessed: October 2025).
+6. Geev (2025) Geev. Available at: https://www.geev.com/ (Accessed: October 2025).
+7. He, L., Sopjani, L. and Laurenti, R. (2021) ‘User participation dilemmas in the circular economy: An empirical study of Scandinavia’s largest peer-to-peer product sharing platform’, Sustainable Production and Consumption. Available at: https://www.sciencedirect.com/science/article/pii/S2352550921000658 (Accessed: 17 November 2025).
+8. Jacildo, K. N. and Soberano, K. T. (2024) RescuePlate: Streamlining Food Donation, Rescue, and Reuse through Web and Mobile Apps. Journal of Arts, Humanities and Social Sciences (GASJAHSS). Available at: https://gaspublishers.com/wp-content/uploads/2024/05/RescuePlate.pdf (Accessed: 16 November 2025).
+9. JHCO (2025) Charity Clothes Bank. Available at: https://jhco.org.jo/charity-clothes-bank (Accessed: October 2025).
+10. Jordan Ministry of Environment (2020) Waste Sector Green Growth Plan 2020–2030. Amman: Ministry of Environment. Available at: https://www.moenv.gov.jo/ebv4.0/root_storage/ar/eb_list_page/20022_jordan_waste_v02_rc_web.pdf (Accessed: October 2025).
+11. José Antonio, et al. (2025) ‘Acceptance of a Mobile Application for Circular Economy Learning Through Gamification: A Case Study of University Students in Peru’, Sustainability, 17(21), 9694. Available at: https://www.mdpi.com/2071-1050/17/21/9694 (Accessed: 16 November 2025).
+12. Moltene, L. and Orsato, R. J. (2021) ‘The sharing economy in practice: An exploratory study of the acceptance and use of digital platforms in food waste reduction’, RAE – Revista de Administração de Empresas. Available at: https://www.scielo.br/j/rae/a/7HLBxmmzqn57KxBhCDSgqQM/?lang=en (Accessed: 13 November 2025).
+13. Pienwisetkaew, T., Wongsaichia, S., Pinyosap, B., Prasertsil, S., Poonsakpaisarn, K. and Ketkaew, C. (2023) ‘The behavioral intention to adopt circular economy-based digital technology for agricultural waste valorization’, Foods. Available at: https://www.mdpi.com/2304-8158/12/12/2341 (Accessed: 16 November 2025).
+14. Sakeena (2023) Sakeena Orphans. Available at: https://sakeenaorphans.org/ (Accessed: October 2025).
+15. Sani, M. and Rejab, M. (2024) DonoSync: A Mobile App for Effective Donation. Applied Information Technology and Computer Science, 5(2). Available at: https://penerbit.uthm.edu.my/periodicals/index.php/aitcs/article/view/16379/5732 (Accessed: 17 November 2025).
+16. Sarojin, V., Serohina, S., Horbata, L., Gudz, P. and Maltseva, O. (2025) Digital Platforms for Social Services Administration in the Context of Sustainable Community Development. Available at: Microsoft Word - 6 59177 70738413 14738_JATIT_02.03.2025 (1)_red  (Accessed: 17 November 2025).
+17. Sarunporn and Jitiporn (2020) Platform Design to Promote the Sustainable Material-Sharing in Circular Economy in Bangkok, Thailand. Available at: https://www.researchgate.net (Accessed: 16 November 2025).
+18. Shengyu Zhang and Sahagun, J. (2023) A Mobile Application to Enable Donation of Devices within a Community with the Potential Social and Environmental Impacts. CS & IT Conference Proceedings, pp. 273–283. Available at: https://csitcp.org/abstract/13/1313csit21 (Accessed: 16 November 2025).
+19. Trash Nothing (2025) Trash Nothing. Available at: https://trashnothing.com/ (Accessed: October 2025).
+20. Wan, M., Qu, T., Huang, M., Li, L. and Huang, G. Q. (2020) ‘Cloud-based product-service systems platform for household solid waste classification management’, IET Collaborative Intelligent Manufacturing, 2(2), pp. 66–73. Available at:  https://www.researchgate.net/publication/341157677_Cloud-based_Product-Service_Systems_Platform_for_Household_Solid_Waste_Classification_Management  (Accessed: 16 November 2025)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Appendix A
+
+This appendix shows the results of the questionnaire conducted to collect the requirements. 
+
+
+Figure 11 : Questionnaire result  
+                   
+
+                  
+
+
+                    
+
+ 
+
+ 
+
+
+ 
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+6
+
+
+ii
+
+
+2
+
+

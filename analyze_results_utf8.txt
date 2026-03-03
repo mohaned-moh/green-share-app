@@ -1,0 +1,15 @@
+﻿Analyzing greenshare1...                                        
+
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\core\app_theme.dart:62:32 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\core\app_theme.dart:98:35 - deprecated_member_use
+   info - Don't invoke 'print' in production code - lib\screens\home\home_screen.dart:116:21 - avoid_print
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\home\item_details_screen.dart:82:55 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\home\item_details_screen.dart:83:47 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\home\item_details_screen.dart:198:35 - deprecated_member_use
+warning - Unnecessary cast - lib\services\database_service.dart:75:74 - unnecessary_cast
+   info - Don't invoke 'print' in production code - lib\services\database_service.dart:87:7 - avoid_print
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\widgets\item_card.dart:80:55 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\widgets\item_card.dart:81:47 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\widgets\item_card.dart:178:64 - deprecated_member_use
+  error - Expected to find ')' - lib\widgets\item_card.dart:193:6 - expected_token
+

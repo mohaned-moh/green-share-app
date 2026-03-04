@@ -3,6 +3,7 @@ import 'package:green_share/core/app_theme.dart';
 import 'package:green_share/services/database_service.dart';
 import 'package:green_share/models/chat_model.dart';
 import 'package:green_share/models/item_model.dart';
+import 'package:green_share/models/review_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class ChatScreen extends StatefulWidget {
@@ -69,6 +70,13 @@ class _ChatScreenState extends State<ChatScreen> {
                               _linkedItem!.ownerId == currentUserId &&
                               _linkedItem!.status == 'available';
 
+    final bool canReviewItem = _linkedItem != null &&
+                               currentUserId != null &&
+                               _linkedItem!.status == 'donated' &&
+                               !_linkedItem!.hasBeenRated &&
+                               _linkedItem!.ownerId == widget.otherUserId &&
+                               (_linkedItem!.receiverId == null || _linkedItem!.receiverId == currentUserId);
+
     return Scaffold(
       appBar: AppBar(title: Text(widget.otherUserName)),
       body: Column(
@@ -93,6 +101,30 @@ class _ChatScreenState extends State<ChatScreen> {
                       minimumSize: const Size(80, 36),
                     ),
                     child: const Text('Award'),
+                  ),
+                ],
+              ),
+            ),
+          if (canReviewItem)
+            Container(
+              color: Colors.amber.shade50,
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      'Rate & Review ${widget.otherUserName} for "${_linkedItem!.title}"',
+                      style: const TextStyle(fontWeight: FontWeight.w600, color: Colors.amber),
+                    ),
+                  ),
+                  ElevatedButton(
+                    onPressed: () => _showReviewDialog(context),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.amber,
+                      foregroundColor: Colors.white,
+                      minimumSize: const Size(80, 36),
+                    ),
+                    child: const Text('Review'),
                   ),
                 ],
               ),
@@ -228,7 +260,7 @@ class _ChatScreenState extends State<ChatScreen> {
               () async {
                 try {
                   // Update item status
-                  await _databaseService.updateItemStatus(_linkedItem!.id, 'donated');
+                  await _databaseService.updateItemStatus(_linkedItem!.id, 'donated', receiverId: widget.otherUserId);
                   // Increment stats for both users
                   await _databaseService.incrementAwardStats(
                     ownerId: _linkedItem!.ownerId, 
@@ -254,6 +286,100 @@ class _ChatScreenState extends State<ChatScreen> {
             child: const Text('Yes, confirm'),
           ),
         ],
+      ),
+    );
+  }
+
+  void _showReviewDialog(BuildContext context) {
+    double rating = 5.0;
+    final commentController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (context) => StatefulBuilder(
+        builder: (context, setState) => AlertDialog(
+          title: const Text('Rate & Review'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text('How was your experience?'),
+              const SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: List.generate(5, (index) {
+                  return IconButton(
+                    icon: Icon(
+                      index < rating ? Icons.star : Icons.star_border,
+                      color: Colors.amber,
+                      size: 32,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        rating = index + 1.0;
+                      });
+                    },
+                  );
+                }),
+              ),
+              const SizedBox(height: 16),
+              TextField(
+                controller: commentController,
+                decoration: InputDecoration(
+                  labelText: 'Comment (optional)',
+                  border: const OutlineInputBorder(),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.amber),
+                  ),
+                ),
+                maxLines: 3,
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                Navigator.pop(context); // Close dialog
+
+                try {
+                  final currentUser = await _databaseService.getUserProfile(currentUserId!);
+                  
+                  final review = ReviewModel(
+                    id: '', // Will be generated by addReview
+                    reviewerId: currentUserId!,
+                    reviewerName: currentUser?.name ?? 'Anonymous',
+                    donorId: _linkedItem!.ownerId,
+                    itemId: _linkedItem!.id,
+                    rating: rating,
+                    comment: commentController.text.trim(),
+                    timestamp: DateTime.now(),
+                  );
+                  
+                  await _databaseService.addReview(review);
+                  
+                  if (mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Review submitted successfully!')),
+                    );
+                    _loadLinkedItem();
+                  }
+                } catch (e) {
+                  print('Error submitting review: $e');
+                  if (mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Failed to submit review.')),
+                    );
+                  }
+                }
+              },
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.amber),
+              child: const Text('Submit'),
+            ),
+          ],
+        ),
       ),
     );
   }

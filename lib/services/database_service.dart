@@ -44,8 +44,12 @@ class DatabaseService {
     return null;
   }
 
-  Future<void> updateItemStatus(String itemId, String status) async {
-    await _firestore.collection('items').doc(itemId).update({'status': status});
+  Future<void> updateItemStatus(String itemId, String status, {String? receiverId}) async {
+    final data = <String, dynamic>{'status': status};
+    if (receiverId != null) {
+      data['receiverId'] = receiverId;
+    }
+    await _firestore.collection('items').doc(itemId).update(data);
   }
 
   Future<void> incrementAwardStats({required String ownerId, String? recipientId, required String itemType}) async {
@@ -123,11 +127,11 @@ class DatabaseService {
               .map((doc) => ItemModel.fromJson(doc.data() as Map<String, dynamic>, doc.id))
               .toList());
     } else {
-      // Items the user received. This requires the item document to store `recipientId` 
+      // Items the user received. This requires the item document to store `receiverId` 
       // or similar when awarded.
       return _firestore
           .collection('items')
-          .where('recipientId', isEqualTo: userId)
+          .where('receiverId', isEqualTo: userId)
           .snapshots()
           .map((snapshot) => snapshot.docs
               .map((doc) => ItemModel.fromJson(doc.data() as Map<String, dynamic>, doc.id))

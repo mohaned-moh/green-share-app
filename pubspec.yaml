@@ -42,7 +42,7 @@ dependencies:
   intl: ^0.20.2
   flutter_map: ^8.2.2
   url_launcher: ^6.3.2
-  google_fonts: ^6.2.1
+  google_fonts: ^8.0.2
   cached_network_image: ^3.4.1
   flutter_localizations:
     sdk: flutter
@@ -51,6 +51,7 @@ dependencies:
   geolocator: ^14.0.2
   latlong2: ^0.9.1
   flutter_rating_bar: ^4.0.1
+  shared_preferences: ^2.5.4
 
 dev_dependencies:
   flutter_test:
@@ -62,13 +63,15 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^5.0.0
+  flutter_gen_runner: ^5.13.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
 # The following section is specific to Flutter packages.
 flutter:
-
+  generate: true
+  
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.

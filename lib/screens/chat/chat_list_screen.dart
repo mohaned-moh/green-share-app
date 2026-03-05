@@ -5,6 +5,7 @@ import 'package:green_share/services/database_service.dart';
 import 'package:green_share/models/chat_model.dart';
 import 'package:green_share/models/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:green_share/main.dart';
 
 class ChatListScreen extends StatefulWidget {
   const ChatListScreen({super.key});
@@ -21,13 +22,13 @@ class _ChatListScreenState extends State<ChatListScreen> {
   Widget build(BuildContext context) {
     if (currentUserId == null) {
       return Scaffold(
-        appBar: AppBar(title: const Text('Messages')),
-        body: const Center(child: Text('Please log in to view messages.')),
+        appBar: AppBar(title: Text(context.l10n.messages)),
+        body: Center(child: Text(context.l10n.pleaseLoginToViewMessages)),
       );
     }
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Messages')),
+      appBar: AppBar(title: Text(context.l10n.messages)),
       body: StreamBuilder<List<ChatRoomModel>>(
         stream: _databaseService.getUserChatRooms(currentUserId!),
         builder: (context, snapshot) {
@@ -41,13 +42,13 @@ class _ChatListScreenState extends State<ChatListScreen> {
                 children: [
                   Icon(Icons.chat_bubble_outline, size: 64, color: Colors.grey.shade400),
                   const SizedBox(height: 16),
-                  const Text(
-                    'No messages yet',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black87),
+                  Text(
+                    context.l10n.noMessagesYet,
+                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black87),
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'Connect with others to start chatting.',
+                    context.l10n.connectWithOthers,
                     style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
                   ),
                 ],
@@ -86,7 +87,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
                     ),
                     title: Text(otherUser.name, style: const TextStyle(fontWeight: FontWeight.bold)),
                     subtitle: Text(
-                      chat.lastMessage ?? 'No messages yet',
+                      chat.lastMessage ?? context.l10n.noMessagesYet,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),

@@ -11,6 +11,9 @@ import 'package:green_share/screens/profile/transaction_history_screen.dart';
 import 'package:green_share/models/review_model.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:intl/intl.dart';
+import 'package:green_share/main.dart'; // import the context extension
+import 'package:provider/provider.dart';
+import 'package:green_share/providers/locale_provider.dart';
 
 class ProfileScreen extends StatefulWidget {
   final String? userId; // Optional: if provided, we view this user's profile instead of our own
@@ -42,12 +45,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     if (currentUserId == null) {
       return Scaffold(
-        appBar: AppBar(title: const Text('Profile')),
+        appBar: AppBar(title: Text(context.l10n.profile)),
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text('Please log in to view your profile.'),
+              Text(context.l10n.pleaseLogInToViewProfile),
               const SizedBox(height: 16),
               ElevatedButton(
                 onPressed: () {
@@ -57,7 +60,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     (route) => false,
                   );
                 },
-                child: const Text('Log In'),
+                child: Text(context.l10n.logIn),
               )
             ],
           ),
@@ -67,7 +70,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(isOwnProfile ? 'Profile' : 'Donor Profile'),
+        title: Text(isOwnProfile ? context.l10n.profile : context.l10n.donorProfile),
         actions: isOwnProfile
             ? [
                 IconButton(
@@ -124,9 +127,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   style: const TextStyle(color: Colors.grey, fontSize: 16),
                 ),
                 const SizedBox(height: 8),
-                const Text(
-                  'Community Member',
-                  style: TextStyle(color: AppTheme.primaryColor, fontWeight: FontWeight.w600),
+                Text(
+                  context.l10n.communityMember,
+                  style: const TextStyle(color: AppTheme.primaryColor, fontWeight: FontWeight.w600),
                 ),
                 const SizedBox(height: 16),
                 Row(
@@ -134,13 +137,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   children: [
                     const Icon(Icons.volunteer_activism, color: AppTheme.primaryColor, size: 24),
                     const SizedBox(width: 8),
-                    Text('${user.givenItemsCount} Given', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                    Text('${user.givenItemsCount} ${context.l10n.given}', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                     const SizedBox(width: 24),
                     Container(width: 1, height: 24, color: Colors.grey),
                     const SizedBox(width: 24),
                     const Icon(Icons.inventory_2, color: Colors.deepOrange, size: 24),
                     const SizedBox(width: 8),
-                    Text('${user.receivedItemsCount} Received', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                    Text('${user.receivedItemsCount} ${context.l10n.received}', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                   ],
                 ),
                 const SizedBox(height: 16),
@@ -176,13 +179,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        isOwnProfile ? 'Your Listings' : 'Reviews',
+                        isOwnProfile ? context.l10n.yourListings : context.l10n.reviews,
                         style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                       ),
                       if (isOwnProfile)
                         TextButton(
                           onPressed: () {},
-                          child: const Text('View All'),
+                          child: Text(context.l10n.viewAll),
                         ),
                     ],
                   ),
@@ -204,7 +207,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               children: [
                                 Icon(Icons.inventory_2_outlined, size: 40, color: Colors.grey.shade400),
                                 const SizedBox(height: 8),
-                                const Text('No items posted yet', style: TextStyle(color: Colors.grey)),
+                                Text(context.l10n.noItemsPostedYet, style: const TextStyle(color: Colors.grey)),
                               ],
                             ),
                           );
@@ -237,9 +240,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       final reviews = reviewSnapshot.data ?? [];
                       
                       if (reviews.isEmpty) {
-                        return const Padding(
-                          padding: EdgeInsets.all(32.0),
-                          child: Text('No reviews yet.', style: TextStyle(color: Colors.grey)),
+                        return Padding(
+                          padding: const EdgeInsets.all(32.0),
+                          child: Text(context.l10n.noReviewsYet, style: const TextStyle(color: Colors.grey)),
                         );
                       }
 
@@ -307,7 +310,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   const Divider(),
                   ListTile(
                     leading: const Icon(Icons.history),
-                    title: const Text('Transaction History'),
+                    title: Text(context.l10n.transactionHistory),
                     trailing: const Icon(Icons.chevron_right),
                     onTap: () {
                       Navigator.push(
@@ -320,13 +323,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                   ListTile(
                     leading: const Icon(Icons.language),
-                    title: const Text('Language (EN/AR)'),
+                    title: Text(context.l10n.languageSetting),
                     trailing: const Icon(Icons.chevron_right),
-                    onTap: () {},
+                    onTap: () {
+                       final provider = Provider.of<LocaleProvider>(context, listen: false);
+                       if (provider.locale.languageCode == 'en') {
+                         provider.setLocale(const Locale('ar'));
+                       } else {
+                         provider.setLocale(const Locale('en'));
+                       }
+                    },
                   ),
                   ListTile(
                     leading: const Icon(Icons.logout, color: Colors.red),
-                    title: const Text('Logout', style: TextStyle(color: Colors.red)),
+                    title: Text(context.l10n.logout, style: const TextStyle(color: Colors.red)),
                     onTap: () async {
                       await FirebaseAuth.instance.signOut();
                       if (!context.mounted) return;

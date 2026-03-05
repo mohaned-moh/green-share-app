@@ -8,6 +8,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:green_share/screens/post/location_picker_screen.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:green_share/main.dart'; // import context extension
 import 'package:flutter/foundation.dart' show kIsWeb;
 
 class PostItemScreen extends StatefulWidget {
@@ -52,7 +53,7 @@ class _PostItemScreenState extends State<PostItemScreen> {
     if (!serviceEnabled) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Location services are disabled. Please enable GPS in your device to auto-detect your location.')),
+          SnackBar(content: Text(context.l10n.locationDisabled)),
         );
         setState(() => _isLoadingLocation = false);
       }
@@ -68,7 +69,7 @@ class _PostItemScreenState extends State<PostItemScreen> {
       if (permission == LocationPermission.denied) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Location permission denied. Please allow location access to auto-detect your location.')),
+            SnackBar(content: Text(context.l10n.locationDenied)),
           );
           setState(() => _isLoadingLocation = false);
         }
@@ -79,7 +80,7 @@ class _PostItemScreenState extends State<PostItemScreen> {
     if (permission == LocationPermission.deniedForever) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Location permissions are permanently denied. Please enable them in your device settings.')),
+          SnackBar(content: Text(context.l10n.locationPermDenied)),
         );
         setState(() => _isLoadingLocation = false);
       }
@@ -100,7 +101,7 @@ class _PostItemScreenState extends State<PostItemScreen> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Failed to auto-detect location. You can still pick it manually.')),
+          SnackBar(content: Text(context.l10n.locationFailed)),
         );
         setState(() => _isLoadingLocation = false);
       }
@@ -129,7 +130,7 @@ class _PostItemScreenState extends State<PostItemScreen> {
   Future<void> _submitPost() async {
     if (_titleController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enter a title')),
+        SnackBar(content: Text(context.l10n.pleaseEnterTitle)),
       );
       return;
     }
@@ -170,7 +171,7 @@ class _PostItemScreenState extends State<PostItemScreen> {
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Item posted successfully!')),
+          SnackBar(content: Text(context.l10n.itemPostedSuccess)),
         );
         
         // Clear form
@@ -186,7 +187,7 @@ class _PostItemScreenState extends State<PostItemScreen> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error posting item: $e')),
+          SnackBar(content: Text(context.l10n.errorPostingItem(e.toString()))),
         );
         setState(() {
           _isUploading = false;
@@ -202,7 +203,7 @@ class _PostItemScreenState extends State<PostItemScreen> {
     if (currentUserId == null) {
       return Scaffold(
         appBar: AppBar(
-          title: const Text('Post Item'),
+          title: Text(context.l10n.postItem),
           automaticallyImplyLeading: false,
         ),
         body: Center(
@@ -211,13 +212,13 @@ class _PostItemScreenState extends State<PostItemScreen> {
             children: [
               Icon(Icons.add_circle_outline, size: 60, color: Colors.grey.shade400),
               const SizedBox(height: 16),
-              const Text(
-                'Ready to share?',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black87),
+              Text(
+                context.l10n.readyToShare,
+                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black87),
               ),
               const SizedBox(height: 8),
               Text(
-                'Please log in or create an account to post items.',
+                context.l10n.pleaseLoginToPost,
                 style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
               ),
             ],
@@ -228,7 +229,7 @@ class _PostItemScreenState extends State<PostItemScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Post Item'),
+        title: Text(context.l10n.postItem),
         automaticallyImplyLeading: false, // Don't show back button inside tab bar
       ),
       body: SingleChildScrollView(
@@ -240,7 +241,7 @@ class _PostItemScreenState extends State<PostItemScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 ChoiceChip(
-                  label: const Text('Donate'),
+                  label: Text(context.l10n.donate),
                   selected: _type == 'Donate',
                   onSelected: (val) {
                     if (val) setState(() => _type = 'Donate');
@@ -248,7 +249,7 @@ class _PostItemScreenState extends State<PostItemScreen> {
                 ),
                 const SizedBox(width: 16),
                 ChoiceChip(
-                  label: const Text('Request'),
+                  label: Text(context.l10n.request),
                   selected: _type == 'Request',
                   onSelected: (val) {
                     if (val) setState(() => _type = 'Request');
@@ -271,47 +272,47 @@ class _PostItemScreenState extends State<PostItemScreen> {
                         borderRadius: BorderRadius.circular(16),
                         child: Image.file(File(_imageFile!.path), fit: BoxFit.cover),
                       )
-                    : const Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.add_a_photo, size: 50, color: Colors.grey),
-                          SizedBox(height: 8),
-                          Text('Tap to add photo', style: TextStyle(color: Colors.grey)),
-                        ],
-                      ),
+                      : Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Icon(Icons.add_a_photo, size: 50, color: Colors.grey),
+                            const SizedBox(height: 8),
+                            Text(context.l10n.tapToAddPhoto, style: const TextStyle(color: Colors.grey)),
+                          ],
+                        ),
               ),
             ),
             const SizedBox(height: 16),
             if (_isProcessingImage)
-              const Row(
+              Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2)),
-                  SizedBox(width: 8),
-                  Text('AI interpreting image...'),
+                  const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2)),
+                  const SizedBox(width: 8),
+                  Text(context.l10n.aiInterpreting),
                 ],
               ),
             const SizedBox(height: 16),
             TextField(
               controller: _titleController,
-              decoration: const InputDecoration(labelText: 'Title'),
+              decoration: InputDecoration(labelText: context.l10n.title),
             ),
             const SizedBox(height: 16),
             TextField(
               controller: _categoryController,
-              decoration: const InputDecoration(labelText: 'Category (Auto-filled by AI)'),
+              decoration: InputDecoration(labelText: context.l10n.categoryAutoFilled),
             ),
             const SizedBox(height: 16),
             TextField(
               controller: _descriptionController,
-              decoration: const InputDecoration(labelText: 'Description'),
+              decoration: InputDecoration(labelText: context.l10n.description),
               maxLines: 4,
             ),
             const SizedBox(height: 16),
             if (_type == 'Donate')
               DropdownButtonFormField<String>(
                 initialValue: _condition,
-                decoration: const InputDecoration(labelText: 'Condition'),
+                decoration: InputDecoration(labelText: context.l10n.condition),
                 items: _conditions.map((c) {
                   return DropdownMenuItem(value: c, child: Text(c));
                 }).toList(),
@@ -324,10 +325,10 @@ class _PostItemScreenState extends State<PostItemScreen> {
               contentPadding: EdgeInsets.zero,
               leading: const Icon(Icons.location_on, color: Colors.green),
               title: Text(_selectedLocation == null 
-                  ? (_isLoadingLocation ? 'Locating...' : 'Select Location') 
-                  : 'Location Selected'),
+                  ? (_isLoadingLocation ? context.l10n.locating : context.l10n.selectLocation) 
+                  : context.l10n.locationSelected),
               subtitle: Text(_selectedLocation == null 
-                  ? (_isLoadingLocation ? 'Getting current location...' : 'Tap to choose on map') 
+                  ? (_isLoadingLocation ? context.l10n.gettingCurrentLocation : context.l10n.tapToChooseOnMap) 
                   : '${_selectedLocation!.latitude.toStringAsFixed(4)}, ${_selectedLocation!.longitude.toStringAsFixed(4)}'),
               trailing: _isLoadingLocation 
                   ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))
@@ -348,7 +349,7 @@ class _PostItemScreenState extends State<PostItemScreen> {
                 ? const Center(child: CircularProgressIndicator())
                 : ElevatedButton(
                     onPressed: _submitPost,
-                    child: const Text('Post'),
+                    child: Text(context.l10n.postButton),
                   ),
           ],
         ),

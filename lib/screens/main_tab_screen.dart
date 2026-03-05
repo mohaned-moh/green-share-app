@@ -6,6 +6,7 @@ import 'package:green_share/screens/profile/profile_screen.dart';
 import 'package:green_share/services/database_service.dart';
 import 'package:green_share/models/chat_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:green_share/main.dart';
 
 class MainTabScreen extends StatefulWidget {
   const MainTabScreen({super.key});
@@ -67,10 +68,10 @@ class _MainTabScreenState extends State<MainTabScreen> {
                   extended: true,
                   minExtendedWidth: 200,
                   destinations: [
-                    const NavigationRailDestination(icon: Icon(Icons.home_outlined), selectedIcon: Icon(Icons.home), label: Text('Home')),
-                    const NavigationRailDestination(icon: Icon(Icons.add_circle_outline), selectedIcon: Icon(Icons.add_circle), label: Text('Post')),
-                    NavigationRailDestination(icon: _buildChatIcon(false), selectedIcon: _buildChatIcon(true), label: const Text('Chat')),
-                    const NavigationRailDestination(icon: Icon(Icons.person_outline), selectedIcon: Icon(Icons.person), label: Text('Profile')),
+                    NavigationRailDestination(icon: const Icon(Icons.home_outlined), selectedIcon: const Icon(Icons.home), label: Text(context.l10n.home)),
+                    NavigationRailDestination(icon: const Icon(Icons.add_circle_outline), selectedIcon: const Icon(Icons.add_circle), label: Text(context.l10n.post)),
+                    NavigationRailDestination(icon: _buildChatIcon(false), selectedIcon: _buildChatIcon(true), label: Text(context.l10n.chat)),
+                    NavigationRailDestination(icon: const Icon(Icons.person_outline), selectedIcon: const Icon(Icons.person), label: Text(context.l10n.profile)),
                   ],
                 ),
                 const VerticalDivider(thickness: 1, width: 1),
@@ -88,10 +89,10 @@ class _MainTabScreenState extends State<MainTabScreen> {
               setState(() => _currentIndex = index);
             },
             destinations: [
-              const NavigationDestination(icon: Icon(Icons.home_outlined), selectedIcon: Icon(Icons.home), label: 'Home'),
-              const NavigationDestination(icon: Icon(Icons.add_circle_outline), selectedIcon: Icon(Icons.add_circle), label: 'Post'),
-              NavigationDestination(icon: _buildChatIcon(false), selectedIcon: _buildChatIcon(true), label: 'Chat'),
-              const NavigationDestination(icon: Icon(Icons.person_outline), selectedIcon: Icon(Icons.person), label: 'Profile'),
+              NavigationDestination(icon: const Icon(Icons.home_outlined), selectedIcon: const Icon(Icons.home), label: context.l10n.home),
+              NavigationDestination(icon: const Icon(Icons.add_circle_outline), selectedIcon: const Icon(Icons.add_circle), label: context.l10n.post),
+              NavigationDestination(icon: _buildChatIcon(false), selectedIcon: _buildChatIcon(true), label: context.l10n.chat),
+              NavigationDestination(icon: const Icon(Icons.person_outline), selectedIcon: const Icon(Icons.person), label: context.l10n.profile),
             ],
           ),
         );

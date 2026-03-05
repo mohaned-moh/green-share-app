@@ -1,0 +1,153 @@
+{
+  "@@locale": "ar",
+  "appTitle": "جرين شير",
+  "profile": "الملف الشخصي",
+  "donorProfile": "ملف المتبرع",
+  "pleaseLogInToViewProfile": "يرجى تسجيل الدخول لعرض ملفك الشخصي.",
+  "logIn": "تسجيل الدخول",
+  "logout": "تسجيل الخروج",
+  "languageSetting": "اللغة (EN/AR)",
+  "transactionHistory": "سجل المعاملات",
+  "yourListings": "قوائمك",
+  "reviews": "التقييمات",
+  "viewAll": "عرض الكل",
+  "noItemsPostedYet": "لا توجد عناصر منشورة بعد",
+  "noReviewsYet": "لا توجد تقييمات بعد.",
+  "communityMember": "عضو في المجتمع",
+  "given": "معطى",
+  "received": "مستلم",
+  "home": "الرئيسية",
+  "post": "نشر",
+  "chat": "المحادثة",
+  "discover": "اكتشف",
+  "list": "قائمة",
+  "map": "خريطة",
+  "searchItems": "ابحث عن العناصر...",
+  "noItemsFound": "لا توجد عناصر",
+  "beTheFirst": "كن أول من ينشر تبرعاً أو طلباً!",
+  "locationDisabled": "تم تعطيل خدمات الموقع.",
+  "locationDenied": "تم رفض إذن الموقع.",
+  "locationPermDenied": "تم رفض أذونات الموقع نهائياً.",
+  "locationFailed": "فشل في الحصول على الموقع الحالي.",
+  "messages": "الرسائل",
+  "pleaseLoginToViewMessages": "يرجى تسجيل الدخول لعرض الرسائل.",
+  "noMessagesYet": "لا توجد رسائل بعد",
+  "connectWithOthers": "تواصل مع الآخرين لبدء المحادثة.",
+  "giveItemTo": "منح '{itemTitle}' إلى {otherUserName}؟",
+  "@giveItemTo": {
+    "placeholders": {
+      "itemTitle": {
+        "type": "String"
+      },
+      "otherUserName": {
+        "type": "String"
+      }
+    }
+  },
+  "award": "منح",
+  "rateAndReviewTitle": "تقييم ومراجعة {otherUserName} لـ '{itemTitle}'",
+  "@rateAndReviewTitle": {
+    "placeholders": {
+      "otherUserName": {
+        "type": "String"
+      },
+      "itemTitle": {
+        "type": "String"
+      }
+    }
+  },
+  "review": "مراجعة",
+  "pleaseLoginToSendMessages": "يرجى تسجيل الدخول لإرسال رسائل.",
+  "startTheConversation": "ابدأ المحادثة!",
+  "sayHiTo": "قل مرحباً لـ {otherUserName}",
+  "@sayHiTo": {
+    "placeholders": {
+      "otherUserName": {
+        "type": "String"
+      }
+    }
+  },
+  "typeMessage": "اكتب رسالة...",
+  "donateItemQ": "التبرع بالعنصر؟",
+  "markRequestCompletedQ": "وضع علامة مكتمل على الطلب؟",
+  "confirmDonate": "هل أنت متأكد أنك تريد التبرع بهذا العنصر إلى {otherUserName}؟ سيؤدي هذا إلى إزالته من الصفحة الرئيسية.",
+  "@confirmDonate": {
+    "placeholders": {
+      "otherUserName": {
+        "type": "String"
+      }
+    }
+  },
+  "confirmComplete": "هل أنت متأكد أنك تريد إكمال هذا الطلب مع {otherUserName}؟",
+  "@confirmComplete": {
+    "placeholders": {
+      "otherUserName": {
+        "type": "String"
+      }
+    }
+  },
+  "cancel": "إلغاء",
+  "itemAwarded": "تم منح العنصر تلقائياً!",
+  "yesConfirm": "نعم، تأكيد",
+  "rateAndReview": "التقييم والمراجعة",
+  "howWasExperience": "كيف كانت تجربتك؟",
+  "commentOptional": "تعليق (اختياري)",
+  "submit": "إرسال",
+  "reviewSubmitted": "تم إرسال التقييم بنجاح!",
+  "reviewFailed": "فشل في إرسال التقييم.",
+  "automatedDonateMsg": "مرحباً! لقد قمت بوضع علامة رسمية على هذا العنصر على أنه متبرع به لك. استمتع!",
+  "automatedCompleteMsg": "مرحباً! لقد قمت بوضع علامة رسمية على هذا الطلب على أنه مكتمل معك. شكراً لك!",
+  "postItem": "نشر عنصر",
+  "readyToShare": "جاهز للمشاركة؟",
+  "pleaseLoginToPost": "يرجى تسجيل الدخول أو إنشاء حساب لنشر العناصر.",
+  "donate": "تبرع",
+  "request": "طلب",
+  "tapToAddPhoto": "انقر لإضافة صورة",
+  "aiInterpreting": "الذكاء الاصطناعي يحلل الصورة...",
+  "title": "العنوان",
+  "categoryAutoFilled": "الفئة (تعبئة تلقائية بالذكاء الاصطناعي)",
+  "description": "الوصف",
+  "condition": "الحالة",
+  "locating": "جاري تحديد الموقع...",
+  "selectLocation": "اختر الموقع",
+  "locationSelected": "تم تحديد الموقع",
+  "gettingCurrentLocation": "الحصول على الموقع الحالي...",
+  "tapToChooseOnMap": "انقر للاختيار على الخريطة",
+  "postButton": "نشر",
+  "pleaseEnterTitle": "يرجى إدخال عنوان",
+  "itemPostedSuccess": "تم نشر العنصر بنجاح!",
+  "errorPostingItem": "خطأ في نشر العنصر: {error}",
+  "@errorPostingItem": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "pleaseEnterEmailPass": "يرجى إدخال البريد الإلكتروني وكلمة المرور",
+  "errorDuringLogin": "حدث خطأ أثناء تسجيل الدخول.",
+  "unexpectedError": "حدث خطأ غير متوقع: {error}",
+  "@unexpectedError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "welcomeBack": "مرحباً بعودتك",
+  "signInToAccount": "قم بتسجيل الدخول إلى حساب Green Share الخاص بك",
+  "email": "البريد الإلكتروني",
+  "password": "كلمة المرور",
+  "signIn": "تسجيل الدخول",
+  "dontHaveAccount": "ليس لديك حساب؟",
+  "signUp": "إنشاء حساب",
+  "pleaseFillAllFields": "الرجاء تعبئة جميع الحقول",
+  "signupFailed": "فشل التسجيل",
+  "createAnAccount": "إنشاء حساب",
+  "joinCommunityToday": "انضم إلى مجتمعنا اليوم",
+  "fullName": "الاسم الكامل",
+  "role": "الدور",
+  "donor": "متبرع",
+  "recipient": "مستلم",
+  "charity": "جمعية خيرية"
+}

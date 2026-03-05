@@ -6,6 +6,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:green_share/screens/home/item_details_screen.dart';
+import 'package:green_share/main.dart'; // import context extension
 
 import 'package:flutter/foundation.dart' show kIsWeb;
 
@@ -38,7 +39,7 @@ class _HomeScreenState extends State<HomeScreen> {
     if (!serviceEnabled) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Location services are disabled. Please enable GPS in your device to view nearby items.')),
+          SnackBar(content: Text(context.l10n.locationDisabled)),
         );
         setState(() => _isLoadingLocation = false);
       }
@@ -54,7 +55,7 @@ class _HomeScreenState extends State<HomeScreen> {
       if (permission == LocationPermission.denied) {
         if (mounted) {
            ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Location permission denied. Please allow location access to view nearby items.')),
+            SnackBar(content: Text(context.l10n.locationDenied)),
           );
           setState(() => _isLoadingLocation = false);
         }
@@ -65,7 +66,7 @@ class _HomeScreenState extends State<HomeScreen> {
     if (permission == LocationPermission.deniedForever) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Location permissions are permanently denied. Please enable them in your device settings to view nearby items.')),
+          SnackBar(content: Text(context.l10n.locationPermDenied)),
         );
         setState(() => _isLoadingLocation = false);
       }
@@ -88,7 +89,7 @@ class _HomeScreenState extends State<HomeScreen> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Failed to get current location. Please try manually moving the map.')),
+          SnackBar(content: Text(context.l10n.locationFailed)),
         );
         setState(() => _isLoadingLocation = false);
       }
@@ -101,11 +102,11 @@ class _HomeScreenState extends State<HomeScreen> {
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Discover'),
-          bottom: const TabBar(
+          title: Text(context.l10n.discover),
+          bottom: TabBar(
             tabs: [
-              Tab(icon: Icon(Icons.list), text: 'List'),
-              Tab(icon: Icon(Icons.map), text: 'Map'),
+              Tab(icon: const Icon(Icons.list), text: context.l10n.list),
+              Tab(icon: const Icon(Icons.map), text: context.l10n.map),
             ],
           ),
           actions: [
@@ -128,10 +129,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     _searchQuery = value;
                   });
                 },
-                decoration: const InputDecoration(
-                  hintText: 'Search items...',
-                  prefixIcon: Icon(Icons.search),
-                  contentPadding: EdgeInsets.symmetric(vertical: 0),
+                decoration: InputDecoration(
+                  hintText: context.l10n.searchItems,
+                  prefixIcon: const Icon(Icons.search),
+                  contentPadding: const EdgeInsets.symmetric(vertical: 0),
                 ),
               ),
             ),
@@ -161,13 +162,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                 children: [
                                   Icon(Icons.eco_outlined, size: 60, color: Colors.grey.shade400),
                                   const SizedBox(height: 16),
-                                  const Text(
-                                    'No items found',
-                                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black87),
+                                  Text(
+                                    context.l10n.noItemsFound,
+                                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black87),
                                   ),
                                   const SizedBox(height: 8),
                                   Text(
-                                    'Be the first to post a donation or request!',
+                                    context.l10n.beTheFirst,
                                     style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
                                   ),
                                 ],

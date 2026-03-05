@@ -3,6 +3,7 @@ import 'package:green_share/core/app_theme.dart';
 import 'package:green_share/screens/auth/signup_screen.dart';
 import 'package:green_share/screens/main_tab_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:green_share/main.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -22,7 +23,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
     if (email.isEmpty || password.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enter both email and password')),
+        SnackBar(content: Text(context.l10n.pleaseEnterEmailPass)),
       );
       return;
     }
@@ -44,13 +45,13 @@ class _LoginScreenState extends State<LoginScreen> {
     } on FirebaseAuthException catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(e.message ?? 'An error occurred during login.')),
+          SnackBar(content: Text(e.message ?? context.l10n.errorDuringLogin)),
         );
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('An unexpected error occurred: $e')),
+          SnackBar(content: Text(context.l10n.unexpectedError(e.toString()))),
         );
       }
     } finally {
@@ -81,32 +82,32 @@ class _LoginScreenState extends State<LoginScreen> {
                   children: [
                     const Icon(Icons.eco, size: 64, color: AppTheme.primaryColor),
                     const SizedBox(height: 24),
-                    const Text(
-                      'Welcome Back',
-                      style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+                    Text(
+                      context.l10n.welcomeBack,
+                      style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 8),
-                    const Text(
-                      'Sign in to your Green Share account',
-                      style: TextStyle(fontSize: 14, color: AppTheme.textSecondaryColor),
+                    Text(
+                      context.l10n.signInToAccount,
+                      style: const TextStyle(fontSize: 14, color: AppTheme.textSecondaryColor),
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 40),
                     TextField(
                       controller: _emailController,
-                      decoration: const InputDecoration(
-                        labelText: 'Email',
-                        prefixIcon: Icon(Icons.email_outlined),
+                      decoration: InputDecoration(
+                        labelText: context.l10n.email,
+                        prefixIcon: const Icon(Icons.email_outlined),
                       ),
                       keyboardType: TextInputType.emailAddress,
                     ),
                     const SizedBox(height: 16),
                     TextField(
                       controller: _passwordController,
-                      decoration: const InputDecoration(
-                        labelText: 'Password',
-                        prefixIcon: Icon(Icons.lock_outline),
+                      decoration: InputDecoration(
+                        labelText: context.l10n.password,
+                        prefixIcon: const Icon(Icons.lock_outline),
                       ),
                       obscureText: true,
                     ),
@@ -118,15 +119,15 @@ class _LoginScreenState extends State<LoginScreen> {
                           style: ElevatedButton.styleFrom(
                             padding: const EdgeInsets.symmetric(vertical: 20),
                           ),
-                          child: const Text('Sign In'),
+                          child: Text(context.l10n.signIn),
                         ),
                     const SizedBox(height: 24),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Text(
-                          'Don\'t have an account?',
-                          style: TextStyle(color: AppTheme.textSecondaryColor),
+                        Text(
+                          context.l10n.dontHaveAccount,
+                          style: const TextStyle(color: AppTheme.textSecondaryColor),
                         ),
                         TextButton(
                           onPressed: () {
@@ -135,7 +136,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               MaterialPageRoute(builder: (_) => const SignupScreen()),
                             );
                           },
-                          child: const Text('Sign up'),
+                          child: Text(context.l10n.signUp),
                         ),
                       ],
                     ),

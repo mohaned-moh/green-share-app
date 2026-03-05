@@ -44,6 +44,15 @@ class DatabaseService {
     return null;
   }
 
+  Stream<ItemModel?> getItemStream(String itemId) {
+    return _firestore.collection('items').doc(itemId).snapshots().map((doc) {
+      if (doc.exists && doc.data() != null) {
+        return ItemModel.fromJson(doc.data()!, doc.id);
+      }
+      return null;
+    });
+  }
+
   Future<void> updateItemStatus(String itemId, String status, {String? receiverId}) async {
     final data = <String, dynamic>{'status': status};
     if (receiverId != null) {

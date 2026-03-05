@@ -4,6 +4,7 @@ import 'package:green_share/screens/main_tab_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:green_share/services/database_service.dart';
 import 'package:green_share/models/user_model.dart';
+import 'package:green_share/main.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -29,7 +30,7 @@ class _SignupScreenState extends State<SignupScreen> {
 
     if (name.isEmpty || email.isEmpty || password.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please fill all fields')),
+        SnackBar(content: Text(context.l10n.pleaseFillAllFields)),
       );
       return;
     }
@@ -64,13 +65,13 @@ class _SignupScreenState extends State<SignupScreen> {
     } on FirebaseAuthException catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(e.message ?? 'Signup failed')),
+          SnackBar(content: Text(e.message ?? context.l10n.signupFailed)),
         );
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: $e')),
+          SnackBar(content: Text(context.l10n.unexpectedError(e.toString()))),
         );
       }
     } finally {
@@ -107,52 +108,56 @@ class _SignupScreenState extends State<SignupScreen> {
                   children: [
                     const Icon(Icons.person_add_outlined, size: 64, color: AppTheme.primaryColor),
                     const SizedBox(height: 24),
-                    const Text(
-                      'Create an Account',
-                      style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+                    Text(
+                      context.l10n.createAnAccount,
+                      style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 8),
-                    const Text(
-                      'Join our community today',
-                      style: TextStyle(fontSize: 14, color: AppTheme.textSecondaryColor),
+                    Text(
+                      context.l10n.joinCommunityToday,
+                      style: const TextStyle(fontSize: 14, color: AppTheme.textSecondaryColor),
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 40),
                     TextField(
                       controller: _nameController,
-                      decoration: const InputDecoration(
-                        labelText: 'Full Name',
-                        prefixIcon: Icon(Icons.person_outline),
+                      decoration: InputDecoration(
+                        labelText: context.l10n.fullName,
+                        prefixIcon: const Icon(Icons.person_outline),
                       ),
                     ),
                     const SizedBox(height: 16),
                     TextField(
                       controller: _emailController,
-                      decoration: const InputDecoration(
-                        labelText: 'Email',
-                        prefixIcon: Icon(Icons.email_outlined),
+                      decoration: InputDecoration(
+                        labelText: context.l10n.email,
+                        prefixIcon: const Icon(Icons.email_outlined),
                       ),
                       keyboardType: TextInputType.emailAddress,
                     ),
                     const SizedBox(height: 16),
                     TextField(
                       controller: _passwordController,
-                      decoration: const InputDecoration(
-                        labelText: 'Password',
-                        prefixIcon: Icon(Icons.lock_outline),
+                      decoration: InputDecoration(
+                        labelText: context.l10n.password,
+                        prefixIcon: const Icon(Icons.lock_outline),
                       ),
                       obscureText: true,
                     ),
                     const SizedBox(height: 16),
                     DropdownButtonFormField<String>(
                       initialValue: _selectedRole,
-                      decoration: const InputDecoration(
-                        labelText: 'Role',
-                        prefixIcon: Icon(Icons.group_outlined),
+                      decoration: InputDecoration(
+                        labelText: context.l10n.role,
+                        prefixIcon: const Icon(Icons.group_outlined),
                       ),
                       items: _roles.map((role) {
-                        return DropdownMenuItem(value: role, child: Text(role));
+                        return DropdownMenuItem(value: role, child: Text(
+                          role == 'Donor' ? context.l10n.donor : 
+                          role == 'Recipient' ? context.l10n.recipient : 
+                          context.l10n.charity
+                        ));
                       }).toList(),
                       onChanged: (val) {
                         if (val != null) {
@@ -168,7 +173,7 @@ class _SignupScreenState extends State<SignupScreen> {
                           style: ElevatedButton.styleFrom(
                             padding: const EdgeInsets.symmetric(vertical: 20),
                           ),
-                          child: const Text('Sign Up'),
+                          child: Text(context.l10n.signUp),
                         ),
                   ],
                 ),

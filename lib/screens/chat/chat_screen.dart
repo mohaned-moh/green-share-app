@@ -5,6 +5,8 @@ import 'package:green_share/models/chat_model.dart';
 import 'package:green_share/models/item_model.dart';
 import 'package:green_share/models/review_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:async';
+import 'package:green_share/main.dart';
 
 class ChatScreen extends StatefulWidget {
   final String chatId;
@@ -29,23 +31,32 @@ class _ChatScreenState extends State<ChatScreen> {
   final DatabaseService _databaseService = DatabaseService();
   final String? currentUserId = FirebaseAuth.instance.currentUser?.uid;
   ItemModel? _linkedItem;
+  StreamSubscription<ItemModel?>? _itemSubscription;
 
   @override
   void initState() {
     super.initState();
     _resetUnread();
-    _loadLinkedItem();
+    _listenToLinkedItem();
   }
 
-  Future<void> _loadLinkedItem() async {
+  void _listenToLinkedItem() {
     if (widget.itemId != null) {
-      final item = await _databaseService.getItemById(widget.itemId!);
-      if (mounted) {
-        setState(() {
-          _linkedItem = item;
-        });
-      }
+      _itemSubscription = _databaseService.getItemStream(widget.itemId!).listen((item) {
+        if (mounted) {
+          setState(() {
+            _linkedItem = item;
+          });
+        }
+      });
     }
+  }
+
+  @override
+  void dispose() {
+    _itemSubscription?.cancel();
+    _messageController.dispose();
+    super.dispose();
   }
 
   void _resetUnread() {
@@ -89,7 +100,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 children: [
                   Expanded(
                     child: Text(
-                      'Give "${_linkedItem!.title}" to ${widget.otherUserName}?',
+                      context.l10n.giveItemTo(_linkedItem!.title, widget.otherUserName),
                       style: const TextStyle(fontWeight: FontWeight.w600, color: Colors.green),
                     ),
                   ),
@@ -100,7 +111,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       foregroundColor: Colors.white,
                       minimumSize: const Size(80, 36),
                     ),
-                    child: const Text('Award'),
+                    child: Text(context.l10n.award),
                   ),
                 ],
               ),
@@ -113,7 +124,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 children: [
                   Expanded(
                     child: Text(
-                      'Rate & Review ${widget.otherUserName} for "${_linkedItem!.title}"',
+                      context.l10n.rateAndReviewTitle(widget.otherUserName, _linkedItem!.title),
                       style: const TextStyle(fontWeight: FontWeight.w600, color: Colors.amber),
                     ),
                   ),
@@ -124,14 +135,14 @@ class _ChatScreenState extends State<ChatScreen> {
                       foregroundColor: Colors.white,
                       minimumSize: const Size(80, 36),
                     ),
-                    child: const Text('Review'),
+                    child: Text(context.l10n.review),
                   ),
                 ],
               ),
             ),
           Expanded(
             child: currentUserId == null 
-              ? const Center(child: Text("Please login to send messages."))
+              ? Center(child: Text(context.l10n.pleaseLoginToSendMessages))
               : StreamBuilder<List<MessageModel>>(
                   stream: _databaseService.getChatMessages(widget.chatId),
                   builder: (context, snapshot) {
@@ -146,12 +157,12 @@ class _ChatScreenState extends State<ChatScreen> {
                             Icon(Icons.mark_chat_unread_outlined, size: 60, color: Colors.grey.shade400),
                             const SizedBox(height: 16),
                             Text(
-                              'Start the conversation!',
-                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black87),
+                              context.l10n.startTheConversation,
+                              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black87),
                             ),
                             const SizedBox(height: 8),
                             Text(
-                              'Say hi to ${widget.otherUserName}',
+                              context.l10n.sayHiTo(widget.otherUserName),
                               style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
                             ),
                           ],
@@ -205,7 +216,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     child: TextField(
                       controller: _messageController,
                       decoration: InputDecoration(
-                        hintText: 'Type a message...',
+                        hintText: context.l10n.typeMessage,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(24),
                           borderSide: BorderSide.none,
@@ -237,23 +248,23 @@ class _ChatScreenState extends State<ChatScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text(_linkedItem!.type == 'Donate' ? 'Donate Item?' : 'Mark Request Completed?'),
+        title: Text(_linkedItem!.type == 'Donate' ? context.l10n.donateItemQ : context.l10n.markRequestCompletedQ),
         content: Text(
           _linkedItem!.type == 'Donate' 
-            ? 'Are you sure you want to donate this item to ${widget.otherUserName}? This will remove it from the home page.'
-            : 'Are you sure you want to complete this request with ${widget.otherUserName}?',
+            ? context.l10n.confirmDonate(widget.otherUserName)
+            : context.l10n.confirmComplete(widget.otherUserName),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+            child: Text(context.l10n.cancel),
           ),
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context); // close dialog
               
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Item automatically awarded!')),
+                SnackBar(content: Text(context.l10n.itemAwarded)),
               );
 
               // Background operations
@@ -270,20 +281,19 @@ class _ChatScreenState extends State<ChatScreen> {
                   
                   // Send automated message
                   final automatedMessage = _linkedItem!.type == 'Donate'
-                      ? "Hi! I have officially marked this item as donated to you. Enjoy!"
-                      : "Hi! I have officially marked this request as completed with you. Thank you!";
+                      ? context.l10n.automatedDonateMsg
+                      : context.l10n.automatedCompleteMsg;
                       
                   await _databaseService.sendMessage(widget.chatId, currentUserId!, widget.otherUserId, automatedMessage);
                   
-                  // Refresh local item state
-                  await _loadLinkedItem();
+                  // Refresh handled by stream
                 } catch (e) {
                   print('Error awarding item: $e');
                 }
               }();
             },
             style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-            child: const Text('Yes, confirm'),
+            child: Text(context.l10n.yesConfirm),
           ),
         ],
       ),
@@ -298,11 +308,11 @@ class _ChatScreenState extends State<ChatScreen> {
       context: context,
       builder: (context) => StatefulBuilder(
         builder: (context, setState) => AlertDialog(
-          title: const Text('Rate & Review'),
+          title: Text(context.l10n.rateAndReview),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text('How was your experience?'),
+              Text(context.l10n.howWasExperience),
               const SizedBox(height: 16),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -325,7 +335,7 @@ class _ChatScreenState extends State<ChatScreen> {
               TextField(
                 controller: commentController,
                 decoration: InputDecoration(
-                  labelText: 'Comment (optional)',
+                  labelText: context.l10n.commentOptional,
                   border: const OutlineInputBorder(),
                   focusedBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.amber),
@@ -338,7 +348,7 @@ class _ChatScreenState extends State<ChatScreen> {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Cancel'),
+              child: Text(context.l10n.cancel),
             ),
             ElevatedButton(
               onPressed: () async {
@@ -362,21 +372,20 @@ class _ChatScreenState extends State<ChatScreen> {
                   
                   if (mounted) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Review submitted successfully!')),
+                      SnackBar(content: Text(context.l10n.reviewSubmitted)),
                     );
-                    _loadLinkedItem();
                   }
                 } catch (e) {
                   print('Error submitting review: $e');
                   if (mounted) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Failed to submit review.')),
+                      SnackBar(content: Text(context.l10n.reviewFailed)),
                     );
                   }
                 }
               },
               style: ElevatedButton.styleFrom(backgroundColor: Colors.amber),
-              child: const Text('Submit'),
+              child: Text(context.l10n.submit),
             ),
           ],
         ),

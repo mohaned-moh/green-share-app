@@ -7,6 +7,7 @@ import 'package:green_share/models/review_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:async';
 import 'package:green_share/main.dart';
+import 'package:green_share/screens/profile/profile_screen.dart';
 
 class ChatScreen extends StatefulWidget {
   final String chatId;
@@ -78,64 +79,152 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     final bool canAwardItem = _linkedItem != null && 
                               currentUserId != null &&
-                              _linkedItem!.ownerId == currentUserId &&
+                              ((_linkedItem!.type == 'Donate' && _linkedItem!.ownerId == currentUserId) ||
+                               (_linkedItem!.type == 'Request' && _linkedItem!.ownerId != currentUserId)) &&
                               _linkedItem!.status == 'available';
 
     final bool canReviewItem = _linkedItem != null &&
                                currentUserId != null &&
                                _linkedItem!.status == 'donated' &&
                                !_linkedItem!.hasBeenRated &&
-                               _linkedItem!.ownerId == widget.otherUserId &&
-                               (_linkedItem!.receiverId == null || _linkedItem!.receiverId == currentUserId);
+                               ((_linkedItem!.type == 'Donate' && _linkedItem!.ownerId == widget.otherUserId && (_linkedItem!.receiverId == null || _linkedItem!.receiverId == currentUserId)) ||
+                                (_linkedItem!.type == 'Request' && _linkedItem!.ownerId == currentUserId && (_linkedItem!.receiverId == null || _linkedItem!.receiverId == widget.otherUserId)));
 
     return Scaffold(
-      appBar: AppBar(title: Text(widget.otherUserName)),
+      appBar: AppBar(
+        title: GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ProfileScreen(userId: widget.otherUserId),
+              ),
+            );
+          },
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(widget.otherUserName),
+              const SizedBox(width: 8),
+              const Icon(Icons.info_outline, size: 18),
+            ],
+          ),
+        ),
+      ),
       body: Column(
         children: [
           if (canAwardItem)
             Container(
-              color: Colors.green.shade50,
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: Colors.green.shade200, width: 1.5),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.green.withOpacity(0.1),
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
               child: Row(
                 children: [
+                  Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: Colors.green.shade50,
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(Icons.eco, color: Colors.green, size: 24),
+                  ),
+                  const SizedBox(width: 12),
                   Expanded(
-                    child: Text(
-                      context.l10n.giveItemTo(_linkedItem!.title, widget.otherUserName),
-                      style: const TextStyle(fontWeight: FontWeight.w600, color: Colors.green),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Ready to share?', 
+                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.black87),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          context.l10n.giveItemTo(_linkedItem!.title, widget.otherUserName),
+                          style: TextStyle(fontSize: 12, color: Colors.grey.shade700),
+                        ),
+                      ],
                     ),
                   ),
+                  const SizedBox(width: 8),
                   ElevatedButton(
                     onPressed: () => _awardItem(context),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.green,
                       foregroundColor: Colors.white,
-                      minimumSize: const Size(80, 36),
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     ),
-                    child: Text(context.l10n.award),
+                    child: const Text('Award', style: TextStyle(fontWeight: FontWeight.bold)),
                   ),
                 ],
               ),
             ),
           if (canReviewItem)
             Container(
-              color: Colors.amber.shade50,
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: Colors.amber.shade200, width: 1.5),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.amber.withOpacity(0.1),
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
               child: Row(
                 children: [
+                  Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: Colors.amber.shade50,
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(Icons.star_rounded, color: Colors.amber.shade600, size: 24),
+                  ),
+                  const SizedBox(width: 12),
                   Expanded(
-                    child: Text(
-                      context.l10n.rateAndReviewTitle(widget.otherUserName, _linkedItem!.title),
-                      style: const TextStyle(fontWeight: FontWeight.w600, color: Colors.amber),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Transaction Complete!', 
+                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.black87),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          context.l10n.rateAndReviewTitle(widget.otherUserName, _linkedItem!.title),
+                          style: TextStyle(fontSize: 12, color: Colors.grey.shade700),
+                        ),
+                      ],
                     ),
                   ),
+                  const SizedBox(width: 8),
                   ElevatedButton(
                     onPressed: () => _showReviewDialog(context),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.amber,
                       foregroundColor: Colors.white,
-                      minimumSize: const Size(80, 36),
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     ),
-                    child: Text(context.l10n.review),
+                    child: const Text('Review', style: TextStyle(fontWeight: FontWeight.bold)),
                   ),
                 ],
               ),
@@ -270,12 +359,17 @@ class _ChatScreenState extends State<ChatScreen> {
               // Background operations
               () async {
                 try {
+                  final interactionReceiverId = _linkedItem!.type == 'Donate' ? widget.otherUserId : currentUserId!;
+                  
                   // Update item status
-                  await _databaseService.updateItemStatus(_linkedItem!.id, 'donated', receiverId: widget.otherUserId);
+                  await _databaseService.updateItemStatus(_linkedItem!.id, 'donated', receiverId: interactionReceiverId);
+                  
                   // Increment stats for both users
+                  // If Donate: owner gave, interactionReceiverId received.
+                  // If Request: owner received, interactionReceiverId gave.
                   await _databaseService.incrementAwardStats(
                     ownerId: _linkedItem!.ownerId, 
-                    recipientId: widget.otherUserId,
+                    recipientId: interactionReceiverId,
                     itemType: _linkedItem!.type,
                   );
                   
@@ -357,11 +451,13 @@ class _ChatScreenState extends State<ChatScreen> {
                 try {
                   final currentUser = await _databaseService.getUserProfile(currentUserId!);
                   
+                  final realDonorId = _linkedItem!.type == 'Donate' ? _linkedItem!.ownerId : widget.otherUserId;
+
                   final review = ReviewModel(
                     id: '', // Will be generated by addReview
                     reviewerId: currentUserId!,
                     reviewerName: currentUser?.name ?? 'Anonymous',
-                    donorId: _linkedItem!.ownerId,
+                    donorId: realDonorId,
                     itemId: _linkedItem!.id,
                     rating: rating,
                     comment: commentController.text.trim(),

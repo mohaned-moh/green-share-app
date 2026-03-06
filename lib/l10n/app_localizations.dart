@@ -667,6 +667,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Charity'**
   String get charity;
+
+  /// No description provided for @city.
+  ///
+  /// In en, this message translates to:
+  /// **'City'**
+  String get city;
+
+  /// No description provided for @filterOptions.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter Options'**
+  String get filterOptions;
+
+  /// No description provided for @applyFilters.
+  ///
+  /// In en, this message translates to:
+  /// **'Apply Filters'**
+  String get applyFilters;
+
+  /// No description provided for @editProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Profile'**
+  String get editProfile;
+
+  /// No description provided for @save.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get save;
+
+  /// No description provided for @name.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get name;
+
+  /// No description provided for @updateProfileSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile updated successfully!'**
+  String get updateProfileSuccess;
+
+  /// No description provided for @updateProfileError.
+  ///
+  /// In en, this message translates to:
+  /// **'Error updating profile: {error}'**
+  String updateProfileError(String error);
+
+  /// No description provided for @reloginRequiredForEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'You must re-login to change your email address.'**
+  String get reloginRequiredForEmail;
+
+  /// No description provided for @activeListings.
+  ///
+  /// In en, this message translates to:
+  /// **'Active Listings'**
+  String get activeListings;
 }
 
 class _AppLocalizationsDelegate

@@ -3,6 +3,8 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class LocationPickerScreen extends StatefulWidget {
   const LocationPickerScreen({super.key});
@@ -13,13 +15,48 @@ class LocationPickerScreen extends StatefulWidget {
 
 class _LocationPickerScreenState extends State<LocationPickerScreen> {
   LatLng? _selectedLocation;
+  String? _cityName;
   final MapController _mapController = MapController();
   bool _isLoadingLocation = true;
+  bool _isFetchingCity = false;
 
   @override
   void initState() {
     super.initState();
     _determinePosition();
+  }
+
+  Future<void> _fetchCityName(LatLng point) async {
+    setState(() {
+      _isFetchingCity = true;
+      _cityName = null;
+    });
+    
+    try {
+      final url = Uri.parse('https://nominatim.openstreetmap.org/reverse?format=json&lat=${point.latitude}&lon=${point.longitude}&zoom=10&addressdetails=1');
+      final response = await http.get(url, headers: {'User-Agent': 'GreenShareApp'});
+      
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        final address = data['address'] as Map<String, dynamic>?;
+        if (address != null) {
+          String? city = address['city'] ?? address['town'] ?? address['village'] ?? address['county'] ?? address['state'];
+          if (mounted) {
+            setState(() {
+              _cityName = city;
+            });
+          }
+        }
+      }
+    } catch (e) {
+      debugPrint('Error fetching city: $e');
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isFetchingCity = false;
+        });
+      }
+    }
   }
 
   Future<void> _determinePosition() async {
@@ -76,6 +113,7 @@ class _LocationPickerScreenState extends State<LocationPickerScreen> {
           _selectedLocation = currentLatLng;
           _isLoadingLocation = false;
         });
+        _fetchCityName(currentLatLng);
         // Move the camera smoothly to the fetched position
         // Since flutter_map v6+, move is standard; for explicit animation, external plugins are needed.
         // `move` accomplishes the jump natively.
@@ -108,6 +146,7 @@ class _LocationPickerScreenState extends State<LocationPickerScreen> {
                 setState(() {
                   _selectedLocation = point;
                 });
+                _fetchCityName(point);
               },
             ),
             children: [
@@ -136,6 +175,44 @@ class _LocationPickerScreenState extends State<LocationPickerScreen> {
             const Center(
               child: CircularProgressIndicator(),
             ),
+          if (_isFetchingCity)
+            Positioned(
+              top: 20,
+              left: 20,
+              right: 20,
+              child: Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2)),
+                      SizedBox(width: 16),
+                      Text('Identifying City...'),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          if (!_isFetchingCity && _cityName != null)
+            Positioned(
+              top: 20,
+              left: 20,
+              right: 20,
+              child: Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.location_city, color: Colors.green),
+                      const SizedBox(width: 16),
+                      Text('City detected: $_cityName', style: const TextStyle(fontWeight: FontWeight.bold)),
+                    ],
+                  ),
+                ),
+              ),
+            ),
           Positioned(
             bottom: 20,
             right: 20,
@@ -156,8 +233,11 @@ class _LocationPickerScreenState extends State<LocationPickerScreen> {
                   backgroundColor: Theme.of(context).primaryColor,
                   foregroundColor: Colors.white,
                 ),
-                onPressed: () {
-                  Navigator.of(context).pop(_selectedLocation);
+                onPressed: _isFetchingCity ? null : () {
+                  Navigator.of(context).pop({
+                    'location': _selectedLocation,
+                    'city': _cityName,
+                  });
                 },
                 child: const Text('Confirm Location', style: TextStyle(fontSize: 16)),
               ),

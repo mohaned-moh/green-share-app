@@ -311,4 +311,37 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get charity => 'جمعية خيرية';
+
+  @override
+  String get city => 'المدينة';
+
+  @override
+  String get filterOptions => 'خيارات التصفية';
+
+  @override
+  String get applyFilters => 'تطبيق التصفية';
+
+  @override
+  String get editProfile => 'تعديل الملف الشخصي';
+
+  @override
+  String get save => 'حفظ';
+
+  @override
+  String get name => 'الاسم';
+
+  @override
+  String get updateProfileSuccess => 'تم تحديث الملف الشخصي بنجاح!';
+
+  @override
+  String updateProfileError(String error) {
+    return 'خطأ في تحديث الملف الشخصي: $error';
+  }
+
+  @override
+  String get reloginRequiredForEmail =>
+      'يجب تسجيل الدخول مرة أخرى لتغيير عنوان بريدك الإلكتروني.';
+
+  @override
+  String get activeListings => 'الإعلانات النشطة';
 }

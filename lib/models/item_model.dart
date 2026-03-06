@@ -12,6 +12,7 @@ class ItemModel {
   final DateTime postedAt;
   final String status; // 'available', 'claimed', 'completed'
   final String location;
+  final String city;
   final double? latitude;
   final double? longitude;
   final String? receiverId; // Added to track who received the item
@@ -29,6 +30,7 @@ class ItemModel {
     required this.postedAt,
     this.status = 'available',
     required this.location,
+    required this.city,
     this.latitude,
     this.longitude,
     this.receiverId,
@@ -48,6 +50,7 @@ class ItemModel {
       'postedAt': Timestamp.fromDate(postedAt),
       'status': status,
       'location': location,
+      'city': city,
       'latitude': latitude,
       'longitude': longitude,
       'receiverId': receiverId,
@@ -70,6 +73,7 @@ class ItemModel {
           : (map['postedAt'] != null ? DateTime.parse(map['postedAt'].toString()) : DateTime.now()),
       status: map['status'] ?? 'available',
       location: map['location'] ?? 'Unknown location',
+      city: map['city'] ?? 'Unknown city',
       latitude: map['latitude'] != null ? (map['latitude'] as num).toDouble() : null,
       longitude: map['longitude'] != null ? (map['longitude'] as num).toDouble() : null,
       receiverId: map['receiverId'],

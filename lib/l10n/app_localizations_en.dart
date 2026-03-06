@@ -310,4 +310,37 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get charity => 'Charity';
+
+  @override
+  String get city => 'City';
+
+  @override
+  String get filterOptions => 'Filter Options';
+
+  @override
+  String get applyFilters => 'Apply Filters';
+
+  @override
+  String get editProfile => 'Edit Profile';
+
+  @override
+  String get save => 'Save';
+
+  @override
+  String get name => 'Name';
+
+  @override
+  String get updateProfileSuccess => 'Profile updated successfully!';
+
+  @override
+  String updateProfileError(String error) {
+    return 'Error updating profile: $error';
+  }
+
+  @override
+  String get reloginRequiredForEmail =>
+      'You must re-login to change your email address.';
+
+  @override
+  String get activeListings => 'Active Listings';
 }

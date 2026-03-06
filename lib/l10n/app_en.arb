@@ -149,5 +149,22 @@
   "role": "Role",
   "donor": "Donor",
   "recipient": "Recipient",
-  "charity": "Charity"
+  "charity": "Charity",
+  "city": "City",
+  "filterOptions": "Filter Options",
+  "applyFilters": "Apply Filters",
+  "editProfile": "Edit Profile",
+  "save": "Save",
+  "name": "Name",
+  "updateProfileSuccess": "Profile updated successfully!",
+  "updateProfileError": "Error updating profile: {error}",
+  "@updateProfileError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "reloginRequiredForEmail": "You must re-login to change your email address.",
+  "activeListings": "Active Listings"
 }

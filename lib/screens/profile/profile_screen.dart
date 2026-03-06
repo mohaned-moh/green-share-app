@@ -7,6 +7,7 @@ import 'package:green_share/models/user_model.dart';
 import 'package:green_share/models/item_model.dart';
 import 'package:green_share/widgets/item_card.dart';
 import 'package:green_share/screens/profile/transaction_history_screen.dart';
+import 'package:green_share/screens/profile/edit_profile_screen.dart';
 
 import 'package:green_share/models/review_model.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -74,9 +75,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
         actions: isOwnProfile
             ? [
                 IconButton(
-                  icon: const Icon(Icons.settings),
-                  onPressed: () {
-                    // Open Settings
+                  icon: const Icon(Icons.edit),
+                  onPressed: () async {
+                    final user = await _databaseService.getUserProfile(currentUserId!);
+                    if (user != null && context.mounted) {
+                      final result = await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => EditProfileScreen(user: user),
+                        ),
+                      );
+                      if (result == true) {
+                        setState(() {}); // Refresh future builder
+                      }
+                    }
                   },
                 )
               ]
@@ -172,139 +184,162 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 const SizedBox(height: 24),
                 const Divider(),
                 
-                // Active Listings Section OR Reviews Section
+                // Active Listings Section
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        isOwnProfile ? context.l10n.yourListings : context.l10n.reviews,
+                        isOwnProfile ? context.l10n.yourListings : context.l10n.activeListings ?? 'Active Listings',
                         style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                       ),
-                      if (isOwnProfile)
-                        TextButton(
-                          onPressed: () {},
-                          child: Text(context.l10n.viewAll),
-                        ),
                     ],
                   ),
                 ),
                 
-                if (isOwnProfile)
-                  SizedBox(
-                    height: 220,
-                    child: StreamBuilder<List<ItemModel>>(
-                      stream: _databaseService.getUserItemsStream(currentUserId!),
-                      builder: (context, itemSnapshot) {
-                        if (itemSnapshot.connectionState == ConnectionState.waiting) {
-                          return const Center(child: CircularProgressIndicator());
-                        }
-                        if (!itemSnapshot.hasData || itemSnapshot.data!.isEmpty) {
-                          return Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(Icons.inventory_2_outlined, size: 40, color: Colors.grey.shade400),
-                                const SizedBox(height: 8),
-                                Text(context.l10n.noItemsPostedYet, style: const TextStyle(color: Colors.grey)),
-                              ],
-                            ),
-                          );
-                        }
-
-                        final items = itemSnapshot.data!;
-                        return ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                          itemCount: items.length,
-                          itemBuilder: (context, index) {
-                            return Container(
-                              width: 180,
-                              margin: const EdgeInsets.only(right: 16.0),
-                              child: ItemCard(item: items[index]),
-                            );
-                          },
-                        );
-                      },
-                    ),
-                  )
-                else
-                  // Reviews List for other profiles
-                  StreamBuilder<List<ReviewModel>>(
-                    stream: _databaseService.getUserReviewsStream(currentUserId!),
-                    builder: (context, reviewSnapshot) {
-                      if (reviewSnapshot.connectionState == ConnectionState.waiting) {
-                        return const Center(child: Padding(padding: EdgeInsets.all(20), child: CircularProgressIndicator()));
+                SizedBox(
+                  height: 220,
+                  child: StreamBuilder<List<ItemModel>>(
+                    stream: _databaseService.getUserItemsStream(currentUserId!),
+                    builder: (context, itemSnapshot) {
+                      if (itemSnapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(child: CircularProgressIndicator());
                       }
-                      final reviews = reviewSnapshot.data ?? [];
-                      
-                      if (reviews.isEmpty) {
-                        return Padding(
-                          padding: const EdgeInsets.all(32.0),
-                          child: Text(context.l10n.noReviewsYet, style: const TextStyle(color: Colors.grey)),
+                      if (!itemSnapshot.hasData || itemSnapshot.data!.isEmpty) {
+                        return Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.inventory_2_outlined, size: 40, color: Colors.grey.shade400),
+                              const SizedBox(height: 8),
+                              Text(context.l10n.noItemsPostedYet, style: const TextStyle(color: Colors.grey)),
+                            ],
+                          ),
                         );
                       }
 
+                      final items = itemSnapshot.data!;
                       return ListView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                        itemCount: reviews.length,
+                        scrollDirection: Axis.horizontal,
+                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                        itemCount: items.length,
                         itemBuilder: (context, index) {
-                          final review = reviews[index];
-                          return Card(
-                            margin: const EdgeInsets.only(bottom: 12.0),
-                            elevation: 0,
-                            color: Colors.white,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              side: BorderSide(color: Colors.grey.shade200),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        review.reviewerName,
-                                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                                      ),
-                                      Text(
-                                        DateFormat.yMMMd().format(review.timestamp),
-                                        style: TextStyle(color: Colors.grey.shade500, fontSize: 12),
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 6),
-                                  RatingBarIndicator(
-                                    rating: review.rating,
-                                    itemBuilder: (context, index) => const Icon(
-                                      Icons.star,
-                                      color: Colors.amber,
-                                    ),
-                                    itemCount: 5,
-                                    itemSize: 18.0,
-                                    direction: Axis.horizontal,
-                                  ),
-                                  if (review.comment.isNotEmpty) ...[
-                                    const SizedBox(height: 12),
-                                    Text(
-                                      review.comment,
-                                      style: const TextStyle(color: Colors.black87, height: 1.4),
-                                    ),
-                                  ]
-                                ],
-                              ),
-                            ),
+                          return Container(
+                            width: 180,
+                            margin: const EdgeInsets.only(right: 16.0),
+                            child: ItemCard(item: items[index]),
                           );
                         },
                       );
                     },
                   ),
+                ),
+                
+                const SizedBox(height: 16),
+                const Divider(),
+                
+                // Reviews Section
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        context.l10n.reviews,
+                        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
+                ),
+                
+                StreamBuilder<List<ReviewModel>>(
+                  stream: _databaseService.getUserReviewsStream(currentUserId!),
+                  builder: (context, reviewSnapshot) {
+                    if (reviewSnapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: Padding(padding: EdgeInsets.all(20), child: CircularProgressIndicator()));
+                    }
+                    final reviews = reviewSnapshot.data ?? [];
+                    
+                    if (reviews.isEmpty) {
+                      return Padding(
+                        padding: const EdgeInsets.all(32.0),
+                        child: Text(context.l10n.noReviewsYet, style: const TextStyle(color: Colors.grey)),
+                      );
+                    }
+
+                    return SizedBox(
+                      height: 160,
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                        itemCount: reviews.length,
+                        itemBuilder: (context, index) {
+                          final review = reviews[index];
+                          return Container(
+                            width: 280,
+                            margin: const EdgeInsets.only(right: 16.0),
+                            child: Card(
+                              elevation: 0,
+                              color: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                side: BorderSide(color: Colors.grey.shade200),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Expanded(
+                                          child: Text(
+                                            review.reviewerName,
+                                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ),
+                                        Text(
+                                          DateFormat.yMMMd().format(review.timestamp),
+                                          style: TextStyle(color: Colors.grey.shade500, fontSize: 12),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 6),
+                                    RatingBarIndicator(
+                                      rating: review.rating,
+                                      itemBuilder: (context, index) => const Icon(
+                                        Icons.star,
+                                        color: Colors.amber,
+                                      ),
+                                      itemCount: 5,
+                                      itemSize: 18.0,
+                                      direction: Axis.horizontal,
+                                    ),
+                                    if (review.comment.isNotEmpty) ...[
+                                      const SizedBox(height: 12),
+                                      Expanded(
+                                        child: Text(
+                                          review.comment,
+                                          style: const TextStyle(color: Colors.black87, height: 1.4),
+                                          maxLines: 3,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                    ]
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    );
+                  },
+                ),
 
                 if (isOwnProfile) ...[
                   const Divider(),

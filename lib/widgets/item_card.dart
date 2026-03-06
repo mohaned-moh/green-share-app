@@ -171,7 +171,7 @@ class ItemCard extends StatelessWidget {
                     runSpacing: 8,
                     children: [
                         _buildChip(Icons.category_outlined, item.category),
-                      _buildChip(Icons.location_on_outlined, item.location),
+                      _buildChip(Icons.location_on_outlined, item.city ?? item.location),
                     ],
                   ),
                   const Spacer(),

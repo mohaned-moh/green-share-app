@@ -11,7 +11,7 @@ class LocaleProvider extends ChangeNotifier {
 
   void setLocale(Locale locale) async {
     if (!['en', 'ar'].contains(locale.languageCode)) return;
-    
+  
     _locale = locale;
     await _prefs.setString('language_code', locale.languageCode);
     notifyListeners();

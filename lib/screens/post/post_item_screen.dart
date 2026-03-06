@@ -21,11 +21,32 @@ class PostItemScreen extends StatefulWidget {
 class _PostItemScreenState extends State<PostItemScreen> {
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
-  final _categoryController = TextEditingController();
   
   String _type = 'Donate';
   String _condition = 'Good';
   final List<String> _conditions = ['New', 'Good', 'Fair', 'Poor'];
+  
+  String _selectedCategory = 'Other';
+  final List<String> _categories = [
+    'Clothing',
+    'Furniture',
+    'Books',
+    'Electronics',
+    'Toys',
+    'Other'
+  ];
+  
+  String _selectedCity = 'Amman';
+  final List<String> _cities = [
+    'Amman',
+    'Zarqa',
+    'Irbid',
+    'Aqaba',
+    'Mafraq',
+    'Jerash',
+    'Madaba',
+    'Other'
+  ];
   
   LatLng? _selectedLocation;
   XFile? _imageFile;
@@ -120,8 +141,10 @@ class _PostItemScreenState extends State<PostItemScreen> {
       
       setState(() {
         _isProcessingImage = false;
-        if (category != null) {
-          _categoryController.text = category;
+        if (category != null && _categories.contains(category)) {
+          _selectedCategory = category;
+        } else if (category != null) {
+          _selectedCategory = 'Other';
         }
       });
     }
@@ -156,12 +179,13 @@ class _PostItemScreenState extends State<PostItemScreen> {
         title: _titleController.text.trim(),
         description: _descriptionController.text.trim(),
         type: _type,
-        category: _categoryController.text.trim().isNotEmpty ? _categoryController.text.trim() : 'Other',
+        category: _selectedCategory,
         condition: _condition,
         imageUrls: uploadedImageUrls,
         ownerId: userId,
         postedAt: DateTime.now(),
         location: _selectedLocation != null ? 'Selected on Map' : 'Unknown Location',
+        city: _selectedCity,
         latitude: _selectedLocation?.latitude,
         longitude: _selectedLocation?.longitude,
         status: 'available',
@@ -177,7 +201,8 @@ class _PostItemScreenState extends State<PostItemScreen> {
         // Clear form
         _titleController.clear();
         _descriptionController.clear();
-        _categoryController.clear();
+        _selectedCategory = 'Other';
+        _selectedCity = 'Amman';
         setState(() {
           _imageFile = null;
           _selectedLocation = null;
@@ -298,9 +323,15 @@ class _PostItemScreenState extends State<PostItemScreen> {
               decoration: InputDecoration(labelText: context.l10n.title),
             ),
             const SizedBox(height: 16),
-            TextField(
-              controller: _categoryController,
+            DropdownButtonFormField<String>(
+              value: _selectedCategory,
               decoration: InputDecoration(labelText: context.l10n.categoryAutoFilled),
+              items: _categories.map((c) {
+                return DropdownMenuItem(value: c, child: Text(c));
+              }).toList(),
+              onChanged: (val) {
+                if (val != null) setState(() => _selectedCategory = val);
+              },
             ),
             const SizedBox(height: 16),
             TextField(
@@ -321,6 +352,13 @@ class _PostItemScreenState extends State<PostItemScreen> {
                 },
               ),
             const SizedBox(height: 16),
+            TextField(
+              controller: TextEditingController(text: _selectedCity),
+              decoration: InputDecoration(labelText: context.l10n.city),
+              readOnly: true,
+              enabled: false,
+            ),
+            const SizedBox(height: 16),
             ListTile(
               contentPadding: EdgeInsets.zero,
               leading: const Icon(Icons.location_on, color: Colors.green),
@@ -334,12 +372,27 @@ class _PostItemScreenState extends State<PostItemScreen> {
                   ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))
                   : const Icon(Icons.chevron_right),
               onTap: _isLoadingLocation ? null : () async {
-                final LatLng? picked = await Navigator.of(context).push(
+                final result = await Navigator.of(context).push(
                   MaterialPageRoute(builder: (_) => const LocationPickerScreen()),
                 );
-                if (picked != null) {
+                if (result != null && result is Map<String, dynamic>) {
                   setState(() {
-                    _selectedLocation = picked;
+                    _selectedLocation = result['location'] as LatLng?;
+                    
+                    final String? city = result['city'] as String?;
+                    if (city != null) {
+                      bool cityExists = _cities.any((c) => c.toLowerCase() == city.toLowerCase());
+                      if (cityExists) {
+                        _selectedCity = _cities.firstWhere((c) => c.toLowerCase() == city.toLowerCase());
+                      } else {
+                        _cities.insert(0, city);
+                        _selectedCity = city;
+                      }
+                    }
+                  });
+                } else if (result != null && result is LatLng) {
+                  setState(() {
+                    _selectedLocation = result;
                   });
                 }
               },

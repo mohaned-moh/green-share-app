@@ -149,5 +149,22 @@
   "role": "الدور",
   "donor": "متبرع",
   "recipient": "مستلم",
-  "charity": "جمعية خيرية"
+  "charity": "جمعية خيرية",
+  "city": "المدينة",
+  "filterOptions": "خيارات التصفية",
+  "applyFilters": "تطبيق التصفية",
+  "editProfile": "تعديل الملف الشخصي",
+  "save": "حفظ",
+  "name": "الاسم",
+  "updateProfileSuccess": "تم تحديث الملف الشخصي بنجاح!",
+  "updateProfileError": "خطأ في تحديث الملف الشخصي: {error}",
+  "@updateProfileError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "reloginRequiredForEmail": "يجب تسجيل الدخول مرة أخرى لتغيير عنوان بريدك الإلكتروني.",
+  "activeListings": "الإعلانات النشطة"
 }

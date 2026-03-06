@@ -23,6 +23,95 @@ class _HomeScreenState extends State<HomeScreen> {
   final MapController _mapController = MapController();
   LatLng _mapCenter = const LatLng(0, 0);
   bool _isLoadingLocation = true;
+  
+  String? _selectedCategory;
+  String? _selectedCity;
+
+  final List<String> _categories = [
+    'All',
+    'Clothing',
+    'Furniture',
+    'Books',
+    'Electronics',
+    'Toys',
+    'Other'
+  ];
+
+  final List<String> _cities = [
+    'All',
+    'Amman',
+    'Zarqa',
+    'Irbid',
+    'Aqaba',
+    'Mafraq',
+    'Jerash',
+    'Madaba',
+    'Other'
+  ];
+
+  void _showFilterDialog() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setModalState) {
+            return Padding(
+              padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom,
+                left: 24,
+                right: 24,
+                top: 24,
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text(context.l10n.filterOptions ?? 'Filter Options', style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                  const SizedBox(height: 24),
+                  DropdownButtonFormField<String>(
+                    value: _selectedCategory ?? 'All',
+                    decoration: InputDecoration(labelText: context.l10n.categoryAutoFilled),
+                    items: _categories.map((c) {
+                      return DropdownMenuItem(value: c, child: Text(c));
+                    }).toList(),
+                    onChanged: (val) {
+                      setModalState(() {
+                        _selectedCategory = val == 'All' ? null : val;
+                      });
+                    },
+                  ),
+                  const SizedBox(height: 16),
+                  DropdownButtonFormField<String>(
+                    value: _selectedCity ?? 'All',
+                    decoration: InputDecoration(labelText: context.l10n.city),
+                    items: _cities.map((c) {
+                      return DropdownMenuItem(value: c, child: Text(c));
+                    }).toList(),
+                    onChanged: (val) {
+                      setModalState(() {
+                        _selectedCity = val == 'All' ? null : val;
+                      });
+                    },
+                  ),
+                  const SizedBox(height: 24),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      setState(() {}); // Trigger stream rebuild with new filters
+                    },
+                    child: Text(context.l10n.applyFilters ?? 'Apply Filters'),
+                  ),
+                  const SizedBox(height: 24),
+                ],
+              ),
+            );
+          }
+        );
+      },
+    );
+  }
 
   @override
   void initState() {
@@ -88,10 +177,15 @@ class _HomeScreenState extends State<HomeScreen> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(context.l10n.locationFailed)),
-        );
         setState(() => _isLoadingLocation = false);
+        // Delay the failure banner by 8 seconds as requested
+        Future.delayed(const Duration(seconds: 8), () {
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(context.l10n.locationFailed)),
+            );
+          }
+        });
       }
     }
   }
@@ -112,9 +206,7 @@ class _HomeScreenState extends State<HomeScreen> {
           actions: [
             IconButton(
               icon: const Icon(Icons.filter_list),
-              onPressed: () {
-                // Show filter dialog
-              },
+              onPressed: _showFilterDialog,
             ),
             const SizedBox(width: 8),
           ],
@@ -138,7 +230,11 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             Expanded(
               child: StreamBuilder<List<ItemModel>>(
-                stream: _databaseService.getItemsStream(searchQuery: _searchQuery),
+                stream: _databaseService.getItemsStream(
+                  searchQuery: _searchQuery,
+                  category: _selectedCategory,
+                  city: _selectedCity,
+                ),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(child: CircularProgressIndicator());

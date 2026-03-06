@@ -555,12 +555,12 @@ For the Green Share project, we approached requirements gathering as a process o
 FR1 The system shall allow users to register using Phone Number, Email.
 FR2 The system shall allow users to upload images and descriptions of items. 
 FR3 The system shall use AI to automatically classify the item category from the image.
-FR4 The system shall allow users to search and filter items by category and location. 
+FR4 The system shall allow users to search and filter items by category and location. done 
 FR5 The system shall allow direct messaging (chat) between the donor and the recipient. done
 FR6 The system shall allow users to rate donors and leave reviews. done
 FR7 The system shall maintain a history log of all donated and received items. done
 FR8 The system shall allow users to view the location of items on a map. done
-FR9 The system shall allow users to edit their profile information.   
+FR9 The system shall allow users to edit their profile information.   done
 FR10 The system shall allow the user to choose their preferred language (Arabic/English). done
 3.3 Non-Functional Requirement:
 NFR1 The system shall provide a user-friendly interface suitable for all age groups.

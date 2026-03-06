@@ -87,7 +87,7 @@ class DatabaseService {
     }
   }
 
-  Stream<List<ItemModel>> getItemsStream({String? category, String? searchQuery}) {
+  Stream<List<ItemModel>> getItemsStream({String? category, String? city, String? searchQuery}) {
     Query query = _firestore.collection('items');
     
     // Default filter for available items
@@ -97,9 +97,13 @@ class DatabaseService {
     return query.snapshots().map((snapshot) {
       var items = snapshot.docs.map((doc) => ItemModel.fromJson(doc.data() as Map<String, dynamic>, doc.id)).toList();
       
-      // Client-side filtering for category and search
+      // Client-side filtering for category, city, and search
       if (category != null && category != 'All') {
         items = items.where((item) => item.category == category).toList();
+      }
+      
+      if (city != null && city != 'All') {
+        items = items.where((item) => item.city == city).toList();
       }
       
       if (searchQuery != null && searchQuery.isNotEmpty) {
@@ -118,6 +122,7 @@ class DatabaseService {
     return _firestore
         .collection('items')
         .where('ownerId', isEqualTo: userId)
+        .where('status', isEqualTo: 'available')
         .orderBy('postedAt', descending: true)
         .snapshots()
         .map((snapshot) => snapshot.docs.map((doc) => ItemModel.fromJson(doc.data() as Map<String, dynamic>, doc.id)).toList());

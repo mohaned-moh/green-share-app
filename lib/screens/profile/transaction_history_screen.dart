@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:green_share/core/app_theme.dart';
 import 'package:green_share/models/item_model.dart';
 import 'package:green_share/services/database_service.dart';
-import 'package:green_share/widgets/item_card.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:green_share/screens/home/item_details_screen.dart';
+import 'package:intl/intl.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:green_share/models/review_model.dart';
 
 class TransactionHistoryScreen extends StatefulWidget {
   const TransactionHistoryScreen({super.key});
@@ -116,14 +119,280 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> wit
           itemCount: items.length,
           itemBuilder: (context, index) {
             final item = items[index];
-            return Padding(
-              padding: const EdgeInsets.only(bottom: 16.0),
-              child: SizedBox(
-                width: double.infinity,
-                child: ItemCard(item: item),
+            return Card(
+              margin: const EdgeInsets.only(bottom: 12.0),
+              elevation: 0,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+                side: BorderSide(color: Colors.grey.shade200),
+              ),
+              child: InkWell(
+                borderRadius: BorderRadius.circular(12),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ItemDetailsScreen(item: item),
+                    ),
+                  );
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Thumbnail
+                      Container(
+                        width: 80,
+                        height: 80,
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade100,
+                          borderRadius: BorderRadius.circular(8),
+                          image: item.imageUrls.isNotEmpty
+                              ? DecorationImage(
+                                  image: NetworkImage(item.imageUrls.first),
+                                  fit: BoxFit.cover,
+                                )
+                              : null,
+                        ),
+                        child: item.imageUrls.isEmpty
+                            ? Icon(Icons.image_outlined, color: Colors.grey.shade400)
+                            : null,
+                      ),
+                      const SizedBox(width: 16),
+                      // Details
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              item.title,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              item.category,
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.grey.shade600,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            Row(
+                              children: [
+                                Icon(Icons.calendar_today, size: 14, color: Colors.grey.shade500),
+                                const SizedBox(width: 4),
+                                Text(
+                                  DateFormat.yMMMd().format(item.postedAt),
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.grey.shade500,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                      // Status / Badge and Rating Button
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                            decoration: BoxDecoration(
+                              color: isDonated ? Colors.green.withOpacity(0.1) : Colors.blue.withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Text(
+                              isDonated ? 'Donated' : 'Received',
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                                color: isDonated ? Colors.green : Colors.blue,
+                              ),
+                            ),
+                          ),
+                          if (item.status == 'donated' && 
+                              ((item.type == 'Donate' && item.receiverId != null && FirebaseAuth.instance.currentUser?.uid == item.receiverId) ||
+                               (item.type == 'Request' && item.ownerId == FirebaseAuth.instance.currentUser?.uid)))
+                            Padding(
+                              padding: const EdgeInsets.only(top: 8.0),
+                              child: item.hasBeenRated
+                                  ? Container(
+                                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                      decoration: BoxDecoration(
+                                        color: Colors.green.shade50,
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child: const Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Icon(Icons.star, color: Colors.green, size: 12),
+                                          SizedBox(width: 4),
+                                          Text(
+                                            'Rated',
+                                            style: TextStyle(
+                                              color: Colors.green,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 10,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    )
+                                  : GestureDetector(
+                                      onTap: () => _showRatingDialog(context, item),
+                                      child: Container(
+                                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                        decoration: BoxDecoration(
+                                          color: Colors.amber.shade50,
+                                          borderRadius: BorderRadius.circular(8),
+                                        ),
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Icon(Icons.star_outline, color: Colors.amber.shade900, size: 12),
+                                            const SizedBox(width: 4),
+                                            Text(
+                                              'Rate',
+                                              style: TextStyle(
+                                                color: Colors.amber.shade900,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 10,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                            ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
               ),
             );
           },
+        );
+      },
+    );
+  }
+
+  void _showRatingDialog(BuildContext context, ItemModel item) {
+    double _rating = 5.0;
+    final _commentController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (dialogContext) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          title: const Text('Rate Donor', style: TextStyle(color: AppTheme.primaryColor)),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text('How was your experience?', style: TextStyle(color: Colors.black87)),
+                const SizedBox(height: 16),
+                RatingBar.builder(
+                  initialRating: 5,
+                  minRating: 1,
+                  direction: Axis.horizontal,
+                  allowHalfRating: true,
+                  itemCount: 5,
+                  itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
+                  itemBuilder: (context, _) => const Icon(
+                    Icons.star,
+                    color: Colors.amber,
+                  ),
+                  onRatingUpdate: (rating) {
+                    _rating = rating;
+                  },
+                ),
+                const SizedBox(height: 24),
+                TextField(
+                  controller: _commentController,
+                  maxLines: 3,
+                  decoration: InputDecoration(
+                    hintText: 'Leave a brief review (optional)',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: BorderSide(color: Colors.grey.shade300),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: const BorderSide(color: AppTheme.primaryColor),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(dialogContext),
+              child: const Text('Cancel', style: TextStyle(color: Colors.grey)),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                final currentUserId = FirebaseAuth.instance.currentUser?.uid;
+                if (currentUserId == null) return;
+                
+                // Show loading
+                Navigator.pop(dialogContext);
+                showDialog(
+                  context: context, 
+                  barrierDismissible: false,
+                  builder: (_) => const Center(child: CircularProgressIndicator())
+                );
+
+                try {
+                  final db = DatabaseService();
+                  final currentUser = await db.getUserProfile(currentUserId);
+                  final realDonorId = item.type == 'Donate' ? item.ownerId : item.receiverId ?? item.ownerId;
+
+                  final review = ReviewModel(
+                    id: '',
+                    reviewerId: currentUserId,
+                    reviewerName: currentUser?.name ?? 'User',
+                    donorId: realDonorId,
+                    itemId: item.id,
+                    rating: _rating,
+                    comment: _commentController.text.trim(),
+                    timestamp: DateTime.now(),
+                  );
+
+                  await db.addReview(review);
+                  
+                  if (context.mounted) {
+                    Navigator.pop(context); // Hide loading
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Thank you for your rating!')),
+                    );
+                  }
+                } catch (e) {
+                  if (context.mounted) {
+                    Navigator.pop(context); // Hide loading
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Failed to submit review.')),
+                    );
+                  }
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppTheme.primaryColor,
+                foregroundColor: Colors.white,
+              ),
+              child: const Text('Submit'),
+            ),
+          ],
         );
       },
     );

@@ -179,5 +179,21 @@
   "user": "User",
   "firstName": "First Name",
   "lastName": "Last Name",
-  "commercialRegistration": "CR (Commercial Number)"
+  "commercialRegistration": "CR (Commercial Number)",
+  "adminDashboard": "Admin Dashboard",
+  "dataCenter": "Data Center",
+  "userManagement": "User Management",
+  "feedbackHub": "Feedback Hub",
+  "globalActivity": "Global Activity",
+  "blockUser": "Block User",
+  "unblockUser": "Unblock",
+  "greenImpact": "Green Impact",
+  "totalDonations": "Total Donations",
+  "totalRequests": "Total Requests",
+  "markResolved": "Mark Resolved",
+  "resolved": "Resolved",
+  "newFeedback": "New",
+  "submitFeedback": "Submit Feedback",
+  "tellUsWhatYouThink": "Tell us what you think!",
+  "feedbackSubmitted": "Feedback submitted successfully."
 }

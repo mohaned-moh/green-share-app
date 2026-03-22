@@ -382,4 +382,52 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get commercialRegistration => 'CR (Commercial Number)';
+
+  @override
+  String get adminDashboard => 'Admin Dashboard';
+
+  @override
+  String get dataCenter => 'Data Center';
+
+  @override
+  String get userManagement => 'User Management';
+
+  @override
+  String get feedbackHub => 'Feedback Hub';
+
+  @override
+  String get globalActivity => 'Global Activity';
+
+  @override
+  String get blockUser => 'Block User';
+
+  @override
+  String get unblockUser => 'Unblock';
+
+  @override
+  String get greenImpact => 'Green Impact';
+
+  @override
+  String get totalDonations => 'Total Donations';
+
+  @override
+  String get totalRequests => 'Total Requests';
+
+  @override
+  String get markResolved => 'Mark Resolved';
+
+  @override
+  String get resolved => 'Resolved';
+
+  @override
+  String get newFeedback => 'New';
+
+  @override
+  String get submitFeedback => 'Submit Feedback';
+
+  @override
+  String get tellUsWhatYouThink => 'Tell us what you think!';
+
+  @override
+  String get feedbackSubmitted => 'Feedback submitted successfully.';
 }

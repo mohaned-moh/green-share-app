@@ -179,5 +179,21 @@
   "user": "مستخدم",
   "firstName": "الاسم الأول",
   "lastName": "اسم العائلة",
-  "commercialRegistration": "رقم السجل التجاري (CR)"
+  "commercialRegistration": "رقم السجل التجاري (CR)",
+  "adminDashboard": "لوحة تحكم المشرف",
+  "dataCenter": "مركز البيانات",
+  "userManagement": "إدارة المستخدمين",
+  "feedbackHub": "مركز الملاحظات",
+  "globalActivity": "النشاط العام",
+  "blockUser": "حظر المستخدم",
+  "unblockUser": "إلغاء الحظر",
+  "greenImpact": "الأثر البيئي",
+  "totalDonations": "إجمالي التبرعات",
+  "totalRequests": "إجمالي الطلبات",
+  "markResolved": "وضع كـ محلول",
+  "resolved": "محلول",
+  "newFeedback": "جديد",
+  "submitFeedback": "إرسال الملاحظات",
+  "tellUsWhatYouThink": "أخبرنا برأيك!",
+  "feedbackSubmitted": "تم إرسال الملاحظات بنجاح."
 }

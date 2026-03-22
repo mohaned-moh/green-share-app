@@ -3,6 +3,7 @@ import 'package:green_share/screens/chat/chat_list_screen.dart';
 import 'package:green_share/screens/home/home_screen.dart';
 import 'package:green_share/screens/post/post_item_screen.dart';
 import 'package:green_share/screens/profile/profile_screen.dart';
+import 'package:green_share/screens/admin/admin_dashboard_screen.dart';
 import 'package:green_share/services/database_service.dart';
 import 'package:green_share/models/chat_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -19,6 +20,30 @@ class _MainTabScreenState extends State<MainTabScreen> {
   int _currentIndex = 0;
   final DatabaseService _databaseService = DatabaseService();
   final String? currentUserId = FirebaseAuth.instance.currentUser?.uid;
+  bool _isAdmin = false;
+  bool _isLoadingRole = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkAdminRole();
+  }
+
+  Future<void> _checkAdminRole() async {
+    if (currentUserId != null) {
+      final user = await _databaseService.getUserProfile(currentUserId!);
+      if (mounted) {
+        setState(() {
+          _isAdmin = user?.role == 'admin';
+          _isLoadingRole = false;
+        });
+      }
+    } else {
+      if (mounted) {
+        setState(() => _isLoadingRole = false);
+      }
+    }
+  }
 
   Widget _buildChatIcon(bool isSelected) {
     if (currentUserId == null) {
@@ -43,20 +68,41 @@ class _MainTabScreenState extends State<MainTabScreen> {
     );
   }
 
-  final List<Widget> _screens = [
-    const HomeScreen(),
-    const PostItemScreen(),
-    const ChatListScreen(),
-    const ProfileScreen(),
-  ];
+  List<Widget> get _screens {
+    final screens = <Widget>[
+      const HomeScreen(),
+      const PostItemScreen(),
+      const ChatListScreen(),
+      const ProfileScreen(),
+    ];
+    if (_isAdmin) {
+      screens.insert(3, const AdminDashboardScreen());
+    }
+    return screens;
+  }
 
   @override
   Widget build(BuildContext context) {
+    if (_isLoadingRole) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+
     return LayoutBuilder(
       builder: (context, constraints) {
         final isWideScreen = constraints.maxWidth > 800;
 
         if (isWideScreen) {
+          final railDests = <NavigationRailDestination>[
+            NavigationRailDestination(icon: const Icon(Icons.home_outlined), selectedIcon: const Icon(Icons.home), label: Text(context.l10n.home)),
+            NavigationRailDestination(icon: const Icon(Icons.add_circle_outline), selectedIcon: const Icon(Icons.add_circle), label: Text(context.l10n.post)),
+            NavigationRailDestination(icon: _buildChatIcon(false), selectedIcon: _buildChatIcon(true), label: Text(context.l10n.chat)),
+            if (_isAdmin)
+              NavigationRailDestination(icon: const Icon(Icons.admin_panel_settings_outlined), selectedIcon: const Icon(Icons.admin_panel_settings), label: Text(context.l10n.adminDashboard)),
+            NavigationRailDestination(icon: const Icon(Icons.person_outline), selectedIcon: const Icon(Icons.person), label: Text(context.l10n.profile)),
+          ];
+
           return Scaffold(
             body: Row(
               children: [
@@ -67,12 +113,7 @@ class _MainTabScreenState extends State<MainTabScreen> {
                   },
                   extended: true,
                   minExtendedWidth: 200,
-                  destinations: [
-                    NavigationRailDestination(icon: const Icon(Icons.home_outlined), selectedIcon: const Icon(Icons.home), label: Text(context.l10n.home)),
-                    NavigationRailDestination(icon: const Icon(Icons.add_circle_outline), selectedIcon: const Icon(Icons.add_circle), label: Text(context.l10n.post)),
-                    NavigationRailDestination(icon: _buildChatIcon(false), selectedIcon: _buildChatIcon(true), label: Text(context.l10n.chat)),
-                    NavigationRailDestination(icon: const Icon(Icons.person_outline), selectedIcon: const Icon(Icons.person), label: Text(context.l10n.profile)),
-                  ],
+                  destinations: railDests,
                 ),
                 const VerticalDivider(thickness: 1, width: 1),
                 Expanded(child: _screens[_currentIndex]),
@@ -81,6 +122,15 @@ class _MainTabScreenState extends State<MainTabScreen> {
           );
         }
 
+        final navDests = <NavigationDestination>[
+          NavigationDestination(icon: const Icon(Icons.home_outlined), selectedIcon: const Icon(Icons.home), label: context.l10n.home),
+          NavigationDestination(icon: const Icon(Icons.add_circle_outline), selectedIcon: const Icon(Icons.add_circle), label: context.l10n.post),
+          NavigationDestination(icon: _buildChatIcon(false), selectedIcon: _buildChatIcon(true), label: context.l10n.chat),
+          if (_isAdmin)
+            NavigationDestination(icon: const Icon(Icons.admin_panel_settings_outlined), selectedIcon: const Icon(Icons.admin_panel_settings), label: context.l10n.adminDashboard),
+          NavigationDestination(icon: const Icon(Icons.person_outline), selectedIcon: const Icon(Icons.person), label: context.l10n.profile),
+        ];
+
         return Scaffold(
           body: _screens[_currentIndex],
           bottomNavigationBar: NavigationBar(
@@ -88,16 +138,10 @@ class _MainTabScreenState extends State<MainTabScreen> {
             onDestinationSelected: (index) {
               setState(() => _currentIndex = index);
             },
-            destinations: [
-              NavigationDestination(icon: const Icon(Icons.home_outlined), selectedIcon: const Icon(Icons.home), label: context.l10n.home),
-              NavigationDestination(icon: const Icon(Icons.add_circle_outline), selectedIcon: const Icon(Icons.add_circle), label: context.l10n.post),
-              NavigationDestination(icon: _buildChatIcon(false), selectedIcon: _buildChatIcon(true), label: context.l10n.chat),
-              NavigationDestination(icon: const Icon(Icons.person_outline), selectedIcon: const Icon(Icons.person), label: context.l10n.profile),
-            ],
+            destinations: navDests,
           ),
         );
       },
     );
   }
 }
-

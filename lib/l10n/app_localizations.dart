@@ -805,6 +805,102 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'CR (Commercial Number)'**
   String get commercialRegistration;
+
+  /// No description provided for @adminDashboard.
+  ///
+  /// In en, this message translates to:
+  /// **'Admin Dashboard'**
+  String get adminDashboard;
+
+  /// No description provided for @dataCenter.
+  ///
+  /// In en, this message translates to:
+  /// **'Data Center'**
+  String get dataCenter;
+
+  /// No description provided for @userManagement.
+  ///
+  /// In en, this message translates to:
+  /// **'User Management'**
+  String get userManagement;
+
+  /// No description provided for @feedbackHub.
+  ///
+  /// In en, this message translates to:
+  /// **'Feedback Hub'**
+  String get feedbackHub;
+
+  /// No description provided for @globalActivity.
+  ///
+  /// In en, this message translates to:
+  /// **'Global Activity'**
+  String get globalActivity;
+
+  /// No description provided for @blockUser.
+  ///
+  /// In en, this message translates to:
+  /// **'Block User'**
+  String get blockUser;
+
+  /// No description provided for @unblockUser.
+  ///
+  /// In en, this message translates to:
+  /// **'Unblock'**
+  String get unblockUser;
+
+  /// No description provided for @greenImpact.
+  ///
+  /// In en, this message translates to:
+  /// **'Green Impact'**
+  String get greenImpact;
+
+  /// No description provided for @totalDonations.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Donations'**
+  String get totalDonations;
+
+  /// No description provided for @totalRequests.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Requests'**
+  String get totalRequests;
+
+  /// No description provided for @markResolved.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark Resolved'**
+  String get markResolved;
+
+  /// No description provided for @resolved.
+  ///
+  /// In en, this message translates to:
+  /// **'Resolved'**
+  String get resolved;
+
+  /// No description provided for @newFeedback.
+  ///
+  /// In en, this message translates to:
+  /// **'New'**
+  String get newFeedback;
+
+  /// No description provided for @submitFeedback.
+  ///
+  /// In en, this message translates to:
+  /// **'Submit Feedback'**
+  String get submitFeedback;
+
+  /// No description provided for @tellUsWhatYouThink.
+  ///
+  /// In en, this message translates to:
+  /// **'Tell us what you think!'**
+  String get tellUsWhatYouThink;
+
+  /// No description provided for @feedbackSubmitted.
+  ///
+  /// In en, this message translates to:
+  /// **'Feedback submitted successfully.'**
+  String get feedbackSubmitted;
 }
 
 class _AppLocalizationsDelegate

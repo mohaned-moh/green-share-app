@@ -383,4 +383,52 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get commercialRegistration => 'رقم السجل التجاري (CR)';
+
+  @override
+  String get adminDashboard => 'لوحة تحكم المشرف';
+
+  @override
+  String get dataCenter => 'مركز البيانات';
+
+  @override
+  String get userManagement => 'إدارة المستخدمين';
+
+  @override
+  String get feedbackHub => 'مركز الملاحظات';
+
+  @override
+  String get globalActivity => 'النشاط العام';
+
+  @override
+  String get blockUser => 'حظر المستخدم';
+
+  @override
+  String get unblockUser => 'إلغاء الحظر';
+
+  @override
+  String get greenImpact => 'الأثر البيئي';
+
+  @override
+  String get totalDonations => 'إجمالي التبرعات';
+
+  @override
+  String get totalRequests => 'إجمالي الطلبات';
+
+  @override
+  String get markResolved => 'وضع كـ محلول';
+
+  @override
+  String get resolved => 'محلول';
+
+  @override
+  String get newFeedback => 'جديد';
+
+  @override
+  String get submitFeedback => 'إرسال الملاحظات';
+
+  @override
+  String get tellUsWhatYouThink => 'أخبرنا برأيك!';
+
+  @override
+  String get feedbackSubmitted => 'تم إرسال الملاحظات بنجاح.';
 }

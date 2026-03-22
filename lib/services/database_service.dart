@@ -5,6 +5,7 @@ import 'package:green_share/models/item_model.dart';
 import 'package:green_share/models/user_model.dart';
 import 'package:green_share/models/chat_model.dart';
 import 'package:green_share/models/review_model.dart';
+import 'package:green_share/models/feedback_model.dart';
 
 class DatabaseService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -292,6 +293,52 @@ class DatabaseService {
         .snapshots()
         .map((snapshot) => snapshot.docs
             .map((doc) => ReviewModel.fromJson(doc.data(), doc.id))
+            .toList());
+  }
+
+  // --- Admin Functions ---
+
+  Stream<List<UserModel>> getAllUsersStream() {
+    return _firestore
+        .collection('users')
+        .orderBy('createdAt', descending: true)
+        .snapshots()
+        .map((snapshot) => snapshot.docs
+            .map((doc) => UserModel.fromJson(doc.data(), doc.id))
+            .toList());
+  }
+
+  Future<void> updateUserBlockStatus(String uid, bool isBlocked) async {
+    await _firestore.collection('users').doc(uid).update({'isBlocked': isBlocked});
+  }
+
+  Future<void> submitFeedback(FeedbackModel feedback) async {
+    final docRef = await _firestore.collection('feedback').add(feedback.toJson());
+    await docRef.update({'id': docRef.id});
+  }
+
+  Stream<List<FeedbackModel>> getAllFeedbackStream() {
+    return _firestore
+        .collection('feedback')
+        .orderBy('createdAt', descending: true)
+        .snapshots()
+        .map((snapshot) => snapshot.docs
+            .map((doc) => FeedbackModel.fromJson(doc.data(), doc.id))
+            .toList());
+  }
+
+  Future<void> updateFeedbackStatus(String feedbackId, String status) async {
+    await _firestore.collection('feedback').doc(feedbackId).update({'status': status});
+  }
+
+  Stream<List<ItemModel>> getGlobalActivityStream() {
+    // Shows all items regardless of status for global oversight
+    return _firestore
+        .collection('items')
+        .orderBy('postedAt', descending: true)
+        .snapshots()
+        .map((snapshot) => snapshot.docs
+            .map((doc) => ItemModel.fromJson(doc.data(), doc.id))
             .toList());
   }
 }

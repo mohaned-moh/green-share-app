@@ -53,6 +53,8 @@ dependencies:
   flutter_rating_bar: ^4.0.1
   shared_preferences: ^2.5.4
   http: ^1.6.0
+  fl_chart: ^1.2.0
+  timeago: ^3.7.1
 
 dev_dependencies:
   flutter_test:

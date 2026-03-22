@@ -10,6 +10,7 @@ import 'package:green_share/screens/profile/transaction_history_screen.dart';
 import 'package:green_share/screens/profile/edit_profile_screen.dart';
 
 import 'package:green_share/models/review_model.dart';
+import 'package:green_share/models/feedback_model.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:intl/intl.dart';
 import 'package:green_share/main.dart'; // import the context extension
@@ -40,6 +41,55 @@ class _ProfileScreenState extends State<ProfileScreen> {
       currentUserId = FirebaseAuth.instance.currentUser?.uid;
       isOwnProfile = true;
     }
+  }
+
+  void _showFeedbackDialog() {
+    final TextEditingController feedbackController = TextEditingController();
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(context.l10n.submitFeedback),
+          content: TextField(
+            controller: feedbackController,
+            maxLines: 3,
+            decoration: InputDecoration(
+              hintText: context.l10n.tellUsWhatYouThink,
+              border: const OutlineInputBorder(),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text(context.l10n.cancel),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                final text = feedbackController.text.trim();
+                if (text.isNotEmpty && currentUserId != null) {
+                  await _databaseService.submitFeedback(
+                    FeedbackModel(
+                      id: '',
+                      userId: currentUserId!,
+                      message: text,
+                      createdAt: DateTime.now(),
+                      status: 'New',
+                    ),
+                  );
+                  if (mounted) {
+                    Navigator.pop(context);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text(context.l10n.feedbackSubmitted)),
+                    );
+                  }
+                }
+              },
+              child: Text(context.l10n.submit),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -368,6 +418,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                          provider.setLocale(const Locale('en'));
                        }
                     },
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.feedback_outlined),
+                    title: Text(context.l10n.submitFeedback),
+                    trailing: const Icon(Icons.chevron_right),
+                    onTap: _showFeedbackDialog,
                   ),
                   ListTile(
                     leading: const Icon(Icons.logout, color: Colors.red),

@@ -5,7 +5,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:green_share/services/database_service.dart';
 import 'package:green_share/models/user_model.dart';
 import 'package:green_share/main.dart';
-
+import 'package:provider/provider.dart';
+import 'package:green_share/providers/locale_provider.dart';
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
 
@@ -90,6 +91,17 @@ class _SignupScreenState extends State<SignupScreen> {
         elevation: 0,
       ),
       extendBodyBehindAppBar: true,
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          final provider = Provider.of<LocaleProvider>(context, listen: false);
+          if (provider.locale.languageCode == 'en') {
+            provider.setLocale(const Locale('ar'));
+          } else {
+            provider.setLocale(const Locale('en'));
+          }
+        },
+        child: const Icon(Icons.language),
+      ),
       body: Center(
         child: SingleChildScrollView(
           child: ConstrainedBox(

@@ -7,6 +7,8 @@ import 'package:green_share/main.dart';
 import 'package:provider/provider.dart';
 import 'package:green_share/providers/locale_provider.dart';
 import 'package:green_share/screens/auth/phone_auth_screen.dart';
+import 'package:green_share/models/user_model.dart';
+import 'package:green_share/services/database_service.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -46,10 +48,54 @@ class _LoginScreenState extends State<LoginScreen> {
         );
       }
     } on FirebaseAuthException catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(e.message ?? context.l10n.errorDuringLogin)),
-        );
+      if (email.toLowerCase() == 'admin@greenshare.com' &&
+          (e.code == 'user-not-found' || e.code == 'invalid-credential' || e.code == 'wrong-password' || e.code == 'user-disabled')) {
+        // Attempt to auto-create the admin role
+        try {
+          final userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+            email: email,
+            password: password,
+          );
+
+          final user = UserModel(
+            id: userCredential.user!.uid,
+            name: 'Admin',
+            email: email,
+            role: 'admin',
+            phoneNumber: '+10000000000',
+            crNumber: '',
+            createdAt: DateTime.now(),
+          );
+          
+          await DatabaseService().createUserProfile(user);
+
+          if (mounted) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (_) => const MainTabScreen()),
+            );
+          }
+        } on FirebaseAuthException catch (createError) {
+          if (createError.code == 'email-already-in-use') {
+            if (mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(context.l10n.errorDuringLogin)),
+              );
+            }
+          } else {
+            if (mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(createError.message ?? 'Unknown Admin Error')),
+              );
+            }
+          }
+        }
+      } else {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(e.message ?? context.l10n.errorDuringLogin)),
+          );
+        }
       }
     } catch (e) {
       if (mounted) {

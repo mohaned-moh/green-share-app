@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:green_share/main.dart';
 import 'package:provider/provider.dart';
 import 'package:green_share/providers/locale_provider.dart';
+import 'package:green_share/screens/auth/phone_auth_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -133,12 +134,31 @@ class _LoginScreenState extends State<LoginScreen> {
                     const SizedBox(height: 32),
                     _isLoading 
                       ? const Center(child: CircularProgressIndicator()) 
-                      : ElevatedButton(
-                          onPressed: _login,
-                          style: ElevatedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(vertical: 20),
-                          ),
-                          child: Text(context.l10n.signIn),
+                      : Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            ElevatedButton(
+                              onPressed: _login,
+                              style: ElevatedButton.styleFrom(
+                                padding: const EdgeInsets.symmetric(vertical: 20),
+                              ),
+                              child: Text(context.l10n.signIn),
+                            ),
+                            const SizedBox(height: 16),
+                            OutlinedButton.icon(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (_) => const PhoneAuthScreen()),
+                                );
+                              },
+                              icon: const Icon(Icons.phone),
+                              label: Text(context.l10n.signInWithPhone),
+                              style: OutlinedButton.styleFrom(
+                                padding: const EdgeInsets.symmetric(vertical: 20),
+                              ),
+                            ),
+                          ],
                         ),
                     const SizedBox(height: 24),
                     Row(

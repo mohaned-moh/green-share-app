@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:green_share/core/app_theme.dart';
-import 'package:green_share/screens/main_tab_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:green_share/services/database_service.dart';
-import 'package:green_share/models/user_model.dart';
 import 'package:green_share/main.dart';
 import 'package:provider/provider.dart';
 import 'package:green_share/providers/locale_provider.dart';
+import 'package:green_share/screens/auth/otp_screen.dart';
+
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
 
@@ -15,21 +15,60 @@ class SignupScreen extends StatefulWidget {
 }
 
 class _SignupScreenState extends State<SignupScreen> {
-  final _nameController = TextEditingController();
+  final _firstNameController = TextEditingController();
+  final _lastNameController = TextEditingController();
+  final _phoneController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  String _selectedRole = 'Donor';
-  final List<String> _roles = ['Donor', 'Recipient', 'Charity'];
+  final _crController = TextEditingController();
+  
+  String _selectedRole = 'User';
+  final List<String> _roles = ['User', 'Charity'];
   
   bool _isLoading = false;
-  final DatabaseService _databaseService = DatabaseService();
+
+  void _navigateToOtp(String verificationId, String phone, [ConfirmationResult? webResult]) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => OtpScreen(
+          phoneNumber: phone,
+          verificationId: verificationId,
+          webConfirmationResult: webResult,
+          firstName: _firstNameController.text.trim(),
+          lastName: _lastNameController.text.trim(),
+          email: _emailController.text.trim(),
+          password: _passwordController.text.trim(),
+          role: _selectedRole,
+          crNumber: _selectedRole == 'Charity' ? _crController.text.trim() : null,
+        ),
+      ),
+    );
+  }
 
   Future<void> _signup() async {
-    final name = _nameController.text.trim();
+    final firstName = _firstNameController.text.trim();
+    final lastName = _lastNameController.text.trim();
+    final phone = _phoneController.text.trim();
     final email = _emailController.text.trim();
     final password = _passwordController.text.trim();
+    final crNumber = _crController.text.trim();
 
-    if (name.isEmpty || email.isEmpty || password.isEmpty) {
+    if (firstName.isEmpty || lastName.isEmpty || phone.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(context.l10n.pleaseFillAllFields)),
+      );
+      return;
+    }
+
+    if (email.isNotEmpty && password.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(context.l10n.pleaseEnterEmailPass)),
+      );
+      return;
+    }
+
+    if (_selectedRole == 'Charity' && crNumber.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(context.l10n.pleaseFillAllFields)),
       );
@@ -39,45 +78,45 @@ class _SignupScreenState extends State<SignupScreen> {
     setState(() => _isLoading = true);
 
     try {
-      final userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-
-      final user = userCredential.user;
-      if (user != null) {
-        // Create user profile in Firestore
-        final newUserModel = UserModel(
-          id: user.uid,
-          name: name,
-          email: email,
-          createdAt: DateTime.now(),
-        );
-        await _databaseService.createUserProfile(newUserModel);
-
+      if (kIsWeb) {
+        ConfirmationResult result = await FirebaseAuth.instance.signInWithPhoneNumber(phone);
         if (mounted) {
-          Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(builder: (_) => const MainTabScreen()),
-            (route) => false,
-          );
+          setState(() => _isLoading = false);
+          _navigateToOtp(result.verificationId, phone, result);
         }
-      }
-    } on FirebaseAuthException catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(e.message ?? context.l10n.signupFailed)),
+      } else {
+        await FirebaseAuth.instance.verifyPhoneNumber(
+          phoneNumber: phone,
+          verificationCompleted: (PhoneAuthCredential credential) async {
+            // Usually handled in OTP screen or automatic, keep simple
+          },
+          verificationFailed: (FirebaseAuthException e) {
+            if (mounted) {
+              setState(() => _isLoading = false);
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(e.message ?? context.l10n.signupFailed)),
+              );
+            }
+          },
+          codeSent: (String verificationId, int? resendToken) {
+            if (mounted) {
+              setState(() => _isLoading = false);
+              _navigateToOtp(verificationId, phone);
+            }
+          },
+          codeAutoRetrievalTimeout: (String verificationId) {
+            if (mounted) {
+              setState(() => _isLoading = false);
+            }
+          },
         );
       }
     } catch (e) {
       if (mounted) {
+        setState(() => _isLoading = false);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(context.l10n.unexpectedError(e.toString()))),
         );
-      }
-    } finally {
-      if (mounted) {
-        setState(() => _isLoading = false);
       }
     }
   }
@@ -86,7 +125,7 @@ class _SignupScreenState extends State<SignupScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(''), // Clear title for cleaner look
+        title: const Text(''), 
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
@@ -132,18 +171,44 @@ class _SignupScreenState extends State<SignupScreen> {
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 40),
+                    
+                    Row(
+                      children: [
+                        Expanded(
+                          child: TextField(
+                            controller: _firstNameController,
+                            decoration: InputDecoration(
+                              labelText: context.l10n.firstName,
+                              prefixIcon: const Icon(Icons.person_outline),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: TextField(
+                            controller: _lastNameController,
+                            decoration: InputDecoration(
+                              labelText: context.l10n.lastName,
+                              prefixIcon: const Icon(Icons.person_outline),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
                     TextField(
-                      controller: _nameController,
+                      controller: _phoneController,
                       decoration: InputDecoration(
-                        labelText: context.l10n.fullName,
-                        prefixIcon: const Icon(Icons.person_outline),
+                        labelText: context.l10n.enterPhoneNumber,
+                        prefixIcon: const Icon(Icons.phone),
                       ),
+                      keyboardType: TextInputType.phone,
                     ),
                     const SizedBox(height: 16),
                     TextField(
                       controller: _emailController,
                       decoration: InputDecoration(
-                        labelText: context.l10n.email,
+                        labelText: '${context.l10n.email} (Optional)',
                         prefixIcon: const Icon(Icons.email_outlined),
                       ),
                       keyboardType: TextInputType.emailAddress,
@@ -166,8 +231,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       ),
                       items: _roles.map((role) {
                         return DropdownMenuItem(value: role, child: Text(
-                          role == 'Donor' ? context.l10n.donor : 
-                          role == 'Recipient' ? context.l10n.recipient : 
+                          role == 'User' ? context.l10n.user : 
                           context.l10n.charity
                         ));
                       }).toList(),
@@ -177,6 +241,16 @@ class _SignupScreenState extends State<SignupScreen> {
                         }
                       },
                     ),
+                    if (_selectedRole == 'Charity') ...[
+                      const SizedBox(height: 16),
+                      TextField(
+                        controller: _crController,
+                        decoration: InputDecoration(
+                          labelText: context.l10n.commercialRegistration,
+                          prefixIcon: const Icon(Icons.business),
+                        ),
+                      ),
+                    ],
                     const SizedBox(height: 32),
                     _isLoading 
                       ? const Center(child: CircularProgressIndicator())

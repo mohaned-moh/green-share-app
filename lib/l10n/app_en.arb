@@ -166,5 +166,18 @@
     }
   },
   "reloginRequiredForEmail": "You must re-login to change your email address.",
-  "activeListings": "Active Listings"
+  "activeListings": "Active Listings",
+  "signInWithPhone": "Sign in with Phone",
+  "enterPhoneNumber": "Enter your phone number (e.g. +1234567890)",
+  "phoneVerification": "Phone Verification",
+  "sendCode": "Send Code",
+  "enterOtp": "Enter the 6-digit code",
+  "verifyCode": "Verify Code",
+  "invalidOtp": "Invalid OTP code",
+  "didNotReceiveCode": "Didn't receive code?",
+  "resendCode": "Resend Code",
+  "user": "User",
+  "firstName": "First Name",
+  "lastName": "Last Name",
+  "commercialRegistration": "CR (Commercial Number)"
 }

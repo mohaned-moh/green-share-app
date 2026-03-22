@@ -343,4 +343,43 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get activeListings => 'Active Listings';
+
+  @override
+  String get signInWithPhone => 'Sign in with Phone';
+
+  @override
+  String get enterPhoneNumber => 'Enter your phone number (e.g. +1234567890)';
+
+  @override
+  String get phoneVerification => 'Phone Verification';
+
+  @override
+  String get sendCode => 'Send Code';
+
+  @override
+  String get enterOtp => 'Enter the 6-digit code';
+
+  @override
+  String get verifyCode => 'Verify Code';
+
+  @override
+  String get invalidOtp => 'Invalid OTP code';
+
+  @override
+  String get didNotReceiveCode => 'Didn\'t receive code?';
+
+  @override
+  String get resendCode => 'Resend Code';
+
+  @override
+  String get user => 'User';
+
+  @override
+  String get firstName => 'First Name';
+
+  @override
+  String get lastName => 'Last Name';
+
+  @override
+  String get commercialRegistration => 'CR (Commercial Number)';
 }

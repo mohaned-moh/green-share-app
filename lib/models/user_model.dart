@@ -4,6 +4,9 @@ class UserModel {
   final String id;
   final String name;
   final String email;
+  final String role;
+  final String? phoneNumber;
+  final String? crNumber;
   final String? profileImageUrl;
   final DateTime createdAt;
   final int givenItemsCount;
@@ -15,6 +18,9 @@ class UserModel {
     required this.id,
     required this.name,
     required this.email,
+    required this.role,
+    this.phoneNumber,
+    this.crNumber,
     this.profileImageUrl,
     required this.createdAt,
     this.givenItemsCount = 0,
@@ -28,6 +34,9 @@ class UserModel {
       'id': id,
       'name': name,
       'email': email,
+      'role': role,
+      'phoneNumber': phoneNumber,
+      'crNumber': crNumber,
       'profileImageUrl': profileImageUrl,
       'createdAt': Timestamp.fromDate(createdAt),
       'givenItemsCount': givenItemsCount,
@@ -42,6 +51,9 @@ class UserModel {
       id: documentId,
       name: map['name'] ?? '',
       email: map['email'] ?? '',
+      role: map['role'] ?? 'User',
+      phoneNumber: map['phoneNumber'],
+      crNumber: map['crNumber'],
       profileImageUrl: map['profileImageUrl'],
       createdAt: map['createdAt'] is Timestamp 
           ? (map['createdAt'] as Timestamp).toDate()

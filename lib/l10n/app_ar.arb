@@ -166,5 +166,18 @@
     }
   },
   "reloginRequiredForEmail": "يجب تسجيل الدخول مرة أخرى لتغيير عنوان بريدك الإلكتروني.",
-  "activeListings": "الإعلانات النشطة"
+  "activeListings": "الإعلانات النشطة",
+  "signInWithPhone": "الدخول برقم الهاتف",
+  "enterPhoneNumber": "أدخل رقم هاتفك (مثال: 1234567890+)",
+  "phoneVerification": "التحقق من الهاتف",
+  "sendCode": "إرسال الرمز",
+  "enterOtp": "أدخل الرمز المكون من 6 أرقام",
+  "verifyCode": "تحقق من الرمز",
+  "invalidOtp": "رمز التحقق غير صحيح",
+  "didNotReceiveCode": "لم تستلم الرمز؟",
+  "resendCode": "إعادة إرسال الرمز",
+  "user": "مستخدم",
+  "firstName": "الاسم الأول",
+  "lastName": "اسم العائلة",
+  "commercialRegistration": "رقم السجل التجاري (CR)"
 }

@@ -344,4 +344,43 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get activeListings => 'الإعلانات النشطة';
+
+  @override
+  String get signInWithPhone => 'الدخول برقم الهاتف';
+
+  @override
+  String get enterPhoneNumber => 'أدخل رقم هاتفك (مثال: 1234567890+)';
+
+  @override
+  String get phoneVerification => 'التحقق من الهاتف';
+
+  @override
+  String get sendCode => 'إرسال الرمز';
+
+  @override
+  String get enterOtp => 'أدخل الرمز المكون من 6 أرقام';
+
+  @override
+  String get verifyCode => 'تحقق من الرمز';
+
+  @override
+  String get invalidOtp => 'رمز التحقق غير صحيح';
+
+  @override
+  String get didNotReceiveCode => 'لم تستلم الرمز؟';
+
+  @override
+  String get resendCode => 'إعادة إرسال الرمز';
+
+  @override
+  String get user => 'مستخدم';
+
+  @override
+  String get firstName => 'الاسم الأول';
+
+  @override
+  String get lastName => 'اسم العائلة';
+
+  @override
+  String get commercialRegistration => 'رقم السجل التجاري (CR)';
 }

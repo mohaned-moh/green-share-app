@@ -727,6 +727,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Active Listings'**
   String get activeListings;
+
+  /// No description provided for @signInWithPhone.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in with Phone'**
+  String get signInWithPhone;
+
+  /// No description provided for @enterPhoneNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your phone number (e.g. +1234567890)'**
+  String get enterPhoneNumber;
+
+  /// No description provided for @phoneVerification.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone Verification'**
+  String get phoneVerification;
+
+  /// No description provided for @sendCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Send Code'**
+  String get sendCode;
+
+  /// No description provided for @enterOtp.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the 6-digit code'**
+  String get enterOtp;
+
+  /// No description provided for @verifyCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Verify Code'**
+  String get verifyCode;
+
+  /// No description provided for @invalidOtp.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid OTP code'**
+  String get invalidOtp;
+
+  /// No description provided for @didNotReceiveCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Didn\'t receive code?'**
+  String get didNotReceiveCode;
+
+  /// No description provided for @resendCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Resend Code'**
+  String get resendCode;
+
+  /// No description provided for @user.
+  ///
+  /// In en, this message translates to:
+  /// **'User'**
+  String get user;
+
+  /// No description provided for @firstName.
+  ///
+  /// In en, this message translates to:
+  /// **'First Name'**
+  String get firstName;
+
+  /// No description provided for @lastName.
+  ///
+  /// In en, this message translates to:
+  /// **'Last Name'**
+  String get lastName;
+
+  /// No description provided for @commercialRegistration.
+  ///
+  /// In en, this message translates to:
+  /// **'CR (Commercial Number)'**
+  String get commercialRegistration;
 }
 
 class _AppLocalizationsDelegate

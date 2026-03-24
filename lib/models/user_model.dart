@@ -14,6 +14,7 @@ class UserModel {
   final double averageRating;
   final int totalReviews;
   final bool isBlocked;
+  final bool isApproved;
 
   UserModel({
     required this.id,
@@ -29,6 +30,7 @@ class UserModel {
     this.averageRating = 0.0,
     this.totalReviews = 0,
     this.isBlocked = false,
+    this.isApproved = true,
   });
 
   Map<String, dynamic> toJson() {
@@ -46,6 +48,7 @@ class UserModel {
       'averageRating': averageRating,
       'totalReviews': totalReviews,
       'isBlocked': isBlocked,
+      'isApproved': isApproved,
     };
   }
 
@@ -66,6 +69,7 @@ class UserModel {
       averageRating: map['averageRating'] != null ? (map['averageRating'] as num).toDouble() : 0.0,
       totalReviews: map['totalReviews'] ?? 0,
       isBlocked: map['isBlocked'] ?? false,
+      isApproved: map['isApproved'] ?? true,
     );
   }
 }

@@ -64,6 +64,7 @@ class _LoginScreenState extends State<LoginScreen> {
             role: 'admin',
             phoneNumber: '+10000000000',
             crNumber: '',
+            isApproved: true,
             createdAt: DateTime.now(),
           );
           

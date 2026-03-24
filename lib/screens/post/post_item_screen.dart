@@ -4,6 +4,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:green_share/services/ai_service.dart';
 import 'package:green_share/services/database_service.dart';
 import 'package:green_share/models/item_model.dart';
+import 'package:green_share/models/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:green_share/screens/post/location_picker_screen.dart';
 import 'package:latlong2/latlong.dart';
@@ -252,11 +253,45 @@ class _PostItemScreenState extends State<PostItemScreen> {
       );
     }
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(context.l10n.postItem),
-        automaticallyImplyLeading: false, // Don't show back button inside tab bar
-      ),
+    return FutureBuilder<UserModel?>(
+      future: _databaseService.getUserProfile(currentUserId),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Scaffold(body: Center(child: CircularProgressIndicator()));
+        }
+
+        final userModel = snapshot.data;
+        if (userModel != null && userModel.role == 'Charity' && !userModel.isApproved) {
+          return Scaffold(
+            appBar: AppBar(
+              title: Text(context.l10n.postItem),
+              automaticallyImplyLeading: false,
+            ),
+            body: Center(
+              child: Padding(
+                padding: const EdgeInsets.all(32.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(Icons.pending_actions, size: 60, color: Colors.orange),
+                    const SizedBox(height: 16),
+                    Text(
+                      context.l10n.accountPendingApproval,
+                      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        }
+
+        return Scaffold(
+          appBar: AppBar(
+            title: Text(context.l10n.postItem),
+            automaticallyImplyLeading: false, // Don't show back button inside tab bar
+          ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -407,6 +442,8 @@ class _PostItemScreenState extends State<PostItemScreen> {
           ],
         ),
       ),
+    );
+      },
     );
   }
 }

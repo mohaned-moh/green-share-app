@@ -431,4 +431,61 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get feedbackSubmitted => 'تم إرسال الملاحظات بنجاح.';
+
+  @override
+  String get requests => 'الطلبات';
+
+  @override
+  String get approve => 'موافقة';
+
+  @override
+  String get deny => 'رفض';
+
+  @override
+  String get pendingApproval => 'في انتظار الموافقة';
+
+  @override
+  String get noPendingRequests => 'لا توجد طلبات معلقة';
+
+  @override
+  String get accountPendingApproval => 'حسابك في انتظار موافقة المشرف.';
+
+  @override
+  String get reportUser => 'الإبلاغ عن المستخدم';
+
+  @override
+  String get reasonForReporting => 'سبب الإبلاغ';
+
+  @override
+  String get reportSubmitted => 'تم إرسال البلاغ بنجاح.';
+
+  @override
+  String get reports => 'بلاغات المستخدمين';
+
+  @override
+  String get reporter => 'المُبلِغ';
+
+  @override
+  String get reportedUser => 'المُبلَغ عنه';
+
+  @override
+  String get archive => 'الأرشيف';
+
+  @override
+  String get archivedRequests => 'الطلبات المحلولة';
+
+  @override
+  String get resolvedFeedback => 'الملاحظات المحلولة';
+
+  @override
+  String get resolvedReports => 'البلاغات المحلولة';
+
+  @override
+  String get approved => 'مقبول';
+
+  @override
+  String get rejected => 'مرفوض';
+
+  @override
+  String get blockedUsers => 'المستخدمين المحظورين';
 }

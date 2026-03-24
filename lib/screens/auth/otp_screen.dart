@@ -92,6 +92,7 @@ class _OtpScreenState extends State<OtpScreen> {
             role: widget.role ?? 'User',
             phoneNumber: widget.phoneNumber,
             crNumber: widget.crNumber,
+            isApproved: widget.role != 'Charity',
             createdAt: DateTime.now(),
           );
           await _databaseService.createUserProfile(newUserModel);

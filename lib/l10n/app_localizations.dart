@@ -901,6 +901,120 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Feedback submitted successfully.'**
   String get feedbackSubmitted;
+
+  /// No description provided for @requests.
+  ///
+  /// In en, this message translates to:
+  /// **'Requests'**
+  String get requests;
+
+  /// No description provided for @approve.
+  ///
+  /// In en, this message translates to:
+  /// **'Approve'**
+  String get approve;
+
+  /// No description provided for @deny.
+  ///
+  /// In en, this message translates to:
+  /// **'Deny'**
+  String get deny;
+
+  /// No description provided for @pendingApproval.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending Approval'**
+  String get pendingApproval;
+
+  /// No description provided for @noPendingRequests.
+  ///
+  /// In en, this message translates to:
+  /// **'No pending requests'**
+  String get noPendingRequests;
+
+  /// No description provided for @accountPendingApproval.
+  ///
+  /// In en, this message translates to:
+  /// **'Your account is pending approval from an administrator.'**
+  String get accountPendingApproval;
+
+  /// No description provided for @reportUser.
+  ///
+  /// In en, this message translates to:
+  /// **'Report User'**
+  String get reportUser;
+
+  /// No description provided for @reasonForReporting.
+  ///
+  /// In en, this message translates to:
+  /// **'Reason for reporting'**
+  String get reasonForReporting;
+
+  /// No description provided for @reportSubmitted.
+  ///
+  /// In en, this message translates to:
+  /// **'Report submitted successfully.'**
+  String get reportSubmitted;
+
+  /// No description provided for @reports.
+  ///
+  /// In en, this message translates to:
+  /// **'User Reports'**
+  String get reports;
+
+  /// No description provided for @reporter.
+  ///
+  /// In en, this message translates to:
+  /// **'Reporter'**
+  String get reporter;
+
+  /// No description provided for @reportedUser.
+  ///
+  /// In en, this message translates to:
+  /// **'Reported User'**
+  String get reportedUser;
+
+  /// No description provided for @archive.
+  ///
+  /// In en, this message translates to:
+  /// **'Archive'**
+  String get archive;
+
+  /// No description provided for @archivedRequests.
+  ///
+  /// In en, this message translates to:
+  /// **'Resolved Requests'**
+  String get archivedRequests;
+
+  /// No description provided for @resolvedFeedback.
+  ///
+  /// In en, this message translates to:
+  /// **'Resolved Feedback'**
+  String get resolvedFeedback;
+
+  /// No description provided for @resolvedReports.
+  ///
+  /// In en, this message translates to:
+  /// **'Resolved Reports'**
+  String get resolvedReports;
+
+  /// No description provided for @approved.
+  ///
+  /// In en, this message translates to:
+  /// **'Approved'**
+  String get approved;
+
+  /// No description provided for @rejected.
+  ///
+  /// In en, this message translates to:
+  /// **'Rejected'**
+  String get rejected;
+
+  /// No description provided for @blockedUsers.
+  ///
+  /// In en, this message translates to:
+  /// **'Blocked Users'**
+  String get blockedUsers;
 }
 
 class _AppLocalizationsDelegate

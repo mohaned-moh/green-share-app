@@ -11,6 +11,7 @@ import 'package:green_share/screens/profile/edit_profile_screen.dart';
 
 import 'package:green_share/models/review_model.dart';
 import 'package:green_share/models/feedback_model.dart';
+import 'package:green_share/models/report_model.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:intl/intl.dart';
 import 'package:green_share/main.dart'; // import the context extension
@@ -92,6 +93,67 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
+  void _showReportDialog() async {
+    final reporterId = FirebaseAuth.instance.currentUser?.uid;
+    if (reporterId == null || currentUserId == null) return;
+
+    final TextEditingController reasonController = TextEditingController();
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(context.l10n.reportUser),
+          content: TextField(
+            controller: reasonController,
+            maxLines: 3,
+            decoration: InputDecoration(
+              hintText: context.l10n.reasonForReporting,
+              border: const OutlineInputBorder(),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text(context.l10n.cancel),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                final reason = reasonController.text.trim();
+                if (reason.isNotEmpty) {
+                  // Fetch names for embedding
+                  final reporterUser = await _databaseService.getUserProfile(reporterId);
+                  final reportedUser = await _databaseService.getUserProfile(currentUserId!);
+                  
+                  if (reporterUser != null && reportedUser != null) {
+                    await _databaseService.submitReport(
+                      ReportModel(
+                        id: '',
+                        reporterId: reporterId,
+                        reporterName: reporterUser.name,
+                        reportedUserId: currentUserId!,
+                        reportedUserName: reportedUser.name,
+                        reason: reason,
+                        status: 'New',
+                        createdAt: DateTime.now(),
+                      ),
+                    );
+                    if (context.mounted) {
+                      Navigator.pop(context);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text(context.l10n.reportSubmitted)),
+                      );
+                    }
+                  }
+                }
+              },
+              child: Text(context.l10n.submit),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     if (currentUserId == null) {
@@ -142,7 +204,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   },
                 )
               ]
-            : null,
+            : [
+                IconButton(
+                  icon: const Icon(Icons.flag, color: Colors.orange),
+                  onPressed: _showReportDialog,
+                )
+              ],
       ),
       body: FutureBuilder<UserModel?>(
         future: _databaseService.getUserProfile(currentUserId!),
@@ -179,9 +246,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       : null,
                 ),
                 const SizedBox(height: 16),
-                Text(
-                  user.name,
-                  style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      user.name,
+                      style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                    ),
+                    if (user.role == 'Charity' && user.isApproved) ...[
+                      const SizedBox(width: 8),
+                      const Icon(Icons.verified, color: Colors.green, size: 24),
+                    ],
+                  ],
                 ),
                 const SizedBox(height: 4),
                 Text(

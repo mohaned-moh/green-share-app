@@ -4,6 +4,7 @@ import 'package:green_share/screens/home/home_screen.dart';
 import 'package:green_share/screens/post/post_item_screen.dart';
 import 'package:green_share/screens/profile/profile_screen.dart';
 import 'package:green_share/screens/admin/admin_dashboard_screen.dart';
+import 'package:green_share/screens/admin/admin_archive_screen.dart';
 import 'package:green_share/services/database_service.dart';
 import 'package:green_share/models/chat_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -71,7 +72,7 @@ class _MainTabScreenState extends State<MainTabScreen> {
   List<Widget> get _screens {
     final screens = <Widget>[
       const HomeScreen(),
-      const PostItemScreen(),
+      _isAdmin ? const AdminArchiveScreen() : const PostItemScreen(),
       const ChatListScreen(),
       const ProfileScreen(),
     ];
@@ -96,7 +97,9 @@ class _MainTabScreenState extends State<MainTabScreen> {
         if (isWideScreen) {
           final railDests = <NavigationRailDestination>[
             NavigationRailDestination(icon: const Icon(Icons.home_outlined), selectedIcon: const Icon(Icons.home), label: Text(context.l10n.home)),
-            NavigationRailDestination(icon: const Icon(Icons.add_circle_outline), selectedIcon: const Icon(Icons.add_circle), label: Text(context.l10n.post)),
+            _isAdmin
+                ? NavigationRailDestination(icon: const Icon(Icons.archive_outlined), selectedIcon: const Icon(Icons.archive), label: Text(context.l10n.archive))
+                : NavigationRailDestination(icon: const Icon(Icons.add_circle_outline), selectedIcon: const Icon(Icons.add_circle), label: Text(context.l10n.post)),
             NavigationRailDestination(icon: _buildChatIcon(false), selectedIcon: _buildChatIcon(true), label: Text(context.l10n.chat)),
             if (_isAdmin)
               NavigationRailDestination(icon: const Icon(Icons.admin_panel_settings_outlined), selectedIcon: const Icon(Icons.admin_panel_settings), label: Text(context.l10n.adminDashboard)),
@@ -124,7 +127,9 @@ class _MainTabScreenState extends State<MainTabScreen> {
 
         final navDests = <NavigationDestination>[
           NavigationDestination(icon: const Icon(Icons.home_outlined), selectedIcon: const Icon(Icons.home), label: context.l10n.home),
-          NavigationDestination(icon: const Icon(Icons.add_circle_outline), selectedIcon: const Icon(Icons.add_circle), label: context.l10n.post),
+          _isAdmin
+              ? NavigationDestination(icon: const Icon(Icons.archive_outlined), selectedIcon: const Icon(Icons.archive), label: context.l10n.archive)
+              : NavigationDestination(icon: const Icon(Icons.add_circle_outline), selectedIcon: const Icon(Icons.add_circle), label: context.l10n.post),
           NavigationDestination(icon: _buildChatIcon(false), selectedIcon: _buildChatIcon(true), label: context.l10n.chat),
           if (_isAdmin)
             NavigationDestination(icon: const Icon(Icons.admin_panel_settings_outlined), selectedIcon: const Icon(Icons.admin_panel_settings), label: context.l10n.adminDashboard),

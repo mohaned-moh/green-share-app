@@ -430,4 +430,62 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get feedbackSubmitted => 'Feedback submitted successfully.';
+
+  @override
+  String get requests => 'Requests';
+
+  @override
+  String get approve => 'Approve';
+
+  @override
+  String get deny => 'Deny';
+
+  @override
+  String get pendingApproval => 'Pending Approval';
+
+  @override
+  String get noPendingRequests => 'No pending requests';
+
+  @override
+  String get accountPendingApproval =>
+      'Your account is pending approval from an administrator.';
+
+  @override
+  String get reportUser => 'Report User';
+
+  @override
+  String get reasonForReporting => 'Reason for reporting';
+
+  @override
+  String get reportSubmitted => 'Report submitted successfully.';
+
+  @override
+  String get reports => 'User Reports';
+
+  @override
+  String get reporter => 'Reporter';
+
+  @override
+  String get reportedUser => 'Reported User';
+
+  @override
+  String get archive => 'Archive';
+
+  @override
+  String get archivedRequests => 'Resolved Requests';
+
+  @override
+  String get resolvedFeedback => 'Resolved Feedback';
+
+  @override
+  String get resolvedReports => 'Resolved Reports';
+
+  @override
+  String get approved => 'Approved';
+
+  @override
+  String get rejected => 'Rejected';
+
+  @override
+  String get blockedUsers => 'Blocked Users';
 }

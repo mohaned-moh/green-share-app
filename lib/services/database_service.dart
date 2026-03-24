@@ -6,6 +6,7 @@ import 'package:green_share/models/user_model.dart';
 import 'package:green_share/models/chat_model.dart';
 import 'package:green_share/models/review_model.dart';
 import 'package:green_share/models/feedback_model.dart';
+import 'package:green_share/models/report_model.dart';
 
 class DatabaseService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -298,10 +299,70 @@ class DatabaseService {
 
   // --- Admin Functions ---
 
+  Stream<List<UserModel>> getPendingCharitiesStream() {
+    return _firestore
+        .collection('users')
+        .where('role', isEqualTo: 'Charity')
+        .where('isApproved', isEqualTo: false)
+        .snapshots()
+        .map((snapshot) {
+          final users = snapshot.docs
+              .map((doc) => UserModel.fromJson(doc.data(), doc.id))
+              .toList();
+          users.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+          return users;
+        });
+  }
+
+  Future<void> archiveCharityRequest(UserModel charity, String status) async {
+    final Map<String, dynamic> data = charity.toJson();
+    data['status'] = status;
+    data['archivedAt'] = FieldValue.serverTimestamp();
+    await _firestore.collection('archived_requests').doc(charity.id).set(data);
+  }
+
+  Future<void> approveCharity(String uid) async {
+    final userDoc = await _firestore.collection('users').doc(uid).get();
+    if (userDoc.exists) {
+      final user = UserModel.fromJson(userDoc.data()!, uid);
+      await archiveCharityRequest(user, 'Approved');
+      await _firestore.collection('users').doc(uid).update({'isApproved': true});
+    }
+  }
+
+  Future<void> denyCharity(String uid) async {
+    final userDoc = await _firestore.collection('users').doc(uid).get();
+    if (userDoc.exists) {
+      final user = UserModel.fromJson(userDoc.data()!, uid);
+      await archiveCharityRequest(user, 'Rejected');
+      await _firestore.collection('users').doc(uid).delete();
+    }
+  }
+
+  Stream<List<UserModel>> getArchivedRequestsStream() {
+    return _firestore
+        .collection('archived_requests')
+        .orderBy('archivedAt', descending: true)
+        .snapshots()
+        .map((snapshot) => snapshot.docs
+            .map((doc) => UserModel.fromJson(doc.data(), doc.id))
+            .toList());
+  }
+
   Stream<List<UserModel>> getAllUsersStream() {
     return _firestore
         .collection('users')
         .orderBy('createdAt', descending: true)
+        .snapshots()
+        .map((snapshot) => snapshot.docs
+            .map((doc) => UserModel.fromJson(doc.data(), doc.id))
+            .toList());
+  }
+
+  Stream<List<UserModel>> getBlockedUsersStream() {
+    return _firestore
+        .collection('users')
+        .where('isBlocked', isEqualTo: true)
         .snapshots()
         .map((snapshot) => snapshot.docs
             .map((doc) => UserModel.fromJson(doc.data(), doc.id))
@@ -320,15 +381,64 @@ class DatabaseService {
   Stream<List<FeedbackModel>> getAllFeedbackStream() {
     return _firestore
         .collection('feedback')
-        .orderBy('createdAt', descending: true)
+        .where('status', isEqualTo: 'New')
         .snapshots()
-        .map((snapshot) => snapshot.docs
-            .map((doc) => FeedbackModel.fromJson(doc.data(), doc.id))
-            .toList());
+        .map((snapshot) {
+           final list = snapshot.docs.map((doc) => FeedbackModel.fromJson(doc.data(), doc.id)).toList();
+           list.sort((a,b) => b.createdAt.compareTo(a.createdAt));
+           return list;
+        });
+  }
+
+  Stream<List<FeedbackModel>> getResolvedFeedbackStream() {
+    return _firestore
+        .collection('feedback')
+        .where('status', isEqualTo: 'Resolved')
+        .snapshots()
+        .map((snapshot) {
+           final list = snapshot.docs.map((doc) => FeedbackModel.fromJson(doc.data(), doc.id)).toList();
+           list.sort((a,b) => b.createdAt.compareTo(a.createdAt));
+           return list;
+        });
   }
 
   Future<void> updateFeedbackStatus(String feedbackId, String status) async {
     await _firestore.collection('feedback').doc(feedbackId).update({'status': status});
+  }
+
+  // --- Reports ---
+
+  Future<void> submitReport(ReportModel report) async {
+    final docRef = await _firestore.collection('reports').add(report.toJson());
+    await docRef.update({'id': docRef.id});
+  }
+
+  Stream<List<ReportModel>> getAllReportsStream() {
+    return _firestore
+        .collection('reports')
+        .where('status', isEqualTo: 'New')
+        .snapshots()
+        .map((snapshot) {
+           final list = snapshot.docs.map((doc) => ReportModel.fromJson(doc.data(), doc.id)).toList();
+           list.sort((a,b) => b.createdAt.compareTo(a.createdAt));
+           return list;
+        });
+  }
+
+  Stream<List<ReportModel>> getResolvedReportsStream() {
+    return _firestore
+        .collection('reports')
+        .where('status', isEqualTo: 'Resolved')
+        .snapshots()
+        .map((snapshot) {
+           final list = snapshot.docs.map((doc) => ReportModel.fromJson(doc.data(), doc.id)).toList();
+           list.sort((a,b) => b.createdAt.compareTo(a.createdAt));
+           return list;
+        });
+  }
+
+  Future<void> updateReportStatus(String reportId, String status) async {
+    await _firestore.collection('reports').doc(reportId).update({'status': status});
   }
 
   Stream<List<ItemModel>> getGlobalActivityStream() {

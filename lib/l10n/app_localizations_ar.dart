@@ -488,4 +488,10 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get blockedUsers => 'المستخدمين المحظورين';
+
+  @override
+  String get searchByNameOrId => 'البحث بالاسم أو المعرف';
+
+  @override
+  String get searchByItemName => 'البحث باسم العنصر';
 }

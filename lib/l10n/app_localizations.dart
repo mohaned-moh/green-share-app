@@ -1015,6 +1015,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Blocked Users'**
   String get blockedUsers;
+
+  /// No description provided for @searchByNameOrId.
+  ///
+  /// In en, this message translates to:
+  /// **'Search by Name or ID'**
+  String get searchByNameOrId;
+
+  /// No description provided for @searchByItemName.
+  ///
+  /// In en, this message translates to:
+  /// **'Search by Item Name'**
+  String get searchByItemName;
 }
 
 class _AppLocalizationsDelegate

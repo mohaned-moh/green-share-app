@@ -31,18 +31,35 @@ class _MainTabScreenState extends State<MainTabScreen> {
   }
 
   Future<void> _checkAdminRole() async {
-    if (currentUserId != null) {
-      final user = await _databaseService.getUserProfile(currentUserId!);
-      if (mounted) {
-        setState(() {
-          _isAdmin = user?.role == 'admin';
-          _isLoadingRole = false;
-        });
+    try {
+      if (currentUserId != null) {
+        // Fetch the profile
+        final user = await _databaseService.getUserProfile(currentUserId!);
+        
+        if (mounted) {
+          setState(() {
+            // Check for 'admin' role, but handle the case where user might be null
+            _isAdmin = user?.role == 'admin';
+            _isLoadingRole = false; 
+          });
+
+          // Safety: If they are logged into Auth but have no Profile in Firestore, 
+          // log them out so they can start fresh.
+          if (user == null) {
+            await FirebaseAuth.instance.signOut();
+          }
+        }
+      } else {
+        if (mounted) {
+          setState(() => _isLoadingRole = false);
+        }
       }
-    } else {
+    } catch (e) {
+      // If there is ANY error (like a network issue), stop the loading spinner
       if (mounted) {
         setState(() => _isLoadingRole = false);
       }
+      debugPrint("Error checking admin role: $e");
     }
   }
 

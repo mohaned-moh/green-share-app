@@ -488,4 +488,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get blockedUsers => 'Blocked Users';
+
+  @override
+  String get searchByNameOrId => 'Search by Name or ID';
+
+  @override
+  String get searchByItemName => 'Search by Item Name';
 }

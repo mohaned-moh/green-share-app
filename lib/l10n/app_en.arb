@@ -214,5 +214,7 @@
   "resolvedReports": "Resolved Reports",
   "approved": "Approved",
   "rejected": "Rejected",
-  "blockedUsers": "Blocked Users"
+  "blockedUsers": "Blocked Users",
+  "searchByNameOrId": "Search by Name or ID",
+  "searchByItemName": "Search by Item Name"
 }

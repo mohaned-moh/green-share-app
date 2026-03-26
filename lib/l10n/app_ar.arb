@@ -214,5 +214,7 @@
   "resolvedReports": "البلاغات المحلولة",
   "approved": "مقبول",
   "rejected": "مرفوض",
-  "blockedUsers": "المستخدمين المحظورين"
+  "blockedUsers": "المستخدمين المحظورين",
+  "searchByNameOrId": "البحث بالاسم أو المعرف",
+  "searchByItemName": "البحث باسم العنصر"
 }

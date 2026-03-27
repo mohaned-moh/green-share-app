@@ -8,18 +8,17 @@ import 'package:green_share/models/item_model.dart';
 import 'package:green_share/widgets/item_card.dart';
 import 'package:green_share/screens/profile/transaction_history_screen.dart';
 import 'package:green_share/screens/profile/edit_profile_screen.dart';
-
 import 'package:green_share/models/review_model.dart';
 import 'package:green_share/models/feedback_model.dart';
 import 'package:green_share/models/report_model.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:intl/intl.dart';
-import 'package:green_share/main.dart'; // import the context extension
+import 'package:green_share/main.dart'; 
 import 'package:provider/provider.dart';
 import 'package:green_share/providers/locale_provider.dart';
 
 class ProfileScreen extends StatefulWidget {
-  final String? userId; // Optional: if provided, we view this user's profile instead of our own
+  final String? userId;
 
   const ProfileScreen({super.key, this.userId});
 
@@ -41,6 +40,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
     } else {
       currentUserId = FirebaseAuth.instance.currentUser?.uid;
       isOwnProfile = true;
+    }
+  }
+
+  // HELPER: Gets the label based on the role string from Firestore
+  String _getRoleLabel(String role, BuildContext context) {
+    switch (role.toLowerCase()) {
+      case 'admin':
+        return "System Admin";
+      case 'charity':
+        return "Charity Organization";
+      default:
+        return context.l10n.communityMember;
     }
   }
 
@@ -120,7 +131,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
               onPressed: () async {
                 final reason = reasonController.text.trim();
                 if (reason.isNotEmpty) {
-                  // Fetch names for embedding
                   final reporterUser = await _databaseService.getUserProfile(reporterId);
                   final reportedUser = await _databaseService.getUserProfile(currentUserId!);
                   
@@ -198,7 +208,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                       );
                       if (result == true) {
-                        setState(() {}); // Refresh future builder
+                        setState(() {}); 
                       }
                     }
                   },
@@ -246,29 +256,44 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       : null,
                 ),
                 const SizedBox(height: 16),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      user.name,
-                      style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                    ),
-                    if (user.role == 'Charity' && user.isApproved) ...[
-                      const SizedBox(width: 8),
-                      const Icon(Icons.verified, color: Colors.green, size: 24),
-                    ],
-                  ],
+                
+                // Name
+                Text(
+                  user.name,
+                  style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                 ),
+                
                 const SizedBox(height: 4),
                 Text(
                   user.email,
                   style: const TextStyle(color: Colors.grey, fontSize: 16),
                 ),
                 const SizedBox(height: 8),
-                Text(
-                  context.l10n.communityMember,
-                  style: const TextStyle(color: AppTheme.primaryColor, fontWeight: FontWeight.w600),
+
+                // ROLE & BADGE ROW
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      _getRoleLabel(user.role, context),
+                      style: TextStyle(
+                        color: user.role.toLowerCase() == 'admin' 
+                            ? Colors.red.shade700 
+                            : AppTheme.primaryColor, 
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    if (user.role.toLowerCase() == 'charity' && user.isApproved) ...[
+                      const SizedBox(width: 6),
+                      const Icon(Icons.verified, color: Colors.blue, size: 20),
+                    ],
+                    if (user.role.toLowerCase() == 'admin') ...[
+                      const SizedBox(width: 6),
+                      const Icon(Icons.admin_panel_settings, color: Colors.red, size: 20),
+                    ],
+                  ],
                 ),
+
                 const SizedBox(height: 16),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -286,7 +311,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
                 const SizedBox(height: 16),
                 
-                // Average Rating Bar
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -310,7 +334,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 const SizedBox(height: 24),
                 const Divider(),
                 
-                // Active Listings Section
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                   child: Row(
@@ -365,7 +388,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 const SizedBox(height: 16),
                 const Divider(),
                 
-                // Reviews Section
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                   child: Row(

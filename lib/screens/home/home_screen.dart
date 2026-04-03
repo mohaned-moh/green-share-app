@@ -26,6 +26,7 @@ class _HomeScreenState extends State<HomeScreen> {
   
   String? _selectedCategory;
   String? _selectedCity;
+  String? _selectedCondition;
 
   final List<String> _categories = [
     'All',
@@ -47,6 +48,14 @@ class _HomeScreenState extends State<HomeScreen> {
     'Jerash',
     'Madaba',
     'Other'
+  ];
+
+  final List<String> _conditions = [
+    'All',
+    'New',
+    'Good',
+    'Fair',
+    'Poor'
   ];
 
   void _showFilterDialog() {
@@ -92,6 +101,19 @@ class _HomeScreenState extends State<HomeScreen> {
                     onChanged: (val) {
                       setModalState(() {
                         _selectedCity = val == 'All' ? null : val;
+                      });
+                    },
+                  ),
+                  const SizedBox(height: 16),
+                  DropdownButtonFormField<String>(
+                    value: _selectedCondition ?? 'All',
+                    decoration: InputDecoration(labelText: context.l10n.condition),
+                    items: _conditions.map((c) {
+                      return DropdownMenuItem(value: c, child: Text(c));
+                    }).toList(),
+                    onChanged: (val) {
+                      setModalState(() {
+                        _selectedCondition = val == 'All' ? null : val;
                       });
                     },
                   ),
@@ -234,6 +256,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   searchQuery: _searchQuery,
                   category: _selectedCategory,
                   city: _selectedCity,
+                  condition: _selectedCondition,
                 ),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {

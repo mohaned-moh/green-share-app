@@ -17,6 +17,7 @@ class ItemModel {
   final double? longitude;
   final String? receiverId; // Added to track who received the item
   final bool hasBeenRated;  // Track if a review has already been submitted
+  final bool isOwnerBlocked;
 
   ItemModel({
     required this.id,
@@ -35,6 +36,7 @@ class ItemModel {
     this.longitude,
     this.receiverId,
     this.hasBeenRated = false,
+    this.isOwnerBlocked = false,
   });
 
   Map<String, dynamic> toJson() {
@@ -55,6 +57,7 @@ class ItemModel {
       'longitude': longitude,
       'receiverId': receiverId,
       'hasBeenRated': hasBeenRated,
+      'isOwnerBlocked': isOwnerBlocked,
     };
   }
 
@@ -78,6 +81,7 @@ class ItemModel {
       longitude: map['longitude'] != null ? (map['longitude'] as num).toDouble() : null,
       receiverId: map['receiverId'],
       hasBeenRated: map['hasBeenRated'] ?? false,
+      isOwnerBlocked: map['isOwnerBlocked'] ?? false,
     );
   }
 }

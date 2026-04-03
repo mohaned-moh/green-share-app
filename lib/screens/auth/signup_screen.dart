@@ -49,7 +49,7 @@ class _SignupScreenState extends State<SignupScreen> {
   Future<void> _signup() async {
     final firstName = _firstNameController.text.trim();
     final lastName = _lastNameController.text.trim();
-    final phone = _phoneController.text.trim();
+    String phone = _phoneController.text.trim();
     final email = _emailController.text.trim();
     final password = _passwordController.text.trim();
     final crNumber = _crController.text.trim();
@@ -59,6 +59,20 @@ class _SignupScreenState extends State<SignupScreen> {
         SnackBar(content: Text(context.l10n.pleaseFillAllFields)),
       );
       return;
+    }
+
+    final jordanPhoneRegExp = RegExp(r'^(?:\+962|0)?7[789]\d{7}$');
+    if (!jordanPhoneRegExp.hasMatch(phone)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(context.l10n.invalidJordanPhoneNumber)),
+      );
+      return;
+    }
+
+    if (phone.startsWith('07')) {
+      phone = '+962${phone.substring(1)}';
+    } else if (phone.startsWith('7')) {
+      phone = '+962$phone';
     }
 
     if (email.isNotEmpty && password.isEmpty) {

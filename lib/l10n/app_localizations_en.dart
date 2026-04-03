@@ -348,7 +348,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get signInWithPhone => 'Sign in with Phone';
 
   @override
-  String get enterPhoneNumber => 'Enter your phone number (e.g. +1234567890)';
+  String get enterPhoneNumber =>
+      'Enter a Jordanian phone number (e.g. 07XXXXXXXX)';
 
   @override
   String get phoneVerification => 'Phone Verification';
@@ -494,4 +495,8 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get searchByItemName => 'Search by Item Name';
+
+  @override
+  String get invalidJordanPhoneNumber =>
+      'Please enter a valid Jordanian phone number (e.g. 07XXXXXXXX)';
 }

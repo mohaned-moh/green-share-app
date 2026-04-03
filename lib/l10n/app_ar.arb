@@ -168,7 +168,7 @@
   "reloginRequiredForEmail": "يجب تسجيل الدخول مرة أخرى لتغيير عنوان بريدك الإلكتروني.",
   "activeListings": "الإعلانات النشطة",
   "signInWithPhone": "الدخول برقم الهاتف",
-  "enterPhoneNumber": "أدخل رقم هاتفك (مثال: 1234567890+)",
+  "enterPhoneNumber": "أدخل رقم هاتف أردني (مثال: 0791234567)",
   "phoneVerification": "التحقق من الهاتف",
   "sendCode": "إرسال الرمز",
   "enterOtp": "أدخل الرمز المكون من 6 أرقام",
@@ -216,5 +216,6 @@
   "rejected": "مرفوض",
   "blockedUsers": "المستخدمين المحظورين",
   "searchByNameOrId": "البحث بالاسم أو المعرف",
-  "searchByItemName": "البحث باسم العنصر"
+  "searchByItemName": "البحث باسم العنصر",
+  "invalidJordanPhoneNumber": "يرجى إدخال رقم هاتف أردني صحيح (مثال: 07XXXXXXXX)"
 }

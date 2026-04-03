@@ -50,7 +50,7 @@ class _PostItemScreenState extends State<PostItemScreen> {
   ];
   
   LatLng? _selectedLocation;
-  XFile? _imageFile;
+  List<XFile> _imageFiles = [];
   final ImagePicker _picker = ImagePicker();
   final AIService _aiService = AIService();
   final DatabaseService _databaseService = DatabaseService();
@@ -130,15 +130,15 @@ class _PostItemScreenState extends State<PostItemScreen> {
     }
   }
 
-  Future<void> _pickImage() async {
-    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
+  Future<void> _pickImages() async {
+    final pickedFiles = await _picker.pickMultiImage();
+    if (pickedFiles.isNotEmpty) {
       setState(() {
-        _imageFile = pickedFile;
+        _imageFiles.addAll(pickedFiles);
         _isProcessingImage = true;
       });
       
-      final category = await _aiService.classifyImage(pickedFile);
+      final category = await _aiService.classifyImage(pickedFiles.first);
       
       setState(() {
         _isProcessingImage = false;
@@ -149,6 +149,12 @@ class _PostItemScreenState extends State<PostItemScreen> {
         }
       });
     }
+  }
+
+  void _removeImage(int index) {
+    setState(() {
+      _imageFiles.removeAt(index);
+    });
   }
 
   Future<void> _submitPost() async {
@@ -167,9 +173,9 @@ class _PostItemScreenState extends State<PostItemScreen> {
       final userId = FirebaseAuth.instance.currentUser?.uid ?? 'anonymous_user';
       List<String> uploadedImageUrls = [];
 
-      if (_imageFile != null) {
-        final fileName = '${DateTime.now().millisecondsSinceEpoch}_${_imageFile!.name}';
-        final url = await _databaseService.uploadImage(File(_imageFile!.path), 'item_images/$fileName');
+      for (var file in _imageFiles) {
+        final fileName = '${DateTime.now().millisecondsSinceEpoch}_${file.name}';
+        final url = await _databaseService.uploadImage(File(file.path), 'item_images/$fileName');
         if (url != null) {
           uploadedImageUrls.add(url);
         }
@@ -205,7 +211,7 @@ class _PostItemScreenState extends State<PostItemScreen> {
         _selectedCategory = 'Other';
         _selectedCity = 'Amman';
         setState(() {
-          _imageFile = null;
+          _imageFiles.clear();
           _selectedLocation = null;
           _isUploading = false;
         });
@@ -318,30 +324,87 @@ class _PostItemScreenState extends State<PostItemScreen> {
               ],
             ),
             const SizedBox(height: 24),
-            GestureDetector(
-              onTap: _pickImage,
-              child: Container(
-                height: 200,
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade200,
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: Colors.grey.shade400, style: BorderStyle.none),
+            if (_imageFiles.isEmpty)
+              GestureDetector(
+                onTap: _pickImages,
+                child: Container(
+                  height: 200,
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade200,
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(color: Colors.grey.shade400, style: BorderStyle.none),
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.add_a_photo, size: 50, color: Colors.grey),
+                      const SizedBox(height: 8),
+                      Text(context.l10n.tapToAddPhoto, style: const TextStyle(color: Colors.grey)),
+                    ],
+                  ),
                 ),
-                child: _imageFile != null
-                    ? ClipRRect(
-                        borderRadius: BorderRadius.circular(16),
-                        child: Image.file(File(_imageFile!.path), fit: BoxFit.cover),
-                      )
-                      : Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
+              )
+            else
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    height: 120,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: _imageFiles.length + 1,
+                      itemBuilder: (context, index) {
+                        if (index == _imageFiles.length) {
+                          return GestureDetector(
+                            onTap: _pickImages,
+                            child: Container(
+                              width: 120,
+                              margin: const EdgeInsets.only(right: 8),
+                              decoration: BoxDecoration(
+                                color: Colors.grey.shade200,
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                              child: const Center(
+                                child: Icon(Icons.add_a_photo, size: 40, color: Colors.grey),
+                              ),
+                            ),
+                          );
+                        }
+                        return Stack(
                           children: [
-                            const Icon(Icons.add_a_photo, size: 50, color: Colors.grey),
-                            const SizedBox(height: 8),
-                            Text(context.l10n.tapToAddPhoto, style: const TextStyle(color: Colors.grey)),
+                            Container(
+                              width: 120,
+                              margin: const EdgeInsets.only(right: 8),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(16),
+                                child: Image.file(
+                                  File(_imageFiles[index].path),
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                            Positioned(
+                              top: 4,
+                              right: 12,
+                              child: GestureDetector(
+                                onTap: () => _removeImage(index),
+                                child: Container(
+                                  padding: const EdgeInsets.all(4),
+                                  decoration: const BoxDecoration(
+                                    color: Colors.black54,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: const Icon(Icons.close, size: 16, color: Colors.white),
+                                ),
+                              ),
+                            ),
                           ],
-                        ),
+                        );
+                      },
+                    ),
+                  ),
+                ],
               ),
-            ),
             const SizedBox(height: 16),
             if (_isProcessingImage)
               Row(

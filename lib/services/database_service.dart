@@ -89,11 +89,12 @@ class DatabaseService {
     }
   }
 
-  Stream<List<ItemModel>> getItemsStream({String? category, String? city, String? searchQuery}) {
+  Stream<List<ItemModel>> getItemsStream({String? category, String? city, String? condition, String? searchQuery}) {
     Query query = _firestore.collection('items');
     
     // Default filter for available items
     query = query.where('status', isEqualTo: 'available')
+                 .where('isOwnerBlocked', isEqualTo: false)
                  .orderBy('postedAt', descending: true);
 
     return query.snapshots().map((snapshot) {
@@ -106,6 +107,10 @@ class DatabaseService {
       
       if (city != null && city != 'All') {
         items = items.where((item) => item.city == city).toList();
+      }
+      
+      if (condition != null && condition != 'All') {
+        items = items.where((item) => item.condition == condition).toList();
       }
       
       if (searchQuery != null && searchQuery.isNotEmpty) {
@@ -371,6 +376,16 @@ class DatabaseService {
 
   Future<void> updateUserBlockStatus(String uid, bool isBlocked) async {
     await _firestore.collection('users').doc(uid).update({'isBlocked': isBlocked});
+    
+    // Also update all items currently owned by this user
+    final itemsQuery = await _firestore.collection('items').where('ownerId', isEqualTo: uid).get();
+    if (itemsQuery.docs.isNotEmpty) {
+      final batch = _firestore.batch();
+      for (var doc in itemsQuery.docs) {
+        batch.update(doc.reference, {'isOwnerBlocked': isBlocked});
+      }
+      await batch.commit();
+    }
   }
 
   Future<void> submitFeedback(FeedbackModel feedback) async {

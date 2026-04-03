@@ -172,6 +172,8 @@ class ItemCard extends StatelessWidget {
                     children: [
                         _buildChip(Icons.category_outlined, item.category),
                       _buildChip(Icons.location_on_outlined, item.city ?? item.location),
+                      if (item.type == 'Donate' && item.condition.isNotEmpty)
+                        _buildChip(Icons.info_outline, item.condition),
                     ],
                   ),
                   const Spacer(),

@@ -349,7 +349,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get signInWithPhone => 'الدخول برقم الهاتف';
 
   @override
-  String get enterPhoneNumber => 'أدخل رقم هاتفك (مثال: 1234567890+)';
+  String get enterPhoneNumber => 'أدخل رقم هاتف أردني (مثال: 0791234567)';
 
   @override
   String get phoneVerification => 'التحقق من الهاتف';
@@ -494,4 +494,8 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get searchByItemName => 'البحث باسم العنصر';
+
+  @override
+  String get invalidJordanPhoneNumber =>
+      'يرجى إدخال رقم هاتف أردني صحيح (مثال: 07XXXXXXXX)';
 }

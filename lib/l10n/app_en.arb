@@ -168,7 +168,7 @@
   "reloginRequiredForEmail": "You must re-login to change your email address.",
   "activeListings": "Active Listings",
   "signInWithPhone": "Sign in with Phone",
-  "enterPhoneNumber": "Enter your phone number (e.g. +1234567890)",
+  "enterPhoneNumber": "Enter a Jordanian phone number (e.g. 07XXXXXXXX)",
   "phoneVerification": "Phone Verification",
   "sendCode": "Send Code",
   "enterOtp": "Enter the 6-digit code",
@@ -216,5 +216,6 @@
   "rejected": "Rejected",
   "blockedUsers": "Blocked Users",
   "searchByNameOrId": "Search by Name or ID",
-  "searchByItemName": "Search by Item Name"
+  "searchByItemName": "Search by Item Name",
+  "invalidJordanPhoneNumber": "Please enter a valid Jordanian phone number (e.g. 07XXXXXXXX)"
 }

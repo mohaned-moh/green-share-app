@@ -79,6 +79,18 @@ class _OtpScreenState extends State<OtpScreen> {
 
         // Check if user profile exists
         final userProfile = await _databaseService.getUserProfile(user.uid);
+        
+        if (userProfile != null && userProfile.isBlocked) {
+          await FirebaseAuth.instance.signOut();
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('you are blocked')),
+            );
+            setState(() => _isLoading = false);
+          }
+          return;
+        }
+
         if (userProfile == null) {
           String fullName = 'Phone User';
           if (widget.firstName != null && widget.lastName != null) {

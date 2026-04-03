@@ -737,7 +737,7 @@ abstract class AppLocalizations {
   /// No description provided for @enterPhoneNumber.
   ///
   /// In en, this message translates to:
-  /// **'Enter your phone number (e.g. +1234567890)'**
+  /// **'Enter a Jordanian phone number (e.g. 07XXXXXXXX)'**
   String get enterPhoneNumber;
 
   /// No description provided for @phoneVerification.
@@ -1027,6 +1027,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Search by Item Name'**
   String get searchByItemName;
+
+  /// No description provided for @invalidJordanPhoneNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid Jordanian phone number (e.g. 07XXXXXXXX)'**
+  String get invalidJordanPhoneNumber;
 }
 
 class _AppLocalizationsDelegate

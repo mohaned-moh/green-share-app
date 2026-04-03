@@ -36,10 +36,22 @@ class _LoginScreenState extends State<LoginScreen> {
     setState(() => _isLoading = true);
 
     try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
+      final userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
+
+      final userProfile = await DatabaseService().getUserProfile(userCredential.user!.uid);
+      if (userProfile != null && userProfile.isBlocked) {
+        await FirebaseAuth.instance.signOut();
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('you are blocked')),
+          );
+          setState(() => _isLoading = false);
+        }
+        return;
+      }
 
       if (mounted) {
         Navigator.pushReplacement(
@@ -115,7 +127,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(''), // Clear title for cleaner look
+        title: const Text(''), 
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),

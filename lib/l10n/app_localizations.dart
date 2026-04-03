@@ -1033,6 +1033,144 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Please enter a valid Jordanian phone number (e.g. 07XXXXXXXX)'**
   String get invalidJordanPhoneNumber;
+
+  /// No description provided for @categoryClothing.
+  ///
+  /// In en, this message translates to:
+  /// **'Clothing'**
+  String get categoryClothing;
+
+  /// No description provided for @categoryFurniture.
+  ///
+  /// In en, this message translates to:
+  /// **'Furniture'**
+  String get categoryFurniture;
+
+  /// No description provided for @categoryBooks.
+  ///
+  /// In en, this message translates to:
+  /// **'Books'**
+  String get categoryBooks;
+
+  /// No description provided for @categoryElectronics.
+  ///
+  /// In en, this message translates to:
+  /// **'Electronics'**
+  String get categoryElectronics;
+
+  /// No description provided for @categoryToys.
+  ///
+  /// In en, this message translates to:
+  /// **'Toys'**
+  String get categoryToys;
+
+  /// No description provided for @categoryOther.
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get categoryOther;
+
+  /// No description provided for @conditionNew.
+  ///
+  /// In en, this message translates to:
+  /// **'New'**
+  String get conditionNew;
+
+  /// No description provided for @conditionLikeNew.
+  ///
+  /// In en, this message translates to:
+  /// **'Like New'**
+  String get conditionLikeNew;
+
+  /// No description provided for @conditionGood.
+  ///
+  /// In en, this message translates to:
+  /// **'Good'**
+  String get conditionGood;
+
+  /// No description provided for @conditionFair.
+  ///
+  /// In en, this message translates to:
+  /// **'Fair'**
+  String get conditionFair;
+
+  /// No description provided for @cityAmman.
+  ///
+  /// In en, this message translates to:
+  /// **'Amman'**
+  String get cityAmman;
+
+  /// No description provided for @cityZarqa.
+  ///
+  /// In en, this message translates to:
+  /// **'Zarqa'**
+  String get cityZarqa;
+
+  /// No description provided for @cityIrbid.
+  ///
+  /// In en, this message translates to:
+  /// **'Irbid'**
+  String get cityIrbid;
+
+  /// No description provided for @cityAqaba.
+  ///
+  /// In en, this message translates to:
+  /// **'Aqaba'**
+  String get cityAqaba;
+
+  /// No description provided for @cityMadaba.
+  ///
+  /// In en, this message translates to:
+  /// **'Madaba'**
+  String get cityMadaba;
+
+  /// No description provided for @cityKarak.
+  ///
+  /// In en, this message translates to:
+  /// **'Karak'**
+  String get cityKarak;
+
+  /// No description provided for @cityMaan.
+  ///
+  /// In en, this message translates to:
+  /// **'Ma\'an'**
+  String get cityMaan;
+
+  /// No description provided for @cityTafilah.
+  ///
+  /// In en, this message translates to:
+  /// **'Tafilah'**
+  String get cityTafilah;
+
+  /// No description provided for @cityAjloun.
+  ///
+  /// In en, this message translates to:
+  /// **'Ajloun'**
+  String get cityAjloun;
+
+  /// No description provided for @cityJerash.
+  ///
+  /// In en, this message translates to:
+  /// **'Jerash'**
+  String get cityJerash;
+
+  /// No description provided for @cityMafraq.
+  ///
+  /// In en, this message translates to:
+  /// **'Mafraq'**
+  String get cityMafraq;
+
+  /// No description provided for @cityBalqa.
+  ///
+  /// In en, this message translates to:
+  /// **'Balqa'**
+  String get cityBalqa;
+
+  /// No description provided for @all.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get all;
 }
 
 class _AppLocalizationsDelegate

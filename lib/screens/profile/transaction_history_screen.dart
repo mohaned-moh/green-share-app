@@ -7,6 +7,8 @@ import 'package:green_share/screens/home/item_details_screen.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:green_share/models/review_model.dart';
+import 'package:green_share/core/localization_helpers.dart';
+import 'package:green_share/main.dart';
 
 class TransactionHistoryScreen extends StatefulWidget {
   const TransactionHistoryScreen({super.key});
@@ -176,7 +178,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> wit
                             ),
                             const SizedBox(height: 4),
                             Text(
-                              item.category,
+                              LocalizationHelpers.getCategory(context, item.category),
                               style: TextStyle(
                                 fontSize: 14,
                                 color: Colors.grey.shade600,
@@ -210,7 +212,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> wit
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: Text(
-                              isDonated ? 'Donated' : 'Received',
+                              isDonated ? context.l10n.given : context.l10n.received,
                               style: TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.bold,
@@ -218,7 +220,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> wit
                               ),
                             ),
                           ),
-                          if (item.status == 'donated' && 
+                          if ((item.status == 'donated' || item.status == 'completed') && 
                               ((item.type == 'Donate' && item.receiverId != null && FirebaseAuth.instance.currentUser?.uid == item.receiverId) ||
                                (item.type == 'Request' && item.ownerId == FirebaseAuth.instance.currentUser?.uid)))
                             Padding(
@@ -363,6 +365,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> wit
                     reviewerId: currentUserId,
                     reviewerName: currentUser?.name ?? 'User',
                     donorId: realDonorId,
+                    recipientId: currentUserId,
                     itemId: item.id,
                     rating: _rating,
                     comment: _commentController.text.trim(),

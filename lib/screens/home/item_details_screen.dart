@@ -11,6 +11,8 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:green_share/models/user_model.dart';
 import 'package:green_share/screens/profile/profile_screen.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:green_share/main.dart';
+import 'package:green_share/core/localization_helpers.dart';
 
 class ItemDetailsScreen extends StatelessWidget {
   final ItemModel item;
@@ -35,20 +37,33 @@ class ItemDetailsScreen extends StatelessWidget {
           children: [
             // Image Header
             if (item.imageUrls.isNotEmpty)
-              CachedNetworkImage(
-                imageUrl: item.imageUrls.first,
-                height: 300,
+              Container(
+                height: 350, // Slightly taller for better detail
                 width: double.infinity,
-                fit: BoxFit.cover,
-                placeholder: (context, url) => Container(
-                  height: 300,
-                  color: Colors.grey.shade200,
-                  child: const Center(child: CircularProgressIndicator()),
-                ),
-                errorWidget: (context, url, error) => Container(
-                  height: 300,
-                  color: Colors.grey.shade200,
-                  child: const Icon(Icons.error),
+                child: Stack(
+                  children: [
+                    // Blurred Background (Fills the place)
+                    Positioned.fill(
+                      child: CachedNetworkImage(
+                        imageUrl: item.imageUrls.first,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    Positioned.fill(
+                      child: Container(color: Colors.black.withOpacity(0.3)), // Darken a bit
+                    ),
+                    // Foreground Image (Shows the whole thing)
+                    Positioned.fill(
+                      child: Center(
+                        child: CachedNetworkImage(
+                          imageUrl: item.imageUrls.first,
+                          fit: BoxFit.contain,
+                          placeholder: (context, url) => const Center(child: CircularProgressIndicator(color: Colors.white)),
+                          errorWidget: (context, url, error) => const Icon(Icons.error, color: Colors.white),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               )
             else
@@ -195,13 +210,13 @@ class ItemDetailsScreen extends StatelessWidget {
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 12),
-                  Row(
-                    children: [
-                      _buildDetailItem(Icons.category, 'Category', item.category),
-                      const SizedBox(width: 24),
-                      _buildDetailItem(Icons.info_outline, 'Condition', item.condition),
-                    ],
-                  ),
+                    Row(
+                      children: [
+                        _buildDetailItem(Icons.category, context.l10n.categoryAutoFilled, LocalizationHelpers.getCategory(context, item.category)),
+                        const SizedBox(width: 24),
+                        _buildDetailItem(Icons.info_outline, context.l10n.condition, LocalizationHelpers.getCondition(context, item.condition)),
+                      ],
+                    ),
                   const SizedBox(height: 24),
 
                   // Location Map
@@ -287,7 +302,7 @@ class ItemDetailsScreen extends StatelessWidget {
                       children: [
                         const Icon(Icons.location_on, color: Colors.grey),
                         const SizedBox(width: 8),
-                        Text(item.location, style: const TextStyle(fontSize: 16)),
+                        Text(LocalizationHelpers.getCity(context, item.city), style: const TextStyle(fontSize: 16)),
                       ],
                     ),
                   ],

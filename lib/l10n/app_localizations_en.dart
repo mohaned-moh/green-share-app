@@ -499,4 +499,73 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get invalidJordanPhoneNumber =>
       'Please enter a valid Jordanian phone number (e.g. 07XXXXXXXX)';
+
+  @override
+  String get categoryClothing => 'Clothing';
+
+  @override
+  String get categoryFurniture => 'Furniture';
+
+  @override
+  String get categoryBooks => 'Books';
+
+  @override
+  String get categoryElectronics => 'Electronics';
+
+  @override
+  String get categoryToys => 'Toys';
+
+  @override
+  String get categoryOther => 'Other';
+
+  @override
+  String get conditionNew => 'New';
+
+  @override
+  String get conditionLikeNew => 'Like New';
+
+  @override
+  String get conditionGood => 'Good';
+
+  @override
+  String get conditionFair => 'Fair';
+
+  @override
+  String get cityAmman => 'Amman';
+
+  @override
+  String get cityZarqa => 'Zarqa';
+
+  @override
+  String get cityIrbid => 'Irbid';
+
+  @override
+  String get cityAqaba => 'Aqaba';
+
+  @override
+  String get cityMadaba => 'Madaba';
+
+  @override
+  String get cityKarak => 'Karak';
+
+  @override
+  String get cityMaan => 'Ma\'an';
+
+  @override
+  String get cityTafilah => 'Tafilah';
+
+  @override
+  String get cityAjloun => 'Ajloun';
+
+  @override
+  String get cityJerash => 'Jerash';
+
+  @override
+  String get cityMafraq => 'Mafraq';
+
+  @override
+  String get cityBalqa => 'Balqa';
+
+  @override
+  String get all => 'All';
 }

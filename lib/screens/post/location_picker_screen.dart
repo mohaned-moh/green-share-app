@@ -40,10 +40,25 @@ class _LocationPickerScreenState extends State<LocationPickerScreen> {
         final data = json.decode(response.body);
         final address = data['address'] as Map<String, dynamic>?;
         if (address != null) {
-          String? city = address['city'] ?? address['town'] ?? address['village'] ?? address['county'] ?? address['state'];
+          String? rawCity = address['city'] ?? address['town'] ?? address['village'] ?? address['county'] ?? address['state'];
+          String? matchedCity;
+          
+          // Match against exact dropdown cities for the filter to work
+          final knownCities = ['Amman', 'Zarqa', 'Irbid', 'Aqaba', 'Mafraq', 'Jerash', 'Madaba'];
+          
+          for (var value in address.values) {
+             for (var kCity in knownCities) {
+                 if (value.toString().toLowerCase().contains(kCity.toLowerCase())) {
+                     matchedCity = kCity;
+                     break;
+                 }
+             }
+             if (matchedCity != null) break;
+          }
+
           if (mounted) {
             setState(() {
-              _cityName = city;
+              _cityName = matchedCity ?? rawCity;
             });
           }
         }

@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:green_share/models/item_model.dart';
@@ -137,22 +138,21 @@ class DatabaseService {
 
   Stream<List<ItemModel>> getTransactionHistoryStream({required String userId, required bool isDonated}) {
     if (isDonated) {
-      // Items the user posted that are no longer available (e.g. status == 'donated' or 'awarded')
-      // Note: If you have a specific status for given items, update 'donated' to that status.
+      // Items the user posted that are finished
       return _firestore
           .collection('items')
           .where('ownerId', isEqualTo: userId)
-          .where('status', isEqualTo: 'donated') // Assuming 'donated' is the status
+          .where('status', whereIn: ['donated', 'completed', 'claimed'])
           .snapshots()
           .map((snapshot) => snapshot.docs
               .map((doc) => ItemModel.fromJson(doc.data() as Map<String, dynamic>, doc.id))
               .toList());
     } else {
-      // Items the user received. This requires the item document to store `receiverId` 
-      // or similar when awarded.
+      // Items the user received that are finished
       return _firestore
           .collection('items')
           .where('receiverId', isEqualTo: userId)
+          .where('status', whereIn: ['donated', 'completed', 'claimed'])
           .snapshots()
           .map((snapshot) => snapshot.docs
               .map((doc) => ItemModel.fromJson(doc.data() as Map<String, dynamic>, doc.id))
@@ -160,12 +160,40 @@ class DatabaseService {
     }
   }
 
+  Stream<List<ItemModel>> getPendingReceivedItemsStream(String userId) {
+    // Items where the current user is expected to confirm receipt
+    // In our logic: if Donate -> they are receiverId. 
+    // If Request -> they are ownerId. 
+    // Wait, since we are moving this to a unified logic where we query "pending", 
+    // we should combine streams or run two queries and merge them client-side.
+    // It's much simpler to use `Filter.or`:
+    return _firestore
+        .collection('items')
+        .where('status', isEqualTo: 'pending')
+        .where(
+          Filter.or(
+            Filter.and(
+              Filter('type', isEqualTo: 'Donate'),
+              Filter('receiverId', isEqualTo: userId),
+            ),
+            Filter.and(
+              Filter('type', isEqualTo: 'Request'),
+              Filter('ownerId', isEqualTo: userId),
+            )
+          )
+        )
+        .snapshots()
+        .map((snapshot) => snapshot.docs
+            .map((doc) => ItemModel.fromJson(doc.data() as Map<String, dynamic>, doc.id))
+            .toList());
+  }
+
   // --- Storage ---
 
-  Future<String?> uploadImage(File imageFile, String path) async {
+  Future<String?> uploadImage(Uint8List imageBytes, String path) async {
     try {
       final ref = FirebaseStorage.instance.ref().child(path);
-      final uploadTask = ref.putFile(imageFile);
+      final uploadTask = ref.putData(imageBytes, SettableMetadata(contentType: 'image/jpeg'));
       final snapshot = await uploadTask;
       return await snapshot.ref.getDownloadURL();
     } catch (e) {
@@ -254,10 +282,8 @@ class DatabaseService {
   // --- Reviews ---
 
   Future<void> addReview(ReviewModel review) async {
-    // 1. Add review to donor's subcollection
+    // 1. Add review to top-level collection
     final reviewRef = _firestore
-        .collection('users')
-        .doc(review.donorId)
         .collection('reviews')
         .doc();
     
@@ -292,14 +318,16 @@ class DatabaseService {
 
   Stream<List<ReviewModel>> getUserReviewsStream(String userId) {
     return _firestore
-        .collection('users')
-        .doc(userId)
         .collection('reviews')
-        .orderBy('timestamp', descending: true)
+        .where('donorId', isEqualTo: userId)
         .snapshots()
-        .map((snapshot) => snapshot.docs
-            .map((doc) => ReviewModel.fromJson(doc.data(), doc.id))
-            .toList());
+        .map((snapshot) {
+           final list = snapshot.docs
+              .map((doc) => ReviewModel.fromJson(doc.data(), doc.id))
+              .toList();
+           list.sort((a,b) => b.timestamp.compareTo(a.timestamp));
+           return list;
+        });
   }
 
   // --- Admin Functions ---

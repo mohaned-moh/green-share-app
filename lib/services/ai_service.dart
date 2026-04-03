@@ -3,15 +3,21 @@ import 'package:google_mlkit_image_labeling/google_mlkit_image_labeling.dart';
 import 'package:image_picker/image_picker.dart';
 
 class AIService {
-  final ImageLabeler _imageLabeler;
+  final ImageLabeler? _imageLabeler;
 
   AIService()
-      : _imageLabeler = ImageLabeler(options: ImageLabelerOptions(confidenceThreshold: 0.6));
+      : _imageLabeler = kIsWeb 
+          ? null 
+          : ImageLabeler(options: ImageLabelerOptions(confidenceThreshold: 0.6));
 
   Future<String?> classifyImage(XFile imageFile) async {
+    if (kIsWeb || _imageLabeler == null) {
+      return null;
+    }
+
     try {
       final inputImage = InputImage.fromFilePath(imageFile.path);
-      final List<ImageLabel> labels = await _imageLabeler.processImage(inputImage);
+      final List<ImageLabel> labels = await _imageLabeler!.processImage(inputImage);
 
       String? bestCategory;
       double highestConfidence = 0.0;
@@ -47,6 +53,6 @@ class AIService {
   }
 
   void dispose() {
-    _imageLabeler.close();
+    _imageLabeler?.close();
   }
 }

@@ -3,6 +3,7 @@ import 'package:green_share/core/app_theme.dart';
 import 'package:green_share/models/item_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:green_share/services/database_service.dart';
+import 'package:green_share/core/localization_helpers.dart';
 import 'package:green_share/screens/chat/chat_screen.dart';
 import 'package:green_share/screens/home/item_details_screen.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -39,7 +40,7 @@ class ItemCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Expanded(
-            flex: 3,
+            flex: 4,
             child: Container(
               decoration: BoxDecoration(
                 color: Colors.grey.shade100,
@@ -56,7 +57,7 @@ class ItemCard extends StatelessWidget {
             ),
           ),
           Expanded(
-            flex: 5,
+            flex: 6,
             child: Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
@@ -170,10 +171,10 @@ class ItemCard extends StatelessWidget {
                     spacing: 8,
                     runSpacing: 8,
                     children: [
-                        _buildChip(Icons.category_outlined, item.category),
-                      _buildChip(Icons.location_on_outlined, item.city ?? item.location),
+                        _buildChip(Icons.category_outlined, LocalizationHelpers.getCategory(context, item.category)),
+                      _buildChip(Icons.location_on_outlined, LocalizationHelpers.getCity(context, item.city ?? item.location)),
                       if (item.type == 'Donate' && item.condition.isNotEmpty)
-                        _buildChip(Icons.info_outline, item.condition),
+                        _buildChip(Icons.info_outline, LocalizationHelpers.getCondition(context, item.condition)),
                     ],
                   ),
                   const Spacer(),
@@ -485,6 +486,7 @@ class ItemCard extends StatelessWidget {
                     reviewerId: currentUserId,
                     reviewerName: currentUser?.name ?? 'User',
                     donorId: item.ownerId,
+                    recipientId: currentUserId,
                     itemId: item.id,
                     rating: _rating,
                     comment: _commentController.text.trim(),

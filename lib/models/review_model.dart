@@ -5,6 +5,7 @@ class ReviewModel {
   final String reviewerId;
   final String reviewerName;
   final String donorId;
+  final String recipientId;
   final String itemId;
   final double rating;
   final String comment;
@@ -15,6 +16,7 @@ class ReviewModel {
     required this.reviewerId,
     required this.reviewerName,
     required this.donorId,
+    required this.recipientId,
     required this.itemId,
     required this.rating,
     required this.comment,
@@ -27,6 +29,7 @@ class ReviewModel {
       'reviewerId': reviewerId,
       'reviewerName': reviewerName,
       'donorId': donorId,
+      'recipientId': recipientId,
       'itemId': itemId,
       'rating': rating,
       'comment': comment,
@@ -40,6 +43,7 @@ class ReviewModel {
       reviewerId: map['reviewerId'] ?? '',
       reviewerName: map['reviewerName'] ?? 'Anonymous',
       donorId: map['donorId'] ?? '',
+      recipientId: map['recipientId'] ?? map['reviewerId'] ?? '',
       itemId: map['itemId'] ?? '',
       rating: map['rating'] != null ? (map['rating'] as num).toDouble() : 0.0,
       comment: map['comment'] ?? '',

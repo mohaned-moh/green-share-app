@@ -498,4 +498,73 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get invalidJordanPhoneNumber =>
       'يرجى إدخال رقم هاتف أردني صحيح (مثال: 07XXXXXXXX)';
+
+  @override
+  String get categoryClothing => 'ملابس';
+
+  @override
+  String get categoryFurniture => 'أثاث';
+
+  @override
+  String get categoryBooks => 'كتب';
+
+  @override
+  String get categoryElectronics => 'إلكترونيات';
+
+  @override
+  String get categoryToys => 'ألعاب';
+
+  @override
+  String get categoryOther => 'أخرى';
+
+  @override
+  String get conditionNew => 'جديد';
+
+  @override
+  String get conditionLikeNew => 'شبه جديد';
+
+  @override
+  String get conditionGood => 'جيد';
+
+  @override
+  String get conditionFair => 'مستعمل';
+
+  @override
+  String get cityAmman => 'عمان';
+
+  @override
+  String get cityZarqa => 'الزرقاء';
+
+  @override
+  String get cityIrbid => 'إربد';
+
+  @override
+  String get cityAqaba => 'العقبة';
+
+  @override
+  String get cityMadaba => 'مادبا';
+
+  @override
+  String get cityKarak => 'الكرك';
+
+  @override
+  String get cityMaan => 'معان';
+
+  @override
+  String get cityTafilah => 'الطفيلة';
+
+  @override
+  String get cityAjloun => 'عجلون';
+
+  @override
+  String get cityJerash => 'جرش';
+
+  @override
+  String get cityMafraq => 'المفرق';
+
+  @override
+  String get cityBalqa => 'البلقاء';
+
+  @override
+  String get all => 'الكل';
 }

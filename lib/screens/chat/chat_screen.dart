@@ -8,6 +8,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:async';
 import 'package:green_share/main.dart';
 import 'package:green_share/screens/profile/profile_screen.dart';
+import 'package:green_share/widgets/transaction_card.dart';
 
 class ChatScreen extends StatefulWidget {
   final String chatId;
@@ -83,13 +84,6 @@ class _ChatScreenState extends State<ChatScreen> {
                                (_linkedItem!.type == 'Request' && _linkedItem!.ownerId != currentUserId)) &&
                               _linkedItem!.status == 'available';
 
-    final bool canReviewItem = _linkedItem != null &&
-                               currentUserId != null &&
-                               _linkedItem!.status == 'donated' &&
-                               !_linkedItem!.hasBeenRated &&
-                               ((_linkedItem!.type == 'Donate' && _linkedItem!.ownerId == widget.otherUserId && (_linkedItem!.receiverId == null || _linkedItem!.receiverId == currentUserId)) ||
-                                (_linkedItem!.type == 'Request' && _linkedItem!.ownerId == currentUserId && (_linkedItem!.receiverId == null || _linkedItem!.receiverId == widget.otherUserId)));
-
     return Scaffold(
       appBar: AppBar(
         title: GestureDetector(
@@ -113,6 +107,8 @@ class _ChatScreenState extends State<ChatScreen> {
       ),
       body: Column(
         children: [
+          if (currentUserId != null)
+            TransactionCard(currentUserId: currentUserId!),
           if (canAwardItem)
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -167,64 +163,6 @@ class _ChatScreenState extends State<ChatScreen> {
                       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     ),
                     child: const Text('Award', style: TextStyle(fontWeight: FontWeight.bold)),
-                  ),
-                ],
-              ),
-            ),
-          if (canReviewItem)
-            Container(
-              margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: Colors.amber.shade200, width: 1.5),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.amber.withOpacity(0.1),
-                    blurRadius: 10,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
-              ),
-              child: Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: Colors.amber.shade50,
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(Icons.star_rounded, color: Colors.amber.shade600, size: 24),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          'Transaction Complete!', 
-                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.black87),
-                        ),
-                        const SizedBox(height: 2),
-                        Text(
-                          context.l10n.rateAndReviewTitle(widget.otherUserName, _linkedItem!.title),
-                          style: TextStyle(fontSize: 12, color: Colors.grey.shade700),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  ElevatedButton(
-                    onPressed: () => _showReviewDialog(context),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.amber,
-                      foregroundColor: Colors.white,
-                      elevation: 0,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    ),
-                    child: const Text('Review', style: TextStyle(fontWeight: FontWeight.bold)),
                   ),
                 ],
               ),
@@ -359,10 +297,12 @@ class _ChatScreenState extends State<ChatScreen> {
               // Background operations
               () async {
                 try {
-                  final interactionReceiverId = _linkedItem!.type == 'Donate' ? widget.otherUserId : currentUserId!;
+                  // The receiverId is always the other person involved in the chat, 
+                  // regardless of who is donating or requesting.
+                  final interactionReceiverId = widget.otherUserId;
                   
-                  // Update item status
-                  await _databaseService.updateItemStatus(_linkedItem!.id, 'donated', receiverId: interactionReceiverId);
+                  // Update item status to pending
+                  await _databaseService.updateItemStatus(_linkedItem!.id, 'pending', receiverId: interactionReceiverId);
                   
                   // Increment stats for both users
                   // If Donate: owner gave, interactionReceiverId received.
@@ -390,101 +330,6 @@ class _ChatScreenState extends State<ChatScreen> {
             child: Text(context.l10n.yesConfirm),
           ),
         ],
-      ),
-    );
-  }
-
-  void _showReviewDialog(BuildContext context) {
-    double rating = 5.0;
-    final commentController = TextEditingController();
-
-    showDialog(
-      context: context,
-      builder: (context) => StatefulBuilder(
-        builder: (context, setState) => AlertDialog(
-          title: Text(context.l10n.rateAndReview),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(context.l10n.howWasExperience),
-              const SizedBox(height: 16),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(5, (index) {
-                  return IconButton(
-                    icon: Icon(
-                      index < rating ? Icons.star : Icons.star_border,
-                      color: Colors.amber,
-                      size: 32,
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        rating = index + 1.0;
-                      });
-                    },
-                  );
-                }),
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: commentController,
-                decoration: InputDecoration(
-                  labelText: context.l10n.commentOptional,
-                  border: const OutlineInputBorder(),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.amber),
-                  ),
-                ),
-                maxLines: 3,
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text(context.l10n.cancel),
-            ),
-            ElevatedButton(
-              onPressed: () async {
-                Navigator.pop(context); // Close dialog
-
-                try {
-                  final currentUser = await _databaseService.getUserProfile(currentUserId!);
-                  
-                  final realDonorId = _linkedItem!.type == 'Donate' ? _linkedItem!.ownerId : widget.otherUserId;
-
-                  final review = ReviewModel(
-                    id: '', // Will be generated by addReview
-                    reviewerId: currentUserId!,
-                    reviewerName: currentUser?.name ?? 'Anonymous',
-                    donorId: realDonorId,
-                    itemId: _linkedItem!.id,
-                    rating: rating,
-                    comment: commentController.text.trim(),
-                    timestamp: DateTime.now(),
-                  );
-                  
-                  await _databaseService.addReview(review);
-                  
-                  if (mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text(context.l10n.reviewSubmitted)),
-                    );
-                  }
-                } catch (e) {
-                  print('Error submitting review: $e');
-                  if (mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text(context.l10n.reviewFailed)),
-                    );
-                  }
-                }
-              },
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.amber),
-              child: Text(context.l10n.submit),
-            ),
-          ],
-        ),
       ),
     );
   }

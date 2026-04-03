@@ -108,6 +108,14 @@ class _OtpScreenState extends State<OtpScreen> {
             createdAt: DateTime.now(),
           );
           await _databaseService.createUserProfile(newUserModel);
+          // Safety Guard: Wait for profile to be fully queryable
+          int retries = 0;
+          while (retries < 5) {
+            final check = await _databaseService.getUserProfile(user.uid);
+            if (check != null) break;
+            await Future.delayed(const Duration(milliseconds: 500));
+            retries++;
+          }
         }
 
         if (mounted) {

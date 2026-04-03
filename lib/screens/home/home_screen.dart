@@ -7,8 +7,11 @@ import 'package:latlong2/latlong.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:green_share/screens/home/item_details_screen.dart';
 import 'package:green_share/main.dart'; // import context extension
+import 'package:green_share/widgets/transaction_card.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:green_share/core/localization_helpers.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -53,9 +56,9 @@ class _HomeScreenState extends State<HomeScreen> {
   final List<String> _conditions = [
     'All',
     'New',
+    'Like New',
     'Good',
-    'Fair',
-    'Poor'
+    'Fair'
   ];
 
   void _showFilterDialog() {
@@ -83,7 +86,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     value: _selectedCategory ?? 'All',
                     decoration: InputDecoration(labelText: context.l10n.categoryAutoFilled),
                     items: _categories.map((c) {
-                      return DropdownMenuItem(value: c, child: Text(c));
+                      return DropdownMenuItem(
+                        value: c, 
+                        child: Text(LocalizationHelpers.getCategory(context, c))
+                      );
                     }).toList(),
                     onChanged: (val) {
                       setModalState(() {
@@ -96,7 +102,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     value: _selectedCity ?? 'All',
                     decoration: InputDecoration(labelText: context.l10n.city),
                     items: _cities.map((c) {
-                      return DropdownMenuItem(value: c, child: Text(c));
+                      return DropdownMenuItem(
+                        value: c, 
+                        child: Text(LocalizationHelpers.getCity(context, c))
+                      );
                     }).toList(),
                     onChanged: (val) {
                       setModalState(() {
@@ -109,7 +118,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     value: _selectedCondition ?? 'All',
                     decoration: InputDecoration(labelText: context.l10n.condition),
                     items: _conditions.map((c) {
-                      return DropdownMenuItem(value: c, child: Text(c));
+                      return DropdownMenuItem(
+                        value: c, 
+                        child: Text(LocalizationHelpers.getCondition(context, c))
+                      );
                     }).toList(),
                     onChanged: (val) {
                       setModalState(() {
@@ -138,7 +150,10 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    _determinePosition();
+    // Delay location request to avoid blocking initial build/transitions
+    Future.delayed(const Duration(milliseconds: 1500), () {
+      if (mounted) _determinePosition();
+    });
   }
 
   Future<void> _determinePosition() async {
@@ -235,6 +250,8 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         body: Column(
           children: [
+            if (FirebaseAuth.instance.currentUser != null)
+              TransactionCard(currentUserId: FirebaseAuth.instance.currentUser!.uid),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
               child: TextField(

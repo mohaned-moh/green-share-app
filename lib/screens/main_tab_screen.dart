@@ -33,18 +33,22 @@ class _MainTabScreenState extends State<MainTabScreen> {
   Future<void> _checkAdminRole() async {
     try {
       if (currentUserId != null) {
-        // Fetch the profile
-        final user = await _databaseService.getUserProfile(currentUserId!);
+        // Retry logic for fresh signups
+        dynamic user;
+        int retries = 0;
+        while (retries < 3) {
+          user = await _databaseService.getUserProfile(currentUserId!);
+          if (user != null) break;
+          await Future.delayed(const Duration(seconds: 1)); // Wait for propagates
+          retries++;
+        }
         
         if (mounted) {
           setState(() {
-            // Check for 'admin' role, but handle the case where user might be null
             _isAdmin = user?.role == 'admin';
             _isLoadingRole = false; 
           });
 
-          // Safety: If they are logged into Auth but have no Profile in Firestore, 
-          // log them out so they can start fresh.
           if (user == null) {
             await FirebaseAuth.instance.signOut();
           }

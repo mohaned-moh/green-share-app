@@ -10,7 +10,9 @@ import 'package:green_share/screens/post/location_picker_screen.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:green_share/main.dart'; // import context extension
-import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter/foundation.dart'; // import kIsWeb
+import 'package:flutter/services.dart'; // import Uint8List
+import 'package:green_share/core/localization_helpers.dart';
 
 class PostItemScreen extends StatefulWidget {
   const PostItemScreen({super.key});
@@ -25,7 +27,7 @@ class _PostItemScreenState extends State<PostItemScreen> {
   
   String _type = 'Donate';
   String _condition = 'Good';
-  final List<String> _conditions = ['New', 'Good', 'Fair', 'Poor'];
+  final List<String> _conditions = ['New', 'Like New', 'Good', 'Fair'];
   
   String _selectedCategory = 'Other';
   final List<String> _categories = [
@@ -43,9 +45,14 @@ class _PostItemScreenState extends State<PostItemScreen> {
     'Zarqa',
     'Irbid',
     'Aqaba',
-    'Mafraq',
-    'Jerash',
     'Madaba',
+    'Karak',
+    'Ma\'an',
+    'Tafilah',
+    'Ajloun',
+    'Jerash',
+    'Mafraq',
+    'Balqa',
     'Other'
   ];
   
@@ -135,19 +142,41 @@ class _PostItemScreenState extends State<PostItemScreen> {
     if (pickedFiles.isNotEmpty) {
       setState(() {
         _imageFiles.addAll(pickedFiles);
-        _isProcessingImage = true;
+        // Start showing the "AI is interpreting..." loader
+        _isProcessingImage = true; 
       });
-      
-      final category = await _aiService.classifyImage(pickedFiles.first);
-      
-      setState(() {
-        _isProcessingImage = false;
-        if (category != null && _categories.contains(category)) {
-          _selectedCategory = category;
-        } else if (category != null) {
-          _selectedCategory = 'Other';
+
+      try {
+        // Run AI classification on the first image picked
+        final String? detectedCategory = await _aiService.classifyImage(pickedFiles.first);
+
+        if (mounted && detectedCategory != null) {
+          setState(() {
+            // Check if the AI's result exists in your predefined _categories list
+            if (_categories.contains(detectedCategory)) {
+              _selectedCategory = detectedCategory;
+            } else {
+              _selectedCategory = 'Other';
+            }
+          });
+
+          // Optional: Show a snackbar to let the user know AI helped
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text("AI detected: $detectedCategory"),
+              backgroundColor: Colors.green,
+              duration: const Duration(seconds: 2),
+            ),
+          );
         }
-      });
+      } catch (e) {
+        debugPrint("AI Error: $e");
+      } finally {
+        // Hide the loader regardless of success or failure
+        if (mounted) {
+          setState(() => _isProcessingImage = false);
+        }
+      }
     }
   }
 
@@ -158,9 +187,27 @@ class _PostItemScreenState extends State<PostItemScreen> {
   }
 
   Future<void> _submitPost() async {
+    if (_imageFiles.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please add at least one image')),
+      );
+      return;
+    }
     if (_titleController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(context.l10n.pleaseEnterTitle)),
+      );
+      return;
+    }
+    if (_descriptionController.text.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please enter a description')),
+      );
+      return;
+    }
+    if (_selectedLocation == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please select a location on the map')),
       );
       return;
     }
@@ -170,15 +217,15 @@ class _PostItemScreenState extends State<PostItemScreen> {
     });
 
     try {
-      final userId = FirebaseAuth.instance.currentUser?.uid ?? 'anonymous_user';
+      final user = FirebaseAuth.instance.currentUser;
+      final userId = user?.uid ?? 'anonymous_user';
       List<String> uploadedImageUrls = [];
 
-      for (var file in _imageFiles) {
-        final fileName = '${DateTime.now().millisecondsSinceEpoch}_${file.name}';
-        final url = await _databaseService.uploadImage(File(file.path), 'item_images/$fileName');
-        if (url != null) {
-          uploadedImageUrls.add(url);
-        }
+      // Upload each compressed image natively
+      for (var xfile in _imageFiles) {
+        Uint8List bytes = await xfile.readAsBytes();
+        String? url = await _databaseService.uploadImage(bytes, 'items/${userId}_${DateTime.now().millisecondsSinceEpoch}_${_imageFiles.indexOf(xfile)}.jpg');
+        if (url != null) uploadedImageUrls.add(url);
       }
 
       final item = ItemModel(
@@ -229,6 +276,16 @@ class _PostItemScreenState extends State<PostItemScreen> {
   }
 
   @override
+  void dispose() {
+    // Clean up controllers
+    _titleController.dispose();
+    _descriptionController.dispose();
+    
+    // CRITICAL: Close the ML Kit Image Labeler
+    _aiService.dispose(); 
+    
+    super.dispose();
+  }
   Widget build(BuildContext context) {
     final currentUserId = FirebaseAuth.instance.currentUser?.uid;
 
@@ -345,44 +402,53 @@ class _PostItemScreenState extends State<PostItemScreen> {
                 ),
               )
             else
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    height: 120,
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: _imageFiles.length + 1,
-                      itemBuilder: (context, index) {
-                        if (index == _imageFiles.length) {
-                          return GestureDetector(
-                            onTap: _pickImages,
-                            child: Container(
-                              width: 120,
-                              margin: const EdgeInsets.only(right: 8),
-                              decoration: BoxDecoration(
-                                color: Colors.grey.shade200,
-                                borderRadius: BorderRadius.circular(16),
-                              ),
-                              child: const Center(
-                                child: Icon(Icons.add_a_photo, size: 40, color: Colors.grey),
-                              ),
-                            ),
-                          );
-                        }
-                        return Stack(
-                          children: [
-                            Container(
-                              width: 120,
-                              margin: const EdgeInsets.only(right: 8),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(16),
-                                child: Image.file(
-                                  File(_imageFiles[index].path),
-                                  fit: BoxFit.cover,
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        height: 200,
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: _imageFiles.length + 1,
+                          itemBuilder: (context, index) {
+                            if (index == _imageFiles.length) {
+                              return GestureDetector(
+                                onTap: _pickImages,
+                                child: Container(
+                                  width: 160,
+                                  margin: const EdgeInsets.only(right: 8),
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey.shade200,
+                                    borderRadius: BorderRadius.circular(16),
+                                  ),
+                                  child: const Center(
+                                    child: Icon(Icons.add_a_photo, size: 40, color: Colors.grey),
+                                  ),
                                 ),
-                              ),
-                            ),
+                              );
+                            }
+                            return Stack(
+                              children: [
+                                Container(
+                                  width: 160,
+                                  margin: const EdgeInsets.only(right: 8),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(16),
+                                    child: kIsWeb 
+                                      ? Image.network(
+                                          _imageFiles[index].path,
+                                          fit: BoxFit.cover,
+                                          width: 160,
+                                          height: 200,
+                                        )
+                                      : Image.file(
+                                          File(_imageFiles[index].path),
+                                          fit: BoxFit.cover,
+                                          width: 160,
+                                          height: 200,
+                                        ),
+                                  ),
+                                ),
                             Positioned(
                               top: 4,
                               right: 12,
@@ -406,59 +472,116 @@ class _PostItemScreenState extends State<PostItemScreen> {
                 ],
               ),
             const SizedBox(height: 16),
-            if (_isProcessingImage)
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2)),
-                  const SizedBox(width: 8),
-                  Text(context.l10n.aiInterpreting),
-                ],
-              ),
             const SizedBox(height: 16),
+            // 1. AI Loader Row
+            if (_isProcessingImage)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const SizedBox(
+                      width: 16,
+                      height: 16,
+                      child: CircularProgressIndicator(strokeWidth: 2, color: Colors.green),
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      context.l10n.aiInterpreting,
+                      style: const TextStyle(color: Colors.green, fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+              ),
+
+            // 2. Title Field
             TextField(
               controller: _titleController,
-              decoration: InputDecoration(labelText: context.l10n.title),
+              decoration: InputDecoration(
+                labelText: context.l10n.title,
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+              ),
             ),
             const SizedBox(height: 16),
+
+            // 3. Smart Category Dropdown
             DropdownButtonFormField<String>(
               value: _selectedCategory,
-              decoration: InputDecoration(labelText: context.l10n.categoryAutoFilled),
+              decoration: InputDecoration(
+                labelText: context.l10n.categoryAutoFilled,
+                prefixIcon: const Icon(Icons.auto_awesome, color: Colors.amber, size: 20),
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: _isProcessingImage ? Colors.green : Colors.grey.shade400,
+                    width: _isProcessingImage ? 2.0 : 1.0,
+                  ),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
               items: _categories.map((c) {
-                return DropdownMenuItem(value: c, child: Text(c));
+                return DropdownMenuItem(
+                  value: c, 
+                  child: Text(LocalizationHelpers.getCategory(context, c))
+                );
               }).toList(),
               onChanged: (val) {
                 if (val != null) setState(() => _selectedCategory = val);
               },
             ),
             const SizedBox(height: 16),
+
+            // 4. Description Field
             TextField(
               controller: _descriptionController,
-              decoration: InputDecoration(labelText: context.l10n.description),
+              decoration: InputDecoration(
+                labelText: context.l10n.description,
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+              ),
               maxLines: 4,
             ),
             const SizedBox(height: 16),
-            if (_type == 'Donate')
+
+            // 5. Condition Dropdown (Only for Donations)
+            if (_type == 'Donate') ...[
               DropdownButtonFormField<String>(
-                initialValue: _condition,
-                decoration: InputDecoration(labelText: context.l10n.condition),
+                value: _condition,
+                decoration: InputDecoration(
+                  labelText: context.l10n.condition,
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                ),
                 items: _conditions.map((c) {
-                  return DropdownMenuItem(value: c, child: Text(c));
+                  return DropdownMenuItem(
+                    value: c, 
+                    child: Text(LocalizationHelpers.getCondition(context, c))
+                  );
                 }).toList(),
                 onChanged: (val) {
                   if (val != null) setState(() => _condition = val);
                 },
               ),
-            const SizedBox(height: 16),
+              const SizedBox(height: 16),
+            ],
+
+            // 6. City Display
             TextField(
-              controller: TextEditingController(text: _selectedCity),
-              decoration: InputDecoration(labelText: context.l10n.city),
+              controller: TextEditingController(text: LocalizationHelpers.getCity(context, _selectedCity)),
+              decoration: InputDecoration(
+                labelText: context.l10n.city,
+                prefixIcon: const Icon(Icons.location_city),
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+              ),
               readOnly: true,
               enabled: false,
             ),
             const SizedBox(height: 16),
+
+            // 7. Location Picker Button
             ListTile(
-              contentPadding: EdgeInsets.zero,
+              shape: RoundedRectangleBorder(
+                side: BorderSide(color: Colors.grey.shade300),
+                borderRadius: BorderRadius.circular(12),
+              ),
               leading: const Icon(Icons.location_on, color: Colors.green),
               title: Text(_selectedLocation == null 
                   ? (_isLoadingLocation ? context.l10n.locating : context.l10n.selectLocation) 
@@ -476,7 +599,6 @@ class _PostItemScreenState extends State<PostItemScreen> {
                 if (result != null && result is Map<String, dynamic>) {
                   setState(() {
                     _selectedLocation = result['location'] as LatLng?;
-                    
                     final String? city = result['city'] as String?;
                     if (city != null) {
                       bool cityExists = _cities.any((c) => c.toLowerCase() == city.toLowerCase());
@@ -488,17 +610,19 @@ class _PostItemScreenState extends State<PostItemScreen> {
                       }
                     }
                   });
-                } else if (result != null && result is LatLng) {
-                  setState(() {
-                    _selectedLocation = result;
-                  });
                 }
               },
             ),
             const SizedBox(height: 32),
+
+            // 8. Submit Button
             _isUploading
                 ? const Center(child: CircularProgressIndicator())
                 : ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: const Size.fromHeight(50),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    ),
                     onPressed: _submitPost,
                     child: Text(context.l10n.postButton),
                   ),

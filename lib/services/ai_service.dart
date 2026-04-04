@@ -37,7 +37,7 @@ class AIService {
       return 'Other';
     } catch (e) {
       debugPrint('Error classifying image with Gemini: $e');
-      return null;
+      throw Exception(e);
     }
   }
 

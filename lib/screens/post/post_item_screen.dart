@@ -168,9 +168,24 @@ class _PostItemScreenState extends State<PostItemScreen> {
               duration: const Duration(seconds: 2),
             ),
           );
+        } else if (mounted && detectedCategory == null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text("AI Classification failed. Check API Key or Console."),
+              backgroundColor: Colors.red,
+            ),
+          );
         }
       } catch (e) {
         debugPrint("AI Error: $e");
+        if (mounted) {
+           ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text("AI Error: $e"),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
       } finally {
         // Hide the loader regardless of success or failure
         if (mounted) {

@@ -1,58 +1,47 @@
 import 'package:flutter/foundation.dart';
-import 'package:google_mlkit_image_labeling/google_mlkit_image_labeling.dart';
+import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:image_picker/image_picker.dart';
 
 class AIService {
-  final ImageLabeler? _imageLabeler;
+  static const String apiKey = String.fromEnvironment(
+    'GEMINI_API_KEY', 
+    defaultValue: 'AIzaSyCNCWG3ZC5lEsTBTkjkM7Cw-hwNiaBdMnE',
+  );
 
-  AIService()
-      : _imageLabeler = kIsWeb 
-          ? null 
-          : ImageLabeler(options: ImageLabelerOptions(confidenceThreshold: 0.6));
+  final GenerativeModel _model;
+
+  AIService() : _model = GenerativeModel(model: 'gemini-1.5-flash', apiKey: apiKey);
 
   Future<String?> classifyImage(XFile imageFile) async {
-    if (kIsWeb || _imageLabeler == null) {
-      return null;
-    }
-
     try {
-      final inputImage = InputImage.fromFilePath(imageFile.path);
-      final List<ImageLabel> labels = await _imageLabeler!.processImage(inputImage);
+      final bytes = await imageFile.readAsBytes();
+      final prompt = TextPart("Classify this image into exactly one of these categories: Clothing, Furniture, Books, Electronics, Toys, or Other. Output only the exact category string and nothing else. No formatting, no extra words.");
+      final imagePart = DataPart(imageFile.mimeType ?? 'image/jpeg', bytes);
+      
+      final response = await _model.generateContent([
+        Content.multi([prompt, imagePart])
+      ]);
 
-      String? bestCategory;
-      double highestConfidence = 0.0;
-
-      for (ImageLabel label in labels) {
-        if (label.confidence > highestConfidence) {
-          highestConfidence = label.confidence;
-          bestCategory = _mapLabelToCategory(label.label);
+      final String? text = response.text?.trim();
+      
+      final validCategories = ['Clothing', 'Furniture', 'Books', 'Electronics', 'Toys', 'Other'];
+      if (text != null) {
+        // Handle case variations just in case Gemini adds periods or slightly differs capitalization
+        final cleanText = text.replaceAll('.', '').trim();
+        for (final category in validCategories) {
+          if (category.toLowerCase() == cleanText.toLowerCase()) {
+            return category;
+          }
         }
       }
-      return bestCategory ?? 'Other';
+      return 'Other';
     } catch (e) {
-      debugPrint('Error classifying image: $e');
+      debugPrint('Error classifying image with Gemini: $e');
       return null;
-    }
-  }
-
-  String _mapLabelToCategory(String label) {
-    final lowerLabel = label.toLowerCase();
-    if (lowerLabel.contains('clothing') || lowerLabel.contains('shirt') || lowerLabel.contains('pants') || lowerLabel.contains('dress')) {
-      return 'Clothing';
-    } else if (lowerLabel.contains('furniture') || lowerLabel.contains('chair') || lowerLabel.contains('table') || lowerLabel.contains('sofa') || lowerLabel.contains('desk')) {
-      return 'Furniture';
-    } else if (lowerLabel.contains('book')) {
-      return 'Books';
-    } else if (lowerLabel.contains('electronics') || lowerLabel.contains('phone') || lowerLabel.contains('computer') || lowerLabel.contains('tv')) {
-      return 'Electronics';
-    } else if (lowerLabel.contains('toy') || lowerLabel.contains('game')) {
-      return 'Toys';
-    } else {
-      return 'Other'; // Default category
     }
   }
 
   void dispose() {
-    _imageLabeler?.close();
+    // No explicit dispose needed for Gemini SDK
   }
 }

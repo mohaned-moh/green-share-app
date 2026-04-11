@@ -32,12 +32,19 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
   }
 
   Future<void> _verifyPhone() async {
-    final phone = _phoneController.text.trim();
+    String phone = _phoneController.text.trim();
     if (phone.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(context.l10n.pleaseFillAllFields)),
       );
       return;
+    }
+
+    // Auto-format Jordanian number to E.164 format for Firebase
+    if (phone.startsWith('0')) {
+      phone = '+962${phone.substring(1)}';
+    } else if (!phone.startsWith('+')) {
+      phone = '+962$phone';
     }
 
     setState(() => _isLoading = true);

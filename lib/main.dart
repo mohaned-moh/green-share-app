@@ -11,6 +11,7 @@ import 'package:provider/provider.dart';
 import 'package:green_share/providers/locale_provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:green_share/l10n/app_localizations.dart';
+import 'package:green_share/providers/theme_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,11 +23,16 @@ void main() async {
   final String? languageCode = prefs.getString('language_code');
 
   runApp(
-    ChangeNotifierProvider(
-      create: (_) => LocaleProvider(
-        languageCode != null ? Locale(languageCode) : const Locale('en'),
-        prefs,
-      ),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => LocaleProvider(
+            languageCode != null ? Locale(languageCode) : const Locale('en'),
+            prefs,
+          ),
+        ),
+        ChangeNotifierProvider(create: (_) => ThemeProvider()),
+      ],
       child: const GreenShareApp(),
     ),
   );
@@ -37,8 +43,8 @@ class GreenShareApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<LocaleProvider>(
-      builder: (context, localeProvider, child) {
+    return Consumer2<LocaleProvider, ThemeProvider>(
+      builder: (context, localeProvider, themeProvider, child) {
         return MaterialApp(
           title: 'Green Share',
           debugShowCheckedModeBanner: false,
@@ -47,6 +53,12 @@ class GreenShareApp extends StatelessWidget {
               fontFamily: localeProvider.locale.languageCode == 'ar' ? 'Tajawal' : 'Inter',
             ),
           ),
+          darkTheme: AppTheme.darkTheme.copyWith(
+            textTheme: AppTheme.darkTheme.textTheme.apply(
+              fontFamily: localeProvider.locale.languageCode == 'ar' ? 'Tajawal' : 'Inter',
+            ),
+          ),
+          themeMode: themeProvider.isDark ? ThemeMode.dark : ThemeMode.light,
           locale: localeProvider.locale,
           localizationsDelegates: const [
             AppLocalizations.delegate,

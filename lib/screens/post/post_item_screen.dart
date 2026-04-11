@@ -26,10 +26,10 @@ class _PostItemScreenState extends State<PostItemScreen> {
   final _descriptionController = TextEditingController();
   
   String _type = 'Donate';
-  String _condition = 'Good';
+  String? _condition;
   final List<String> _conditions = ['New', 'Like New', 'Good', 'Fair'];
   
-  String _selectedCategory = 'Other';
+  String? _selectedCategory;
   final List<String> _categories = [
     'Clothing',
     'Furniture',
@@ -214,9 +214,21 @@ class _PostItemScreenState extends State<PostItemScreen> {
       );
       return;
     }
+    if (_selectedCategory == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please select a category')),
+      );
+      return;
+    }
     if (_descriptionController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Please enter a description')),
+      );
+      return;
+    }
+    if (_type == 'Donate' && _condition == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please select a condition')),
       );
       return;
     }
@@ -248,8 +260,8 @@ class _PostItemScreenState extends State<PostItemScreen> {
         title: _titleController.text.trim(),
         description: _descriptionController.text.trim(),
         type: _type,
-        category: _selectedCategory,
-        condition: _condition,
+        category: _selectedCategory!,
+        condition: _type == 'Donate' ? _condition! : 'N/A',
         imageUrls: uploadedImageUrls,
         ownerId: userId,
         postedAt: DateTime.now(),
@@ -270,7 +282,8 @@ class _PostItemScreenState extends State<PostItemScreen> {
         // Clear form
         _titleController.clear();
         _descriptionController.clear();
-        _selectedCategory = 'Other';
+        _selectedCategory = null;
+        _condition = null;
         _selectedCity = 'Amman';
         setState(() {
           _imageFiles.clear();
@@ -513,7 +526,7 @@ class _PostItemScreenState extends State<PostItemScreen> {
             TextField(
               controller: _titleController,
               decoration: InputDecoration(
-                labelText: context.l10n.title,
+                labelText: '${context.l10n.title} *',
                 border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
               ),
             ),
@@ -523,7 +536,7 @@ class _PostItemScreenState extends State<PostItemScreen> {
             DropdownButtonFormField<String>(
               value: _selectedCategory,
               decoration: InputDecoration(
-                labelText: context.l10n.categoryAutoFilled,
+                labelText: '${context.l10n.categoryAutoFilled} *',
                 prefixIcon: const Icon(Icons.auto_awesome, color: Colors.amber, size: 20),
                 border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                 enabledBorder: OutlineInputBorder(
@@ -550,7 +563,7 @@ class _PostItemScreenState extends State<PostItemScreen> {
             TextField(
               controller: _descriptionController,
               decoration: InputDecoration(
-                labelText: context.l10n.description,
+                labelText: '${context.l10n.description} *',
                 border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
               ),
               maxLines: 4,
@@ -562,7 +575,7 @@ class _PostItemScreenState extends State<PostItemScreen> {
               DropdownButtonFormField<String>(
                 value: _condition,
                 decoration: InputDecoration(
-                  labelText: context.l10n.condition,
+                  labelText: '${context.l10n.condition} *',
                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                 ),
                 items: _conditions.map((c) {

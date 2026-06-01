@@ -3,6 +3,8 @@ import 'package:green_share/core/app_theme.dart';
 import 'package:green_share/screens/auth/login_screen.dart';
 import 'package:green_share/screens/main_tab_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_app_check/firebase_app_check.dart';
+import 'package:flutter/foundation.dart';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:green_share/firebase_options.dart';
@@ -18,6 +20,13 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  
+  if (!kIsWeb) {
+    await FirebaseAppCheck.instance.activate(
+      androidProvider: AndroidProvider.playIntegrity,
+      appleProvider: AppleProvider.deviceCheck,
+    );
+  }
   
   final prefs = await SharedPreferences.getInstance();
   final String? languageCode = prefs.getString('language_code');

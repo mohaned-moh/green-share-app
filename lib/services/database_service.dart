@@ -8,6 +8,7 @@ import 'package:green_share/models/chat_model.dart';
 import 'package:green_share/models/review_model.dart';
 import 'package:green_share/models/feedback_model.dart';
 import 'package:green_share/models/report_model.dart';
+import 'package:green_share/services/encryption_service.dart';
 
 class DatabaseService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -236,7 +237,13 @@ class DatabaseService {
         .orderBy('updatedAt', descending: true)
         .snapshots()
         .map((snapshot) => snapshot.docs
-            .map((doc) => ChatRoomModel.fromJson(doc.data(), doc.id))
+            .map((doc) {
+              final data = doc.data();
+              if (data['lastMessage'] != null) {
+                data['lastMessage'] = EncryptionService.decryptText(data['lastMessage']);
+              }
+              return ChatRoomModel.fromJson(data, doc.id);
+            })
             .toList());
   }
 
@@ -248,11 +255,19 @@ class DatabaseService {
         .orderBy('sentAt', descending: true)
         .snapshots()
         .map((snapshot) => snapshot.docs
-            .map((doc) => MessageModel.fromJson(doc.data(), doc.id))
+            .map((doc) {
+              final data = doc.data();
+              if (data['text'] != null) {
+                data['text'] = EncryptionService.decryptText(data['text']);
+              }
+              return MessageModel.fromJson(data, doc.id);
+            })
             .toList());
   }
 
   Future<void> sendMessage(String chatId, String senderId, String recipientId, String text) async {
+    final encryptedText = EncryptionService.encryptText(text);
+
     // Add message with server timestamp
     await _firestore
         .collection('chats')
@@ -260,14 +275,14 @@ class DatabaseService {
         .collection('messages')
         .add({
       'senderId': senderId,
-      'text': text,
+      'text': encryptedText,
       'sentAt': FieldValue.serverTimestamp(),
       'isRead': false,
     });
 
     // Update chat room last message & time
     await _firestore.collection('chats').doc(chatId).update({
-      'lastMessage': text,
+      'lastMessage': encryptedText,
       'updatedAt': FieldValue.serverTimestamp(),
       'unreadCounts.$recipientId': FieldValue.increment(1),
     });

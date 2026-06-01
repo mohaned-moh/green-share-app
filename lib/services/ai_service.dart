@@ -5,7 +5,7 @@ import 'package:image_picker/image_picker.dart';
 class AIService {
   static const String apiKey = String.fromEnvironment(
     'GEMINI_API_KEY', 
-    defaultValue: 'AIzaSyBeDfZW8sGqxBOu_QRU3mh837pyzwX5iCs',
+    defaultValue: 'AQ.Ab8RN6INyu-bklgjkCQNNI7j9gQOQMfdqYONPgRu7zB69C-DJg',
   );
 
   final GenerativeModel _model;
@@ -15,7 +15,7 @@ class AIService {
   Future<String?> classifyImage(XFile imageFile) async {
     try {
       final bytes = await imageFile.readAsBytes();
-      final prompt = TextPart("Classify this image into exactly one of these categories: Clothing, Furniture, Books, Electronics, Toys, or Other. Output only the exact category string and nothing else. No formatting, no extra words.");
+      final prompt = TextPart("Classify this image into exactly one of these categories: Clothing, Furniture, Books, Electronics, Toys, . Output only the exact category string and nothing else. No formatting, no extra words.");
       final imagePart = DataPart(imageFile.mimeType ?? 'image/jpeg', bytes);
       
       final response = await _model.generateContent([

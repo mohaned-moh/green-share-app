@@ -69,7 +69,18 @@ class ItemModel {
       type: map['type'] ?? 'Donate',
       category: map['category'] ?? 'Other',
       condition: map['condition'] ?? 'Good',
-      imageUrls: List<String>.from(map['imageUrls'] ?? []),
+      imageUrls: () {
+        if (map['imageUrls'] != null && map['imageUrls'] is List) {
+          return List<String>.from(map['imageUrls']);
+        } else if (map['images'] != null && map['images'] is List) {
+          return List<String>.from(map['images']);
+        } else if (map['imageUrl'] != null && map['imageUrl'].toString().isNotEmpty) {
+          return [map['imageUrl'].toString()];
+        } else if (map['image'] != null && map['image'].toString().isNotEmpty) {
+          return [map['image'].toString()];
+        }
+        return <String>[];
+      }(),
       ownerId: map['ownerId'] ?? '',
       postedAt: map['postedAt'] is Timestamp 
           ? (map['postedAt'] as Timestamp).toDate()

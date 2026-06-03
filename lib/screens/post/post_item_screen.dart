@@ -35,8 +35,7 @@ class _PostItemScreenState extends State<PostItemScreen> {
     'Furniture',
     'Books',
     'Electronics',
-    'Toys',
-    'Other'
+    'Toys'
   ];
   
   String _selectedCity = 'Amman';
@@ -152,11 +151,19 @@ class _PostItemScreenState extends State<PostItemScreen> {
 
         if (mounted && detectedCategory != null) {
           setState(() {
-            // Check if the AI's result exists in your predefined _categories list
             if (_categories.contains(detectedCategory)) {
               _selectedCategory = detectedCategory;
             } else {
-              _selectedCategory = 'Other';
+              _selectedCategory = null;
+              if (mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text("AI could not recognize the item."),
+                    backgroundColor: Colors.orange,
+                    duration: Duration(seconds: 4),
+                  ),
+                );
+              }
             }
           });
 
@@ -252,7 +259,11 @@ class _PostItemScreenState extends State<PostItemScreen> {
       for (var xfile in _imageFiles) {
         Uint8List bytes = await xfile.readAsBytes();
         String? url = await _databaseService.uploadImage(bytes, 'items/${userId}_${DateTime.now().millisecondsSinceEpoch}_${_imageFiles.indexOf(xfile)}.jpg');
-        if (url != null) uploadedImageUrls.add(url);
+        if (url != null) {
+          uploadedImageUrls.add(url);
+        } else {
+          throw Exception('Failed to upload one or more images. Check Firebase Storage rules or CORS settings.');
+        }
       }
 
       final item = ItemModel(
@@ -409,6 +420,31 @@ class _PostItemScreenState extends State<PostItemScreen> {
               ],
             ),
             const SizedBox(height: 24),
+            
+            // Note for the donor
+            Container(
+              padding: const EdgeInsets.all(12),
+              margin: const EdgeInsets.only(bottom: 16),
+              decoration: BoxDecoration(
+                color: Colors.blue.shade50,
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: Colors.blue.shade200),
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Icon(Icons.info_outline, color: Colors.blue.shade700),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      "Note: Please only upload items from our accepted categories. If the AI cannot recognize the item, it won't be auto-categorized and the admin will review your post to ensure it meets our standards.",
+                      style: TextStyle(color: Colors.blue.shade900, fontSize: 13),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            
             if (_imageFiles.isEmpty)
               GestureDetector(
                 onTap: _pickImages,

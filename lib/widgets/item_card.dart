@@ -10,6 +10,7 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:green_share/models/review_model.dart';
 import 'package:green_share/models/user_model.dart';
 import 'package:green_share/screens/profile/profile_screen.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class ItemCard extends StatelessWidget {
   final ItemModel item;
@@ -42,18 +43,16 @@ class ItemCard extends StatelessWidget {
           Expanded(
             flex: 4,
             child: Container(
-              decoration: BoxDecoration(
-                color: Colors.grey.shade100,
-                image: hasImage
-                    ? DecorationImage(
-                        image: NetworkImage(item.imageUrls.first),
-                        fit: BoxFit.cover,
-                      )
-                    : null,
-              ),
-              child: !hasImage
-                  ? Icon(Icons.image_outlined, size: 48, color: Colors.grey.shade400)
-                  : null,
+              color: Colors.grey.shade100,
+              width: double.infinity,
+              child: hasImage
+                  ? CachedNetworkImage(
+                      imageUrl: item.imageUrls.first,
+                      fit: BoxFit.cover,
+                      placeholder: (context, url) => const Center(child: CircularProgressIndicator(strokeWidth: 2)),
+                      errorWidget: (context, url, error) => Icon(Icons.broken_image_outlined, size: 48, color: Colors.grey.shade400),
+                    )
+                  : Icon(Icons.image_outlined, size: 48, color: Colors.grey.shade400),
             ),
           ),
           Expanded(
